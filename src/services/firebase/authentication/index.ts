@@ -1,6 +1,40 @@
-import {getAuth} from 'firebase/auth';
-import {firebaseInitializeService} from '../app';
+import {
+  UserCredential,
+  User,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import {FirebaseError} from 'firebase/app';
+import {authenticationService} from './initialize';
 
-export const authenticationInitializeService = getAuth(
-  firebaseInitializeService,
-);
+export abstract class Authentication {
+  protected signInWithEmailAndPassword = (
+    email: string,
+    password: string,
+  ): Promise<User> => {
+    return new Promise<User>((resolve, reject) => {
+      signInWithEmailAndPassword(authenticationService, email, password)
+        .then((userCredential: UserCredential) => {
+          resolve(userCredential.user);
+        })
+        .catch((error: FirebaseError) => {
+          reject(error);
+        });
+    });
+  };
+
+  protected signUpWithEmailAndPassword = (
+    email: string,
+    password: string,
+  ): Promise<User> => {
+    return new Promise<User>((resolve, reject) => {
+      createUserWithEmailAndPassword(authenticationService, email, password)
+        .then((userCredential: UserCredential) => {
+          resolve(userCredential.user);
+        })
+        .catch(error => {
+          reject(error as FirebaseError);
+        });
+    });
+  };
+}
