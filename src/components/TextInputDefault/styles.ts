@@ -3,8 +3,8 @@ import {colors} from '~/shared/themes/colors';
 
 export const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    borderColor: colors.primaryGreen,
+    borderWidth: 0.6,
+    borderColor: colors.primarySlateBlue,
     justifyContent: 'center',
     alignItems: 'flex-start',
     paddingHorizontal: 10,

@@ -36,10 +36,30 @@ export const styles = StyleSheet.create({
     color: colors.primaryWhite,
   },
 
+  signUpTextButton: {
+    color: colors.primaryGreen,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  signUpButton: {
+    backgroundColor: 'transparent',
+  },
+
   secondaryText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.primarySlateBlue,
+  },
+
+  forgottenPasswordContainer: {
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
+    width: 160,
+    height: 40,
   },
 
   forgottenPasswordButton: {
