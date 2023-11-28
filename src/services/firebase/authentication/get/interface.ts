@@ -5,4 +5,6 @@ export interface AuthGetInterface {
     email: string,
     password: string,
   ) => Promise<User>;
+
+  sendPasswordResetEmail: (email: string) => Promise<void>;
 }

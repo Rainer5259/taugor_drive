@@ -3,7 +3,8 @@ import {AuthPost} from './authentication/post';
 import {AuthPostInterface} from './authentication/post/interface';
 import {AuthGet} from './authentication/get';
 import {AuthGetInterface} from './authentication/get/interface';
-
+import {User as UserGoogle} from '@react-native-google-signin/google-signin/src/types';
+import {UserProps} from '../redux/slices/interface';
 class FirebaseServices {
   private authPostService: AuthPostInterface;
   private authGetService: AuthGetInterface;
@@ -21,6 +22,9 @@ class FirebaseServices {
       ): Promise<User> => {
         return this.authGetService.signInWithEmailAndPassword(email, password);
       },
+      requestPasswordResetEmail: (email: string): Promise<void> => {
+        return this.authGetService.sendPasswordResetEmail(email);
+      },
     },
 
     post: {
@@ -29,6 +33,10 @@ class FirebaseServices {
         password: string,
       ): Promise<User> => {
         return this.authPostService.signUpWithEmailAndPassword(email, password);
+      },
+
+      signInWithGooglePopup: (): Promise<UserProps> => {
+        return this.authPostService.signInWithGooglePopup();
       },
     },
   };
