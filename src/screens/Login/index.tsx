@@ -20,6 +20,7 @@ import {setToken, setUser} from '~/services/redux/slices/authenticateUser';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {UserProps} from '~/services/redux/slices/interface';
+import {regexEmail} from '~/shared/utils/regex/email';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('oo@email.com');
@@ -32,17 +33,19 @@ const Login: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const checkEmptyFields = () => {
-    if (!email || !password) {
-      return Toast.show({
-        type: 'error',
-        text1: 'Fill all fields',
-      });
-    }
+  const emptyFields = !email || !password;
+
+  const fillAllFieldsToast = () => {
+    return Toast.show({
+      type: 'error',
+      text1: t('SCREENS.AUTHENTICATION.ERRORS.FILL_FIELDS'),
+    });
   };
 
   const handleSignIn = async () => {
-    checkEmptyFields();
+    if (emptyFields) {
+      return fillAllFieldsToast();
+    }
 
     setLoadingSignIn(true);
     try {
@@ -74,6 +77,12 @@ const Login: React.FC = () => {
           });
           break;
 
+        case AuthErrorCodesCustom.INVALID_EMAIL:
+          toastError({
+            text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_EMAIL'),
+          });
+          break;
+
         default:
           toastError({text1: t('ERRORS.HAS_OCURRED')});
           break;
@@ -84,7 +93,15 @@ const Login: React.FC = () => {
   };
 
   const handleSignUp = async () => {
-    checkEmptyFields();
+    if (emptyFields) {
+      return fillAllFieldsToast();
+    }
+
+    if (!regexEmail.test(email)) {
+      return toastError({
+        text1: t('COMPONENTS.AUTH_CARD.ERRORS.INVALID_EMAIL'),
+      });
+    }
 
     setLoadingSignUp(true);
     try {
@@ -126,8 +143,8 @@ const Login: React.FC = () => {
   };
 
   const handleLoginWithGoogle = async () => {
+    setLoadingSocialMedia(true);
     try {
-      setLoadingSocialMedia(true);
       const userInfo =
         FirebaseServices.authentication.post.signInWithGooglePopup();
 
@@ -152,29 +169,39 @@ const Login: React.FC = () => {
   };
 
   const handleResetPassword = async () => {
-    checkEmptyFields();
+    if (!email) {
+      return fillAllFieldsToast();
+    }
+
     setLoadingForgotPassword(true);
     try {
-      await FirebaseServices.authentication.get
-        .requestPasswordResetEmail(email)
-        .then(() => {
-          toastSuccess({text1: 'Verifique sua caixa de entrada ou spam'});
-        })
-        .catch(e => {
-          const error = e as FirebaseError;
-          switch (error.code) {
-            case AuthErrorCodesCustom.TOO_MANY_ATTEMPTS_TRY_LATER:
-              toastSuccess({
-                text1: 'Limite de solicitações excedido!',
-                text2: 'tente novamente mais tarde.',
-              });
-              break;
-            default:
-              break;
-          }
-        });
+      await FirebaseServices.authentication.get.requestPasswordResetEmail(
+        email,
+      );
+      toastSuccess({
+        text1: t('SCREENS.AUTHENTICATION.SUCCESS.CHECK_EMAIL_BOX'),
+      });
     } catch (e) {
-      toastError({text1: 'Erro ao enviar link'});
+      const error = e as FirebaseError;
+
+      switch (error.code) {
+        case AuthErrorCodesCustom.TOO_MANY_ATTEMPTS_TRY_LATER:
+          toastSuccess({
+            text1: t(
+              'SCREENS.AUTHENTICATION.ERRORS.TOO_MANY_ATTEMPTS_TRY_LATER',
+            ),
+            text2: t('SCREENS.AUTHENTICATION.ERRORS.TRY_AGAIN_LATER'),
+          });
+          break;
+        case AuthErrorCodesCustom.INVALID_EMAIL:
+          toastError({
+            text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_EMAIL'),
+          });
+          break;
+        default:
+          toastError({text1: t('SCREENS.AUTHENTICATION.ERRORS.SEND_LINK')});
+          break;
+      }
     } finally {
       setLoadingForgotPassword(false);
     }
@@ -197,6 +224,7 @@ const Login: React.FC = () => {
             onPressForgotPassword={handleResetPassword}
             onPressSignIn={handleSignIn}
             onPressSignUp={handleSignUp}
+            setLoadingForgotPassword={setLoadingForgotPassword}
             password={password}
             setPassword={setPassword}
             loadingSignIn={loadingSignIn}

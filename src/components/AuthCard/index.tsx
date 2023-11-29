@@ -6,6 +6,7 @@ import GoogleIcon from '~/assets/svgs/google-icon.svg';
 import ButtonDefault from '../ButtonDefault';
 import TextInputDefault from '../TextInputDefault';
 import {AuthCardProps} from './interface';
+import {t} from 'i18next';
 
 const AuthCard: FC<AuthCardProps> = ({
   email,
@@ -13,6 +14,7 @@ const AuthCard: FC<AuthCardProps> = ({
   onPressSignUp,
   loadingForgotPassword,
   onPressForgotPassword,
+  setLoadingForgotPassword,
   password,
   setEmail,
   setPassword,
@@ -26,12 +28,17 @@ const AuthCard: FC<AuthCardProps> = ({
 
   const timerIsZero = timer === 0;
 
-  console.log('fn', timer);
-
   const handleOnPressForgotPassword = () => {
     onPressForgotPassword();
-    // setTimer(5);
   };
+
+  useEffect(() => {
+    if (loadingForgotPassword) {
+      setTimer(60);
+    } else {
+      setTimer(0);
+    }
+  }, [loadingForgotPassword]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -40,6 +47,8 @@ const AuthCard: FC<AuthCardProps> = ({
       intervalId = setInterval(() => {
         setTimer(prevSeconds => prevSeconds - 1);
       }, 1000);
+    } else {
+      setLoadingForgotPassword(false);
     }
 
     return () => {
@@ -53,7 +62,7 @@ const AuthCard: FC<AuthCardProps> = ({
 
       <View style={styles.formBox}>
         <TextInputDefault
-          placeholder="Email Address"
+          placeholder={t('GENERICS.EMAIL')}
           keyboardType="email-address"
           value={email}
           onChangeText={e => setEmail(e)}
@@ -61,7 +70,7 @@ const AuthCard: FC<AuthCardProps> = ({
           autoCorrect={false}
         />
         <TextInputDefault
-          placeholder="Password"
+          placeholder={t('GENERICS.PASSWORD')}
           keyboardType="default"
           secureTextEntry
           value={password}
@@ -73,7 +82,7 @@ const AuthCard: FC<AuthCardProps> = ({
         <View style={styles.forgottenPasswordContainer}>
           {timer > 0 && (
             <View style={{marginRight: 10}}>
-              <Text>{timer}</Text>
+              <Text>{timer}s</Text>
             </View>
           )}
 
@@ -85,19 +94,21 @@ const AuthCard: FC<AuthCardProps> = ({
               styles.forgottenPasswordButton,
               {opacity: !timerIsZero ? 0.5 : 1},
             ]}>
-            <Text style={styles.forgottenPasswordText}>Forgotten Password</Text>
+            <Text style={styles.forgottenPasswordText}>
+              {t('COMPONENTS.AUTH_CARD.FORGOT_PASSWORD')}
+            </Text>
           </ButtonDefault>
         </View>
         <View style={styles.buttonBox}>
           <ButtonDefault
-            title="Sign In"
+            title={t('COMPONENTS.AUTH_CARD.SIGN_IN')}
             textStyle={styles.primaryText}
             onPress={onPressSignIn}
             loading={loadingSignIn}
             disabled={disabled}
           />
           <ButtonDefault
-            title="Sign Up"
+            title={t('COMPONENTS.AUTH_CARD.SIGN_UP')}
             textStyle={styles.signUpTextButton}
             onPress={onPressSignUp}
             style={styles.signUpButton}
@@ -108,12 +119,16 @@ const AuthCard: FC<AuthCardProps> = ({
       </View>
 
       <View style={styles.socialMediaContent}>
-        <Text style={styles.secondaryText}>Or continue with</Text>
+        <View style={styles.horizontalLine} />
+        <Text style={styles.secondaryText}>
+          {t('COMPONENTS.AUTH_CARD.OR_CONTINUE_WITH')}
+        </Text>
         <ButtonDefault
           onPress={onPressSocialMedia}
           style={styles.socialMediaIconButton}
           loading={loadingSocialMedia}
-          disabled={disabled}>
+          disabled={disabled}
+          disabledAnimation>
           <GoogleIcon width={24} height={24} />
         </ButtonDefault>
       </View>

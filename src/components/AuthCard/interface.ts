@@ -10,6 +10,7 @@ export interface AuthCardProps {
   onPressSocialMedia: () => void;
   setEmail: Dispatch<SetStateAction<string>>;
   setPassword: Dispatch<SetStateAction<string>>;
+  setLoadingForgotPassword: Dispatch<SetStateAction<boolean>>;
   onPressSignIn: () => void;
   onPressSignUp: () => void;
   onPressForgotPassword: () => void;

@@ -4,7 +4,7 @@ import {colors} from '~/shared/themes/colors';
 export const styles = StyleSheet.create({
   container: {
     borderWidth: 0.6,
-    borderColor: colors.primarySlateBlue,
+    borderColor: colors.primarySlateBlueOpaque,
     justifyContent: 'center',
     alignItems: 'flex-start',
     paddingHorizontal: 10,
@@ -12,5 +12,6 @@ export const styles = StyleSheet.create({
     minWidth: '100%',
     height: 40,
     borderRadius: 12,
+    color: colors.primarySlateBlue,
   },
 });

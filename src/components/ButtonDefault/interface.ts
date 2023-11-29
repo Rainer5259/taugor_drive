@@ -6,4 +6,5 @@ export interface ButtonDefaultProps extends TouchableOpacityProps {
   style?: ViewStyle & object;
   textStyle?: TextStyle;
   children?: React.ReactNode;
+  disabledAnimation?: boolean;
 }

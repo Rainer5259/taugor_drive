@@ -20,6 +20,7 @@ const ButtonDefault: FC<ButtonDefaultProps> = ({
   style,
   textStyle,
   loading,
+  disabledAnimation,
   ...rest
 }) => {
   const buttonWidth = useSharedValue(150);
@@ -31,6 +32,9 @@ const ButtonDefault: FC<ButtonDefaultProps> = ({
     Animated.createAnimatedComponent(TouchableOpacity);
 
   const animateButtonWidth = (toValue: number) => {
+    if (disabledAnimation) {
+      return;
+    }
     buttonWidth.value = withTiming(toValue, {
       duration: 300,
       easing: Easing.ease,
@@ -38,6 +42,9 @@ const ButtonDefault: FC<ButtonDefaultProps> = ({
   };
 
   const animateOpacity = (toValue: number) => {
+    if (disabledAnimation) {
+      return;
+    }
     opacity.value = withTiming(toValue, {
       duration: 300,
       easing: Easing.ease,

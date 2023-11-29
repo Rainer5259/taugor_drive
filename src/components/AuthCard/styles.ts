@@ -4,7 +4,7 @@ import {colors} from '~/shared/themes/colors';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8E8E8',
+    backgroundColor: colors.primaryBackground,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -16,14 +16,25 @@ export const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: 'center',
     height: 80,
-    width: 280,
-    justifyContent: 'space-between',
+    width: '100%',
+    justifyContent: 'space-evenly',
   },
 
   socialMediaIconButton: {
-    backgroundColor: '#33333310',
+    borderWidth: 1,
+    borderColor: colors.primarySlateBlueOpaque,
+    backgroundColor: 'transparent',
+    width: 42,
+    height: 42,
+    borderRadius: 6,
   },
-
+  horizontalLine: {
+    borderWidth: 0.6,
+    borderColor: colors.secondarySlateBlueOpaque,
+    width: '100%',
+    position: 'absolute',
+    top: 16,
+  },
   buttonBox: {
     marginTop: 10,
     height: 90,
@@ -44,12 +55,15 @@ export const styles = StyleSheet.create({
 
   signUpButton: {
     backgroundColor: 'transparent',
+    width: 80,
   },
 
   secondaryText: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: colors.primarySlateBlue,
+    fontWeight: '300',
+    color: colors.primarySlateBlueOpaque,
+    backgroundColor: colors.primaryBackground,
+    paddingHorizontal: 10,
   },
 
   forgottenPasswordContainer: {
@@ -64,7 +78,7 @@ export const styles = StyleSheet.create({
 
   forgottenPasswordButton: {
     backgroundColor: 'transparent',
-    width: 140,
+    width: 146,
     alignSelf: 'flex-end',
   },
 

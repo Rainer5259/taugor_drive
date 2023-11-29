@@ -14,5 +14,5 @@ export const styles = StyleSheet.create({
 
   buttonOpacity: {opacity: 0.8},
 
-  activityIndicator: {color: colors.primarySlateBlue},
+  activityIndicator: {color: colors.primarySlateBlueOpaque},
 });

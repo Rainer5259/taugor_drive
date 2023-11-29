@@ -4,16 +4,21 @@
       "OK": "Ok",
       "CONFIRM": "Confirmar",
       "CANCEL": "Cancelar",
-      "EMAIL": "E-mail",
-      "PASSWORD": "Senha",
+      "EMAIL": "Digite seu email",
+      "PASSWORD": "Digite sua senha",
       "NEXT": "Próximo",
       "WELCOME": "Bem-Vindo!",
       "SUCCESS": "Sucesso"
     },
     "COMPONENTS": {
-      "AUTH_MODAL": {
-        "SIGN_UP": "Registrar",
-        "SIGN_IN": "Entrar"
+      "AUTH_CARD": {
+        "SIGN_UP": "Cadastrar",
+        "SIGN_IN": "Entrar",
+        "FORGOT_PASSWORD": "Esqueci minha senha",
+        "OR_CONTINUE_WITH": "Ou continue com",
+        "ERRORS": {
+          "INVALID_EMAIL": "Email inválido"
+        }
       },
       "HEADER": {
         "STEP": "Passo {{step1}} de {{step2}}",
@@ -28,11 +33,14 @@
           "INVALID_CREDENTIALS": "Email e/ou senha inválido(s)",
           "FILL_FIELDS": "Preencha todos os campos",
           "TOO_MANY_ATTEMPTS_TRY_LATER": "Limite de requisição excedido",
+          "TRY_AGAIN_LATER": "Tente novamente mais tarde",
           "INVALID_EMAIL": "Email inválido",
-          "SET_TOKEN": "Ocorreu um erro ao salvar token"
+          "SET_TOKEN": "Ocorreu um erro ao salvar token",
+          "SEND_LINK": "Erro ao enviar link"
         },
         "SUCCESS": {
-          "USER_REGISTERED": "Usuário cadastrado com sucesso"
+          "USER_REGISTERED": "Usuário cadastrado com sucesso",
+          "CHECK_EMAIL_BOX": "Verifique sua caixa de entrada ou spam"
         }
       },
       "HOME": {

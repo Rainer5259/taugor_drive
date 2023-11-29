@@ -2,25 +2,15 @@ import {
   UserCredential,
   User,
   createUserWithEmailAndPassword,
-  signInWithPopup,
   GoogleAuthProvider,
-  signInWithCredential,
 } from 'firebase/auth';
 import {FirebaseError} from 'firebase/app';
 import {authenticationService} from '../initialize';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
-import {authGoogleProvider, googleProvider} from '../../app/googleProvider';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import {User as UserGoogle} from '@react-native-google-signin/google-signin/src/types';
+import {googleProvider} from '../../app/googleProvider';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Locales} from '~/shared/utils/enums/locales';
-import {setToken} from '~/services/redux/slices/authenticateUser';
-import {useDispatch} from 'react-redux';
-import {AppDispatch, store} from '~/services/redux/store';
-import {userGoogleData} from '~/services/redux/thunks/fetchUserData';
 import {UserProps} from '~/services/redux/slices/interface';
 export class AuthPost {
   signUpWithEmailAndPassword = async (
