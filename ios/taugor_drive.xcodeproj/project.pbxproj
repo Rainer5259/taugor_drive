@@ -11,8 +11,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		4D58E27A2B14D9A9006CC266 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D58E2792B14D9A8006CC266 /* GoogleService-Info.plist */; };
-		4D58E27B2B14D9A9006CC266 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D58E2792B14D9A8006CC266 /* GoogleService-Info.plist */; };
+		4D1AE56E2B17674300CE96F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D1AE56D2B17674300CE96F8 /* GoogleService-Info.plist */; };
+		4D1AE56F2B17674300CE96F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D1AE56D2B17674300CE96F8 /* GoogleService-Info.plist */; };
 		53AB9D7A85BFAEBBE3CE8C86 /* libPods-taugor_drive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 171DC3B7479810DF06E712B3 /* libPods-taugor_drive.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F6DB41B509FAEC60EB7F61A /* libPods-taugor_drive-taugor_driveTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EA4586E7F116B6A9530A027 /* libPods-taugor_drive-taugor_driveTests.a */; };
@@ -41,7 +41,7 @@
 		171DC3B7479810DF06E712B3 /* libPods-taugor_drive.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-taugor_drive.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E015695F6FE0B3CB8FA3C68 /* Pods-taugor_drive-taugor_driveTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taugor_drive-taugor_driveTests.debug.xcconfig"; path = "Target Support Files/Pods-taugor_drive-taugor_driveTests/Pods-taugor_drive-taugor_driveTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4816373CFD2B406290853E6F /* Pods-taugor_drive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taugor_drive.release.xcconfig"; path = "Target Support Files/Pods-taugor_drive/Pods-taugor_drive.release.xcconfig"; sourceTree = "<group>"; };
-		4D58E2792B14D9A8006CC266 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4D1AE56D2B17674300CE96F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "taugor_drive/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		715DECB815F75EA9DD90EDAB /* Pods-taugor_drive-taugor_driveTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taugor_drive-taugor_driveTests.release.xcconfig"; path = "Target Support Files/Pods-taugor_drive-taugor_driveTests/Pods-taugor_drive-taugor_driveTests.release.xcconfig"; sourceTree = "<group>"; };
 		7EA4586E7F116B6A9530A027 /* libPods-taugor_drive-taugor_driveTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-taugor_drive-taugor_driveTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = taugor_drive/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -89,7 +89,7 @@
 		13B07FAE1A68108700A75B9A /* taugor_drive */ = {
 			isa = PBXGroup;
 			children = (
-				4D58E2792B14D9A8006CC266 /* GoogleService-Info.plist */,
+				4D1AE56D2B17674300CE96F8 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -239,7 +239,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D58E27B2B14D9A9006CC266 /* GoogleService-Info.plist in Resources */,
+				4D1AE56F2B17674300CE96F8 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,7 +249,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				4D58E27A2B14D9A9006CC266 /* GoogleService-Info.plist in Resources */,
+				4D1AE56E2B17674300CE96F8 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
