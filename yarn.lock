@@ -7551,6 +7551,13 @@ react-native-codegen@^0.70.6:
     jscodeshift "^0.14.0"
     nullthrows "^1.1.1"
 
+react-native-document-picker@^8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-8.2.1.tgz#30b5ef6b5071e5f2c87954a492974432761448de"
+  integrity sha512-luH2hKdq4cUwE651OscyGderLMsCusOsBzw4MBca91CgprlAGVMm1/pDwJDV5t9LIewVK8DIgXGXzgrsusKVhA==
+  dependencies:
+    invariant "^2.2.4"
+
 react-native-dotenv@^3.4.9:
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.9.tgz#621c5b0c1d0c5c7f569bfe5a1d804bec7885c010"

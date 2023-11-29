@@ -23,6 +23,25 @@
       "HEADER": {
         "STEP": "Passo {{step1}} de {{step2}}",
         "TITLE": "Informações docontato"
+      },
+      "WELCOME": {
+        "TITLE_ONE": "Bem-Vindo",
+        "TITLE_TWO": "Ao",
+        "BUTTON": "Ir para seção de upload"
+      },
+      "UPLOAD": {
+        "USED_SPACE": {
+          "TITLE": "Espaço usado",
+          "CURRENT": "{{gb}} GB",
+          "FROM_TOTAL_AVAILABLE": "de {{totalAvailableGB}}GB Livres"
+        },
+        "SIZE_OF_FILE": "Tamanho: {{size}}GB",
+        "LIMIT_PER_FILE": "Limite 1GB/arquivo",
+        "PLACEHOLDER_INPUT": "Título",
+        "BUTTON": {
+          "CHOOSE_FILE": "Escolher arquivo",
+          "SEE_MY_FILES": "Ver meus arquivos"
+        }
       }
     },
     "SCREENS": {

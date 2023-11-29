@@ -56,7 +56,6 @@ const Login: React.FC = () => {
         );
 
       if (userInfo) {
-        toastSuccess({text1: t('GENERICS.WELCOME')});
         dispatch(setToken(userInfo.refreshToken));
         return;
       }
@@ -112,7 +111,6 @@ const Login: React.FC = () => {
         );
 
       if (userInfo) {
-        toastSuccess({text1: t('GENERICS.WELCOME')});
         dispatch(setToken(userInfo.refreshToken));
         toastSuccess({
           text1: t('SCREENS.AUTHENTICATION.SUCCESS.USER_REGISTERED'),
