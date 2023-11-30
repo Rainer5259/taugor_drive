@@ -11,6 +11,7 @@ import {useTypedNavigation} from '~/routes/useTypedNavigation';
 import {useDispatch} from 'react-redux';
 import {setToken} from '~/services/redux/slices/authenticateUser';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
   const navigation = useTypedNavigation();
@@ -40,9 +41,14 @@ const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
     navigation.goBack();
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     SInfo.deleteItem(LOCAL_STORAGE_SECRET_KEY, {});
     dispatch(setToken(null));
+    const isSignedIn = await GoogleSignin.isSignedIn();
+
+    if (isSignedIn) {
+      await GoogleSignin.signOut();
+    }
   };
 
   const handlePressLeft = () => {
