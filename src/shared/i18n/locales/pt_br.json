@@ -35,12 +35,19 @@
           "CURRENT": "{{gb}} GB",
           "FROM_TOTAL_AVAILABLE": "de {{totalAvailableGB}}GB Livres"
         },
-        "SIZE_OF_FILE": "Tamanho: {{size}}GB",
+        "SIZE_OF_FILE": "Tamanho: {{size}}{{sizeReference}}",
         "LIMIT_PER_FILE": "Limite 1GB/arquivo",
         "PLACEHOLDER_INPUT": "Título",
         "BUTTON": {
+          "REMOVE_FILE_PICKED": "Remover item selecionado",
+          "UPLOAD": "Enviar",
           "CHOOSE_FILE": "Escolher arquivo",
           "SEE_MY_FILES": "Ver meus arquivos"
+        },
+        "STATUS": {
+          "LOADING": "Enviando...",
+          "WAIT": "Por favor, aguarde!",
+          "SENT_SUCCESSFULLY": "Enviado com sucesso!"
         }
       }
     },

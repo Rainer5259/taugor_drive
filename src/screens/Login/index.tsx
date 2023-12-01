@@ -15,12 +15,12 @@ import {AuthErrorCodesCustom} from '~/shared/utils/types/AuthError';
 import toastError from '~/components/ToastNotification/Error';
 import {t} from 'i18next';
 import toastSuccess from '~/components/ToastNotification/Success';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setToken, setUser} from '~/services/redux/slices/authenticateUser';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
-import {UserProps} from '~/services/redux/slices/interface';
 import {regexEmail} from '~/shared/utils/regex/email';
+import {AppUserCredentialInterface} from '~/shared/utils/types/user';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('oo@email.com');
@@ -32,7 +32,6 @@ const Login: React.FC = () => {
     useState<boolean>(false);
 
   const dispatch = useDispatch();
-
   const emptyFields = !email || !password;
 
   const fillAllFieldsToast = () => {
@@ -50,7 +49,7 @@ const Login: React.FC = () => {
     setLoadingSignIn(true);
     try {
       const userInfo =
-        await FirebaseServices.authentication.get.signUpWithEmailAndPassword(
+        await FirebaseServices.authentication.get.signInWithEmail(
           email,
           password,
         );
@@ -105,13 +104,14 @@ const Login: React.FC = () => {
     setLoadingSignUp(true);
     try {
       const userInfo =
-        await FirebaseServices.authentication.post.signUpWithEmailAndPassword(
+        await FirebaseServices.authentication.post.signUpWithEmail(
           email,
           password,
         );
 
       if (userInfo) {
         dispatch(setToken(userInfo.refreshToken));
+        dispatch(setUser({id: userInfo.uid}));
         toastSuccess({
           text1: t('SCREENS.AUTHENTICATION.SUCCESS.USER_REGISTERED'),
         });
@@ -144,11 +144,11 @@ const Login: React.FC = () => {
     setLoadingSocialMedia(true);
     try {
       const userInfo =
-        FirebaseServices.authentication.post.signInWithGooglePopup();
+        await FirebaseServices.authentication.post.signInWithGoogle();
 
-      const userData: UserProps = {
-        id: (await userInfo).id,
-        token: (await userInfo).token,
+      const userData: AppUserCredentialInterface = {
+        id: userInfo.id,
+        token: userInfo.token,
       };
 
       dispatch(setUser(userData));
@@ -161,9 +161,16 @@ const Login: React.FC = () => {
     }
   };
 
-  const getStoragedToken = async () => {
-    const storagedToken = await SInfo.getItem(LOCAL_STORAGE_SECRET_KEY, {});
-    dispatch(setToken(storagedToken));
+  const fetchUserInfoStoraged = async () => {
+    try {
+      const storagedUser = await SInfo.getItem(LOCAL_STORAGE_SECRET_KEY, {});
+
+      if (storagedUser) {
+        const userParsed: AppUserCredentialInterface = JSON.parse(storagedUser);
+        dispatch(setToken(userParsed.token));
+        dispatch(setUser({id: userParsed.id}));
+      }
+    } catch (e) {}
   };
 
   const handleResetPassword = async () => {
@@ -173,9 +180,7 @@ const Login: React.FC = () => {
 
     setLoadingForgotPassword(true);
     try {
-      await FirebaseServices.authentication.get.requestPasswordResetEmail(
-        email,
-      );
+      await FirebaseServices.authentication.get.resetPasswordWithEmail(email);
       toastSuccess({
         text1: t('SCREENS.AUTHENTICATION.SUCCESS.CHECK_EMAIL_BOX'),
       });
@@ -206,7 +211,7 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    getStoragedToken();
+    fetchUserInfoStoraged();
   }, []);
 
   return (

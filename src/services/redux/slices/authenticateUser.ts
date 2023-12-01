@@ -4,11 +4,12 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 import {User} from 'firebase/auth';
 import {userGoogleData} from '../thunks/fetchUserData';
 import {User as UserGoogle} from '@react-native-google-signin/google-signin/src/types';
-import {UserProps} from './interface';
+
+import {AppUserInterface} from '~/shared/utils/types/user';
 
 export interface AuthenticateUserProps {
   token: string | null;
-  user: UserProps | null;
+  user: AppUserInterface | null;
   roundedAvatar: boolean;
   error: boolean;
   loading: boolean;
@@ -31,11 +32,8 @@ export const authenticateUserSlice = createSlice({
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
     },
-    setUser: (state, action: PayloadAction<UserProps | null>) => {
+    setUser: (state, action: PayloadAction<AppUserInterface | null>) => {
       state.user = action.payload;
-    },
-    setRoundedAvatar: (state, action: PayloadAction<boolean | false>) => {
-      state.roundedAvatar = action.payload;
     },
   },
 
@@ -59,7 +57,6 @@ export const authenticateUserSlice = createSlice({
   // },
 });
 
-export const {setToken, setUser, setRoundedAvatar} =
-  authenticateUserSlice.actions;
+export const {setToken, setUser} = authenticateUserSlice.actions;
 
 export default authenticateUserSlice.reducer;

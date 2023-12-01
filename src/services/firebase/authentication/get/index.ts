@@ -2,27 +2,27 @@ import {
   UserCredential,
   User,
   signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import {FirebaseError} from 'firebase/app';
 import {authenticationService} from '../initialize';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
-export class AuthGet {
-  signInWithEmailAndPassword = async (
+import {AppUserCredentialInterface} from '~/shared/utils/types/user';
+export abstract class AuthGet {
+  protected signInWithEmailAndPassword = async (
     email: string,
     password: string,
   ): Promise<User> => {
     return new Promise<User>((resolve, reject) => {
       signInWithEmailAndPassword(authenticationService, email, password)
         .then((userCredential: UserCredential) => {
-          SInfo.setItem(
-            LOCAL_STORAGE_SECRET_KEY,
-            userCredential.user.refreshToken,
-            {},
-          );
+          const user: AppUserCredentialInterface = {
+            id: userCredential.user.uid,
+            token: userCredential.user.refreshToken!,
+          };
+
+          SInfo.setItem(LOCAL_STORAGE_SECRET_KEY, JSON.stringify(user), {});
           resolve(userCredential.user);
         })
         .catch(error => {
@@ -31,7 +31,7 @@ export class AuthGet {
     });
   };
 
-  sendPasswordResetEmail = async (email: string): Promise<void> => {
+  protected sendPasswordResetEmail = async (email: string): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       sendPasswordResetEmail(authenticationService, email)
         .then(response => {
@@ -42,4 +42,19 @@ export class AuthGet {
         });
     });
   };
+}
+
+export class AuthenticationGetServices extends AuthGet {
+  constructor() {
+    super();
+  }
+  async signInWithEmail(email: string, password: string): Promise<User> {
+    const response = await this.signInWithEmailAndPassword(email, password);
+    return response;
+  }
+
+  async resetPasswordWithEmail(email: string): Promise<void> {
+    const response = await this.sendPasswordResetEmail(email);
+    return response;
+  }
 }

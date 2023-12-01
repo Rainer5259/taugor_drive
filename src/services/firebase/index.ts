@@ -1,43 +1,23 @@
-import {User} from 'firebase/auth';
-import {AuthPost} from './authentication/post';
-import {AuthPostInterface} from './authentication/post/interface';
-import {AuthGet} from './authentication/get';
-import {AuthGetInterface} from './authentication/get/interface';
-import {UserProps} from '../redux/slices/interface';
+import {AuthenticationPostServices} from './authentication/post';
+import {AuthenticationGetServices} from './authentication/get';
+import {FirestorePostServices} from './firestore/post';
+import {StoragePostServices} from './storage/post';
 class FirebaseServices {
-  private authPostService: AuthPostInterface;
-  private authGetService: AuthGetInterface;
-
-  constructor() {
-    this.authPostService = new AuthPost();
-    this.authGetService = new AuthGet();
-  }
-
+  private authenticationGet = new AuthenticationGetServices();
+  private authenticationPost = new AuthenticationPostServices();
+  private firestorePost = new FirestorePostServices();
+  private storagePost = new StoragePostServices();
   authentication = {
-    get: {
-      signUpWithEmailAndPassword: async (
-        email: string,
-        password: string,
-      ): Promise<User> => {
-        return this.authGetService.signInWithEmailAndPassword(email, password);
-      },
-      requestPasswordResetEmail: async (email: string): Promise<void> => {
-        return this.authGetService.sendPasswordResetEmail(email);
-      },
-    },
+    get: this.authenticationGet,
+    post: this.authenticationPost,
+  };
 
-    post: {
-      signUpWithEmailAndPassword: async (
-        email: string,
-        password: string,
-      ): Promise<User> => {
-        return this.authPostService.signUpWithEmailAndPassword(email, password);
-      },
+  firestore = {
+    post: this.firestorePost,
+  };
 
-      signInWithGooglePopup: async (): Promise<UserProps> => {
-        return this.authPostService.signInWithGooglePopup();
-      },
-    },
+  storage = {
+    post: this.storagePost,
   };
 }
 

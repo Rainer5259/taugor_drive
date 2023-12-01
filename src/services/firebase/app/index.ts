@@ -11,14 +11,14 @@ import {
 } from '@env';
 
 export const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
-  authDomain: FIREBASE_AUTH_DOMAIN,
-  databaseURL: FIREBASE_DATABASE_URL,
-  projectId: FIREBASE_PROJECT_ID,
-  storageBucket: FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-  appId: FIREBASE_APP_ID,
-  measurementId: FIREBASE_MEASUREMENT_ID,
+  apiKey: 'AIzaSyA3QkAHwDFKBMKoUshfIbnTPvQ85b5h10k',
+  authDomain: 'db-erd.firebaseapp.com',
+  databaseURL: 'https://db-erd-default-rtdb.firebaseio.com',
+  projectId: 'db-erd',
+  storageBucket: 'db-erd.appspot.com',
+  messagingSenderId: '757586612421',
+  appId: '1:757586612421:web:86bee2f47e16de840260ac',
+  measurementId: 'G-66HQF3HF7N',
 };
 
 export const firebaseInitializeService = initializeApp(firebaseConfig);
