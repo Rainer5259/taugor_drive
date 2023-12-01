@@ -497,13 +497,15 @@ PODS:
   - RecaptchaInterop (100.0.0)
   - RNCAsyncStorage (1.19.8):
     - React-Core
-  - RNFBApp (18.6.2):
+  - RNFBApp (18.7.1):
     - Firebase/CoreOnly (= 10.18.0)
     - React-Core
   - RNFBAuth (18.6.2):
     - Firebase/Auth (= 10.18.0)
     - React-Core
     - RNFBApp
+  - RNFS (2.20.0):
+    - React-Core
   - RNGoogleSignin (10.1.1):
     - GoogleSignIn (~> 7.0)
     - React-Core
@@ -615,6 +617,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -734,6 +737,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
     :path: "../node_modules/@react-native-firebase/auth"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNReanimated:
@@ -812,8 +817,9 @@ SPEC CHECKSUMS:
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RNCAsyncStorage: 687bb9e85dd3d45b966662440dcfc0cd962347e6
-  RNFBApp: 5a4df14a5094dab69fc29049be3cf54af07b0435
+  RNFBApp: faf815f60546ca522eb9ef09d21dfd3fc70d3e27
   RNFBAuth: 9682f1015678515f5d3d6ee005a9978905a25810
+  RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGoogleSignin: aac5c1ec73422109dec1da770247a1e410dcc620
   RNReanimated: 12a905af0de1a7f728eacebc5a6af1cc5ada64ad
   RNScreens: 2b19e2471db8a581c83f381f4ea5d43071c9a3bf
@@ -822,6 +828,6 @@ SPEC CHECKSUMS:
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: ab6305d14918479c4a93a934f542a2c981c3c269
+PODFILE CHECKSUM: 4ddb168824b653055fdfc7dcbe432fd430d50546
 
 COCOAPODS: 1.14.3
