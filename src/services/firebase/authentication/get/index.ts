@@ -1,39 +1,39 @@
-import {
-  UserCredential,
-  User,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-} from 'firebase/auth';
-import {FirebaseError} from 'firebase/app';
-import {authenticationService} from '../initialize';
+import firebaseAuth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
+import firebase from '../..';
 export abstract class AuthGet {
   protected signInWithEmailAndPassword = async (
     email: string,
     password: string,
-  ): Promise<User> => {
-    return new Promise<User>((resolve, reject) => {
-      signInWithEmailAndPassword(authenticationService, email, password)
-        .then((userCredential: UserCredential) => {
-          const user: AppUserCredentialInterface = {
-            id: userCredential.user.uid,
-            token: userCredential.user.refreshToken!,
-          };
+  ): Promise<AppUserCredentialInterface> => {
+    return new Promise<AppUserCredentialInterface>((resolve, reject) => {
+      firebaseAuth()
+        .signInWithEmailAndPassword(email, password)
+        .then((userCredential: FirebaseAuthTypes.UserCredential) => {
+          let token = '';
+          userCredential.user.getIdToken().then(tokenRes => {
+            token = tokenRes;
+            const user: AppUserCredentialInterface = {
+              id: userCredential.user.uid,
+              token,
+            };
 
-          SInfo.setItem(LOCAL_STORAGE_SECRET_KEY, JSON.stringify(user), {});
-          resolve(userCredential.user);
+            SInfo.setItem(LOCAL_STORAGE_SECRET_KEY, JSON.stringify(user), {});
+            resolve(user);
+          });
         })
         .catch(error => {
-          reject(error as FirebaseError);
+          reject(error as keyof FirebaseAuthTypes.NativeFirebaseAuthError);
         });
     });
   };
 
   protected sendPasswordResetEmail = async (email: string): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
-      sendPasswordResetEmail(authenticationService, email)
+      firebaseAuth()
+        .sendPasswordResetEmail(email)
         .then(response => {
           resolve(response);
         })
@@ -48,7 +48,10 @@ export class AuthenticationGetServices extends AuthGet {
   constructor() {
     super();
   }
-  async signInWithEmail(email: string, password: string): Promise<User> {
+  async signInWithEmail(
+    email: string,
+    password: string,
+  ): Promise<AppUserCredentialInterface> {
     const response = await this.signInWithEmailAndPassword(email, password);
     return response;
   }

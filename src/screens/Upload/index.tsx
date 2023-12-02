@@ -23,6 +23,7 @@ import {t} from 'i18next';
 import {readFile} from 'react-native-fs';
 
 const UploadScreen: React.FC = () => {
+  const [uploading, setUploading] = useState<boolean>(false);
   const [extension, setExtension] = useState<string | null>();
   const [title, setTitle] = useState<string | null>(null);
   const [uri, setURI] = useState<string | null>(null);
@@ -43,7 +44,6 @@ const UploadScreen: React.FC = () => {
       const document = await DocumentPicker.pick({
         type: DocumentPicker.types.allFiles,
       });
-      document[0];
 
       if (document[0].size === 0) {
         return 0;
@@ -92,9 +92,11 @@ const UploadScreen: React.FC = () => {
   };
 
   const handleUploadFile = async () => {
+    setUploading(true);
     toastSuccess({
       text1: t('COMPONENTS.UPLOAD.STATUS.LOADING'),
       text2: t('COMPONENTS.UPLOAD.STATUS.WAIT'),
+      autoHide: !uploading,
     });
 
     try {
@@ -105,19 +107,28 @@ const UploadScreen: React.FC = () => {
         //   fileContent.match(/[\s\S]/g)!.map(char => char.charCodeAt(0)),
         // );
 
-        const response = await fetch(uri);
-        const blob = await response.blob();
-
+        // const response = await fetch(uri);
+        // const blob = await response.blob();
+        // console.log(blob);
         await FirebaseServices.storage.post
-          .uploadFile(user!.id, blob)
+          .uploadFile(user!.id, uri)
           .then(() => {
+            setUploading(false);
+            console.log('Veio pro then');
             toastSuccess({
               text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
             });
+          })
+          .catch(() => {
+            console.log('catchhhhh');
           });
         clearDocumentStates();
       }
-    } catch (e) {}
+    } catch (e) {
+      setUploading(false);
+      console.log('catcho');
+      console.log(e);
+    }
   };
 
   const handleOnPressRemoveDocumentPicked = () => {

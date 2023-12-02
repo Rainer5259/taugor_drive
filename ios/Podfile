@@ -1,6 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
+$RNFirebaseAsStaticFramework = true
 
 platform :ios, '12.4'
 install! 'cocoapods', :deterministic_uuids => false
@@ -8,13 +9,16 @@ install! 'cocoapods', :deterministic_uuids => false
 target 'taugor_drive' do
   config = use_native_modules!
   use_react_native!()
+  use_frameworks! :linkage => :static
   pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
-  pod 'GoogleUtilities', :modular_headers => true
+  # pod 'GoogleUtilities', :modular_headers => true
   pod 'RNFS', :path => '../node_modules/react-native-fs'
-  
+  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
+  pod 'RNFBAuth', :path => '../node_modules/@react-native-firebase/auth'
+
   # Flags change depending on the env values.
   flags = get_default_flags()
   
@@ -29,7 +33,7 @@ target 'taugor_drive' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => FlipperConfiguration.enabled,
+    #:flipper_configuration => FlipperConfiguration.enabled,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )

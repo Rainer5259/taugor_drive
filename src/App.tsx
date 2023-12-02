@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Routes from './routes';
 import Toast from 'react-native-toast-message';
 import '~/shared/i18n';
 import {Provider} from 'react-redux';
 import {store} from './services/redux/store';
 import '~/services/firebase/app/GoogleSignin';
+import {firebaseInitializeService} from './services/firebase/app';
 
 const App = () => {
   return (

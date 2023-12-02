@@ -1,12 +1,3 @@
-import {
-  UserCredential,
-  User,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
-import {FirebaseError} from 'firebase/app';
-import {authenticationService} from './initialize';
-
 export abstract class Authentication {
   protected signInWithEmailAndPassword = (
     email: string,

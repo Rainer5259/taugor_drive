@@ -21,7 +21,9 @@ import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {regexEmail} from '~/shared/utils/regex/email';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
-
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+const authModuleTypes: FirebaseAuthTypes.NativeFirebaseAuthError =
+  {} as FirebaseAuthTypes.NativeFirebaseAuthError;
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('oo@email.com');
   const [password, setPassword] = useState<string>('123123');
@@ -55,14 +57,16 @@ const Login: React.FC = () => {
         );
 
       if (userInfo) {
-        dispatch(setToken(userInfo.refreshToken));
+        console.log('userInfo', userInfo);
+        dispatch(setToken(userInfo.token));
         return;
       }
     } catch (e) {
-      const error = e as FirebaseError;
+      const error = e as FirebaseAuthTypes.NativeFirebaseAuthError;
+      console.log('erro userInfo', e);
 
       switch (error.code) {
-        case AuthErrorCodesCustom.INVALID_CREDENTIALS:
+        case '':
           toastError({
             text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_CREDENTIALS'),
           });

@@ -1,4 +1,4 @@
-import {getFirestore} from 'firebase/firestore';
-import {firebaseInitializeService} from '..';
+// import {getFirestore} from 'firebase/firestore';
+// import {firebaseInitializeService} from '..';
 
-export const getFirestoreService = getFirestore(firebaseInitializeService);
+// export const getFirestoreService = getFirestore(firebaseInitializeService);

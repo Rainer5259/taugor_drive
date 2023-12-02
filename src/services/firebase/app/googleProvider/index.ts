@@ -1,7 +1,5 @@
-import {GoogleAuthProvider} from 'firebase/auth';
+import firebase from '@react-native-firebase/auth';
 
-export const googleProvider = new GoogleAuthProvider();
+export const googleProvider = firebase.GoogleAuthProvider;
 
-export const authGoogleProvider = googleProvider.addScope(
-  'https://www.googleapis.com/auth/contacts.readonly',
-);
+export const authGoogleProvider = googleProvider.PROVIDER_ID;

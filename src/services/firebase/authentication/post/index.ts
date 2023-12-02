@@ -5,7 +5,7 @@ import {
   GoogleAuthProvider,
 } from 'firebase/auth';
 import {FirebaseError} from 'firebase/app';
-import {authenticationService} from '../initialize';
+// import {authenticationService} from '../initialize';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {googleProvider} from '../../app/googleProvider';
@@ -18,7 +18,7 @@ export class AuthPost {
     password: string,
   ): Promise<User> => {
     return new Promise<User>((resolve, reject) => {
-      createUserWithEmailAndPassword(authenticationService, email, password)
+      createUserWithEmailAndPassword(email, password)
         .then((userCredential: UserCredential) => {
           const user: AppUserCredentialInterface = {
             id: userCredential.user.uid,
@@ -41,7 +41,7 @@ export class AuthPost {
         async (resolve, reject) => {
           const pro = new GoogleAuthProvider();
           pro.setDefaultLanguage(Locales.PT_BR);
-          googleProvider.setDefaultLanguage(Locales.PT_BR);
+          // googleProvider.setDefaultLanguage(Locales.PT_BR);
 
           await GoogleSignin.hasPlayServices();
 
