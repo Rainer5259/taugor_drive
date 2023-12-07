@@ -23,9 +23,12 @@ export abstract class AuthGet {
             SInfo.setItem(LOCAL_STORAGE_SECRET_KEY, JSON.stringify(user), {});
             resolve(user);
           });
+          console.log('result token', token);
         })
         .catch(error => {
-          reject(error as keyof FirebaseAuthTypes.NativeFirebaseAuthError);
+          const e = error as FirebaseAuthTypes.NativeFirebaseAuthError;
+          console.log('result error', e.stack);
+          reject(error as FirebaseAuthTypes.NativeFirebaseAuthError);
         });
     });
   };

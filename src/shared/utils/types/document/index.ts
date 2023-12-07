@@ -1,9 +1,8 @@
-import {DocumentPickerResponse, types} from 'react-native-document-picker';
 import {AppUserInterface} from '../user';
+import {FirebaseStorageTypes} from '@react-native-firebase/storage';
 
 export interface AppDocumentInterface
-  extends DocumentPickerResponse,
+  extends FirebaseStorageTypes.TaskSnapshot,
     AppUserInterface {
-  created_at: Date;
-  updated_at: Date;
+  title: string;
 }

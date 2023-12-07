@@ -17,6 +17,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
   onPressSeeMyFiles,
   size,
   title,
+  setTitle,
   hasDocumentPicked,
   onPressRemoveDocumentPicked,
 }) => {
@@ -72,6 +73,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
             style={styles.input}
             placeholder={t('COMPONENTS.UPLOAD.PLACEHOLDER_INPUT')}
             value={title}
+            onChange={e => setTitle(e.nativeEvent.text)}
           />
         </View>
 
@@ -112,7 +114,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
           />
         )}
       </View>
-      <View style={{position: 'absolute', bottom: -100}}>
+      {/* <View style={{position: 'absolute', bottom: -100}}>
         <ButtonDefault
           onPress={onPressSeeMyFiles}
           textStyle={styles.buttonText}
@@ -120,7 +122,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
           title={t('COMPONENTS.UPLOAD.BUTTON.SEE_MY_FILES')}
           disabledAnimation
         />
-      </View>
+      </View> */}
     </View>
   );
 };

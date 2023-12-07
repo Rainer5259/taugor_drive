@@ -85,6 +85,12 @@ const Login: React.FC = () => {
           });
           break;
 
+        case AuthErrorCodesCustom.NETWORK_REQUEST_FAILED:
+          toastError({
+            text1: 'Net caiu',
+          });
+          break;
+
         default:
           toastError({text1: t('ERRORS.HAS_OCURRED')});
           break;
@@ -135,6 +141,11 @@ const Login: React.FC = () => {
           toastError({text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_EMAIL')});
           break;
 
+        case AuthErrorCodesCustom.NETWORK_REQUEST_FAILED:
+          toastError({
+            text1: 'Net caiu',
+          });
+          break;
         default:
           toastError({text1: t('ERRORS.HAS_OCURRED')});
           break;

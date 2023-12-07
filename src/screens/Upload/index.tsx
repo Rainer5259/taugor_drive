@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -21,6 +23,11 @@ import {RootState} from '~/services/redux/store';
 import toastSuccess from '~/components/ToastNotification/Success';
 import {t} from 'i18next';
 import {readFile} from 'react-native-fs';
+import {FirebaseStorageTypes} from '@react-native-firebase/storage';
+import ButtonDefault from '~/components/ButtonDefault';
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
+import {FoldersList} from '~/components/FoldersList/FoldersList';
+import PlusIcon from '~/assets/svgs/plus-icon.svg';
 
 const UploadScreen: React.FC = () => {
   const [uploading, setUploading] = useState<boolean>(false);
@@ -30,13 +37,19 @@ const UploadScreen: React.FC = () => {
   const [size, setSize] = useState<number | null>(0);
   const [originalNameFile, setOriginalNameFile] = useState<string | null>(null);
   const [documentURI, setDocumentURI] = useState<string | null>();
+  const [userDocuments, setUserDocuments] = useState<
+    FirebaseFirestoreTypes.DocumentSnapshot[]
+  >([]);
+  const [documentDirectory, setDocumentDirectory] =
+    useState<FirebaseStorageTypes.TaskResult>();
   const [documentData, setDocumentData] =
     useState<DocumentPickerResponse | null>();
+  const [selectedFolderID, setSelectedFolderID] = useState<string>('');
 
   const {user} = useSelector((state: RootState) => state.user);
 
   const handlePickerDocument = async () => {
-    if (documentData) {
+    if (uri) {
       return handleUploadFile();
     }
 
@@ -52,26 +65,12 @@ const UploadScreen: React.FC = () => {
       const bytesConvertedToGB = document[0].size! / Math.pow(1024, 3);
       const sizeConverted = parseFloat(bytesConvertedToGB.toString());
 
-      setSize(sizeConverted);
+      setOriginalNameFile(document[0].name);
       setDocumentURI(document[0].fileCopyUri);
       setExtension(document[0].type);
-      setURI(document[0].uri);
-      setOriginalNameFile(document[0].name);
       setTitle(document[0].name);
-
-      const data: AppDocumentInterface = {
-        fileCopyUri: document[0].fileCopyUri,
-        name: title,
-        size: document[0].size,
-        type: document[0].type,
-        uri: document[0].uri,
-        copyError: document[0].copyError,
-        created_at: new Date(),
-        updated_at: new Date(),
-        id: user!.id,
-      };
-
-      setDocumentData(data);
+      setSize(sizeConverted);
+      setURI(document[0].uri);
     } catch (err) {
       console.log('err', err);
       if (DocumentPicker.isCancel(err)) {
@@ -91,8 +90,74 @@ const UploadScreen: React.FC = () => {
     setURI(null);
   };
 
+  const handleShowPromptCreateFolder = () => {
+    Alert.prompt(
+      t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.TITLE'),
+      '',
+      [
+        {
+          onPress: () => {},
+          text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CANCEL'),
+        },
+        {
+          onPress: (value?: string) => {
+            console.log('dasdsada', value);
+            if (value && value.length > 40) {
+              return Alert.alert('Máximo 40 caracters');
+            }
+            if (value) {
+              console.log('tem value');
+              handleCreateFolder(value);
+              return;
+            } else {
+              handleShowPromptCreateFolder();
+            }
+          },
+          text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CONFIRM'),
+        },
+      ],
+      'plain-text',
+    );
+    return;
+  };
+
+  const handleCreateFolder = async (folderTitle: string) => {
+    try {
+      await FirebaseServices.firestore.post.createFolder(user!.id, folderTitle);
+      await handleFetchUserDocuments();
+      // set fields null
+    } catch (e) {
+      // console.log('user documents error', e);
+    }
+  };
+
+  const handleUploadDataToFirestore = async (
+    documentSnapshot: FirebaseStorageTypes.TaskSnapshot,
+  ) => {
+    try {
+      const appDocument: AppDocumentInterface = {
+        ...documentSnapshot,
+        id: user!.id,
+        title: title!,
+      };
+      await FirebaseServices.firestore.post
+        .sendDocument(user!.id, appDocument, selectedFolderID)
+        .then(() => {
+          console.log('enviando');
+        })
+        .catch(e => {
+          console.log('error', e);
+        });
+
+      if (!documentSnapshot) {
+        return;
+      }
+    } catch (e) {}
+  };
+
   const handleUploadFile = async () => {
     setUploading(true);
+
     toastSuccess({
       text1: t('COMPONENTS.UPLOAD.STATUS.LOADING'),
       text2: t('COMPONENTS.UPLOAD.STATUS.WAIT'),
@@ -101,25 +166,24 @@ const UploadScreen: React.FC = () => {
 
     try {
       if (uri) {
-        // const fileContent = await readFile(uri, 'base64');
-
-        // const documentTouint8Array = new Uint8Array(
-        //   fileContent.match(/[\s\S]/g)!.map(char => char.charCodeAt(0)),
-        // );
-
-        // const response = await fetch(uri);
-        // const blob = await response.blob();
-        // console.log(blob);
         await FirebaseServices.storage.post
           .uploadFile(user!.id, uri)
-          .then(() => {
+          .then(async res => {
             setUploading(false);
-            console.log('Veio pro then');
+            clearDocumentStates();
             toastSuccess({
               text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
             });
+            await handleUploadDataToFirestore(res);
+
+            setDocumentDirectory(res);
           })
-          .catch(() => {
+          .catch(e => {
+            const error = e as FirebaseStorageTypes.Reference;
+            switch (error) {
+              case e:
+                break;
+            }
             console.log('catchhhhh');
           });
         clearDocumentStates();
@@ -135,6 +199,21 @@ const UploadScreen: React.FC = () => {
     clearDocumentStates();
   };
 
+  const handleFetchUserDocuments = async () => {
+    try {
+      const userDocumentsRes =
+        await FirebaseServices.firestore.get.userDocuments(user!.id);
+      setUserDocuments(userDocumentsRes);
+      console.log('user documents sucess', userDocuments);
+    } catch (e) {
+      console.log('user documents error', e);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchUserDocuments();
+  }, [user?.id]);
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header right="logout" />
@@ -148,11 +227,24 @@ const UploadScreen: React.FC = () => {
               onPressSeeMyFiles={() => {}}
               size={size!}
               title={title ?? ''}
-              hasDocumentPicked={documentData ? true : false}
+              hasDocumentPicked={uri ? true : false}
               onPressRemoveDocumentPicked={handleOnPressRemoveDocumentPicked}
+              setTitle={setTitle}
             />
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
+        <View style={styles.listBox}>
+          <TouchableOpacity
+            style={styles.createFolderButton}
+            onPress={handleShowPromptCreateFolder}>
+            <PlusIcon width={32} height={32} />
+          </TouchableOpacity>
+          <FoldersList
+            data={userDocuments}
+            setSelectedFolderID={setSelectedFolderID}
+            selectedFolderID={selectedFolderID}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );

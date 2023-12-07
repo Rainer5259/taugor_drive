@@ -48,6 +48,12 @@
           "LOADING": "Enviando...",
           "WAIT": "Por favor, aguarde!",
           "SENT_SUCCESSFULLY": "Enviado com sucesso!"
+        },
+        "ALERT": {
+          "CREATE_FOLDER": {
+            "TITLE": "Criar pasta",
+            "BUTTON": {"CONFIRM": "Confirmar", "CANCEL": "Cancelar"}
+          }
         }
       }
     },

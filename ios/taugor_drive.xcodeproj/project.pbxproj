@@ -12,8 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		4D36B74B5F1A669C95B48D4D /* Pods_taugor_drive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D0431BC4442148A94D04926 /* Pods_taugor_drive.framework */; };
-		4D56FCB52B1BAAC800146C5A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D56FCB42B1BAAC800146C5A /* GoogleService-Info.plist */; };
-		4D56FCB62B1BAAC800146C5A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D56FCB42B1BAAC800146C5A /* GoogleService-Info.plist */; };
+		4D9BF14E2B1CC62000458F60 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D9BF14D2B1CC62000458F60 /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B6EE56AB3528CD60C84AAE30 /* Pods_taugor_drive_taugor_driveTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D1F7011B39339EB09DD966 /* Pods_taugor_drive_taugor_driveTests.framework */; };
 /* End PBXBuildFile section */
@@ -40,7 +39,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = taugor_drive/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = taugor_drive/main.m; sourceTree = "<group>"; };
 		3FAADC232231AD70AE71E99B /* Pods-taugor_drive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taugor_drive.release.xcconfig"; path = "Target Support Files/Pods-taugor_drive/Pods-taugor_drive.release.xcconfig"; sourceTree = "<group>"; };
-		4D56FCB42B1BAAC800146C5A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4D9BF14D2B1CC62000458F60 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		524FA01CE56832D9994E616A /* Pods-taugor_drive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taugor_drive.debug.xcconfig"; path = "Target Support Files/Pods-taugor_drive/Pods-taugor_drive.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = taugor_drive/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D0431BC4442148A94D04926 /* Pods_taugor_drive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_taugor_drive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,7 +118,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				4D56FCB42B1BAAC800146C5A /* GoogleService-Info.plist */,
+				4D9BF14D2B1CC62000458F60 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* taugor_drive */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* taugor_driveTests */,
@@ -240,7 +239,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D56FCB62B1BAAC800146C5A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,8 +247,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				4D56FCB52B1BAAC800146C5A /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				4D9BF14E2B1CC62000458F60 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
