@@ -1,4 +1,1 @@
-export interface UsedSpaceProps {
-  usedSpace: number;
-  totalSpaceAvailable: number;
-}
+export interface UsedSpaceProps {}

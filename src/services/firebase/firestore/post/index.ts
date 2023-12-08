@@ -6,6 +6,7 @@ export abstract class FirestorePost {
   private rootPath: string;
   private usersPath: string;
   private usersEndpoint: string;
+
   constructor(rootPath: string, usersPath: string) {
     this.rootPath = rootPath;
     this.usersPath = usersPath;

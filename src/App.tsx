@@ -5,7 +5,6 @@ import '~/shared/i18n';
 import {Provider} from 'react-redux';
 import {store} from './services/redux/store';
 import '~/services/firebase/app/GoogleSignin';
-import {firebaseInitializeService} from './services/firebase/app';
 
 const App = () => {
   return (

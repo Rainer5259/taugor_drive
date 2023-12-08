@@ -5,4 +5,5 @@ export interface AppUserCredentialInterface {
 
 export interface AppUserInterface {
   id: string;
+  totalBytesUsed: number | 0;
 }

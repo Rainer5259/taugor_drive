@@ -5,23 +5,20 @@ import {styles} from './styles';
 import CloudUploadIcon from '~/assets/svgs/cloud-upload.svg';
 import TextInputDefault from '../TextInputDefault';
 import {t} from 'i18next';
-import {UploadComponentProps} from './interface';
+import {SizeReferenceType, UploadComponentProps} from './interface';
 import ButtonDefault from '../ButtonDefault';
 import UsedSpace from '~/components/UsedSpace';
 import {colors} from '~/shared/themes/colors';
 
-type sizeReferenceType = 'B' | 'Bytes' | 'KB' | 'MB' | 'GB';
-
 const UploadComponent: FC<UploadComponentProps> = ({
   onPressChooseFile,
-  onPressSeeMyFiles,
   size,
   title,
   setTitle,
   hasDocumentPicked,
   onPressRemoveDocumentPicked,
 }) => {
-  const [sizeCodeName, setSizeCodeName] = useState<sizeReferenceType>('B');
+  const [sizeCodeName, setSizeCodeName] = useState<SizeReferenceType>('B');
   const [convertedSize, setConvertedSize] = useState<number>(0);
 
   useEffect(() => {
@@ -53,7 +50,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
 
   return (
     <View style={styles.container}>
-      <UsedSpace totalSpaceAvailable={200} usedSpace={23} />
+      <UsedSpace />
 
       <View style={styles.uploadContainer}>
         <Text style={styles.primaryText}>
@@ -112,15 +109,6 @@ const UploadComponent: FC<UploadComponentProps> = ({
           />
         )}
       </View>
-      {/* <View style={{position: 'absolute', bottom: -100}}>
-        <ButtonDefault
-          onPress={onPressSeeMyFiles}
-          textStyle={styles.buttonText}
-          style={styles.seeMyFilesButton}
-          title={t('COMPONENTS.UPLOAD.BUTTON.SEE_MY_FILES')}
-          disabledAnimation
-        />
-      </View> */}
     </View>
   );
 };

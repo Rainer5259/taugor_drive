@@ -1,29 +1,76 @@
-import {getDownloadURL, ref} from 'firebase/storage';
-import {getStorageFirebaseService} from '../../app/storage';
+import storage, {FirebaseStorageTypes} from '@react-native-firebase/storage';
+
 import {FirebaseError} from 'firebase/app';
+import firebase from '../..';
+import {ListResult} from 'firebase/storage';
 
 abstract class StorageGet {
-  constructor() {}
-  protected getURLFileFromStorage = (docID: string): Promise<string> => {
-    return new Promise<string>((resolve, reject) => {
-      getDownloadURL(ref(getStorageFirebaseService, docID))
-        .then(response => {
-          resolve(response);
+  private rootPath: string;
+
+  constructor(rootPath: string) {
+    this.rootPath = rootPath;
+  }
+
+  // protected getURLFileFromStorage = (docID: string): Promise<string> => {
+  //   return new Promise<string>((resolve, reject) => {
+  //     getDownloadURL(ref(getStorage(), docID))
+  //       .then(response => {
+  //         resolve(response);
+  //       })
+  //       .catch(error => {
+  //         reject(error as FirebaseError);
+  //       });
+  //   });
+  // };
+
+  protected getAllFilesByUserID = (
+    userID: string,
+  ): Promise<FirebaseStorageTypes.ListResult> => {
+    return new Promise<FirebaseStorageTypes.ListResult>((resolve, reject) => {
+      storage()
+        .ref(`${this.rootPath}/${userID}`)
+        .listAll()
+        .then(res => {
+          resolve(res);
         })
         .catch(error => {
-          reject(error as FirebaseError);
+          reject(error);
         });
+    });
+  };
+
+  protected getTotalBytesByUserID = async (userID: string): Promise<number> => {
+    const files = await this.getAllFilesByUserID(userID);
+
+    let totalBytes = 0;
+    const metadataPromises = files.items.map(file => {
+      return storage().ref(file.fullPath).getMetadata();
+    });
+
+    const metadataResults = await Promise.all(metadataPromises);
+
+    metadataResults.forEach(response => {
+      totalBytes += response.size;
+    });
+
+    return new Promise<number>((resolve, reject) => {
+      resolve(totalBytes);
     });
   };
 }
 
-export class StorageGetService extends StorageGet {
+export class StorageGetServices extends StorageGet {
   constructor() {
-    super();
+    super('drive');
   }
 
-  async downloadFileWithID(docID: string) {
-    const response = await this.getURLFileFromStorage(docID);
+  async getAllFiles(userID: string): Promise<FirebaseStorageTypes.ListResult> {
+    const response = await this.getAllFilesByUserID(userID);
+    return response;
+  }
+
+  async getMetadataByUserID(userID: string): Promise<number> {
+    const response = await this.getTotalBytesByUserID(userID);
     return response;
   }
 }

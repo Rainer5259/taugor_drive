@@ -74,32 +74,26 @@ const UploadScreen: React.FC = () => {
   };
 
   const handleShowPromptCreateFolder = () => {
-    Alert.prompt(
-      t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.TITLE'),
-      '',
-      [
-        {
-          onPress: () => {},
-          text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CANCEL'),
+    Alert.prompt(t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.TITLE'), '', [
+      {
+        onPress: () => {},
+        text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CANCEL'),
+      },
+      {
+        onPress: (value?: string) => {
+          if (value && value.length > 40) {
+            return Alert.alert('Máximo 40 caracters');
+          }
+          if (value) {
+            handleCreateFolder(value);
+            return;
+          } else {
+            handleShowPromptCreateFolder();
+          }
         },
-        {
-          onPress: (value?: string) => {
-            if (value && value.length > 40) {
-              return Alert.alert('Máximo 40 caracters');
-            }
-            if (value) {
-              handleCreateFolder(value);
-              return;
-            } else {
-              handleShowPromptCreateFolder();
-            }
-          },
-          text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CONFIRM'),
-        },
-      ],
-      'plain-text',
-    );
-    return;
+        text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CONFIRM'),
+      },
+    ]);
   };
 
   const handleCreateFolder = async (folderTitle: string) => {
@@ -117,6 +111,7 @@ const UploadScreen: React.FC = () => {
         ...documentSnapshot,
         id: user!.id,
         title: title!,
+        totalBytesUsed: 0,
       };
       await FirebaseServices.firestore.post
         .sendDocument(user!.id, appDocument, selectedFolderID)
@@ -128,7 +123,7 @@ const UploadScreen: React.FC = () => {
       }
     } catch (e) {}
   };
-  console.log(selectedFolderID);
+
   const handleUploadFile = async () => {
     setUploading(true);
 
@@ -190,7 +185,6 @@ const UploadScreen: React.FC = () => {
             keyboardVerticalOffset={Platform.OS === 'ios' ? 150 : -300}>
             <UploadComponent
               onPressChooseFile={handlePickerDocument}
-              onPressSeeMyFiles={() => {}}
               size={size!}
               title={title ?? ''}
               hasDocumentPicked={uri ? true : false}
