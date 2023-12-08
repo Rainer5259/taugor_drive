@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     marginTop: 30,
     paddingTop: 30,
     width: 320,
-    height: 264,
+    height: 240,
     borderRadius: 6,
     alignItems: 'center',
     backgroundColor: colors.secondaryCharcoal,
@@ -50,8 +50,6 @@ export const styles = StyleSheet.create({
   },
 
   buttonBox: {
-    // position: 'absolute',
-    // bottom: 100,
     height: 90,
     marginTop: 40,
     justifyContent: 'space-between',

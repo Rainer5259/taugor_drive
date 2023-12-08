@@ -15,7 +15,6 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
           ? colors.primaryCharcoalOpaque
           : colors.secondaryCharcoal,
       borderRadius: 6,
-      opacity: selectedFolderID === elementID ? 1 : 0.5,
     },
 
     textContent: {
@@ -30,4 +29,6 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
       borderRadius: 6,
       height: 100,
     },
+
+    contentContainerFlatList: {alignItems: 'center'},
   });

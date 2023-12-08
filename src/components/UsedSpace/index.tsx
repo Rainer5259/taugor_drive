@@ -5,11 +5,13 @@ import {styles} from './styles';
 import {UsedSpaceProps} from './interface';
 import FirebaseServices from '~/services/firebase';
 import {RootState} from '~/services/redux/store';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setTotalBytesUsed} from '~/services/redux/slices/authenticateUser';
 
 const UsedSpace: FC<UsedSpaceProps> = () => {
-  const {user} = useSelector((state: RootState) => state.user);
-  const [usedSpace, setUsedSpace] = useState(0);
+  const {user, totalBytesUsed} = useSelector((state: RootState) => state.user);
+
+  const dispatch = useDispatch();
 
   const handleGetTotalBytesUsed = async () => {
     await FirebaseServices.storage.get
@@ -17,7 +19,7 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
       .then(bytes => {
         const gigabytes = bytes / (1024 * 1024 * 1024);
 
-        setUsedSpace(parseFloat(gigabytes.toFixed(2)));
+        dispatch(setTotalBytesUsed(parseFloat(gigabytes.toFixed(2))));
       });
   };
 
@@ -38,8 +40,8 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
         {t('COMPONENTS.UPLOAD.USED_SPACE.TITLE')}
       </Text>
       <Text style={styles.usedText}>
-        {usedSpace ? (
-          t('COMPONENTS.UPLOAD.USED_SPACE.CURRENT', {gb: usedSpace})
+        {totalBytesUsed ? (
+          t('COMPONENTS.UPLOAD.USED_SPACE.CURRENT', {gb: totalBytesUsed})
         ) : (
           <ActivityIndicator />
         )}

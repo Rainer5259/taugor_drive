@@ -111,7 +111,6 @@ const UploadScreen: React.FC = () => {
         ...documentSnapshot,
         id: user!.id,
         title: title!,
-        totalBytesUsed: 0,
       };
       await FirebaseServices.firestore.post
         .sendDocument(user!.id, appDocument, selectedFolderID)

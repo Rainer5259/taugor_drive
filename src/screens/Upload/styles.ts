@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
   createFolderButton: {
     marginHorizontal: 10,
     alignItems: 'center',
-
     width: 30,
   },
 });

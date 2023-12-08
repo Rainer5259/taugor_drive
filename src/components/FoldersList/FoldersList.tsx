@@ -10,6 +10,12 @@ const FoldersList: FC<FoldersListProps> = ({
   selectedFolderID,
   setSelectedFolderID,
 }) => {
+  const sortedData = data.sort((a, b) => {
+    const titleA = a.data()?.title || '';
+    const titleB = b.data()?.title || '';
+    return titleA.localeCompare(titleB);
+  });
+
   const renderFolders = (item: FirebaseFirestoreTypes.DocumentSnapshot[]) => {
     return (
       <>
@@ -24,7 +30,17 @@ const FoldersList: FC<FoldersListProps> = ({
                 onPress={() =>
                   setSelectedFolderID(state => (state === e.id ? null : e.id))
                 }>
-                <FolderIcon width={36} height={36} />
+                <FolderIcon
+                  width={36}
+                  height={36}
+                  opacity={
+                    selectedFolderID === null
+                      ? 1
+                      : selectedFolderID === e.id
+                      ? 1
+                      : 0.6
+                  }
+                />
                 <Text style={styles().textContent}>{document.title}</Text>
               </TouchableOpacity>
             )
@@ -36,12 +52,12 @@ const FoldersList: FC<FoldersListProps> = ({
 
   return (
     <FlatList
-      data={[data]}
+      data={[sortedData]}
       keyExtractor={(id, i) => id.toString()}
       renderItem={({item}) => renderFolders(item)}
       horizontal
       style={styles().flatList}
-      contentContainerStyle={{alignItems: 'center'}}
+      contentContainerStyle={styles().contentContainerFlatList}
     />
   );
 };
