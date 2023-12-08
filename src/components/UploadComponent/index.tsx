@@ -35,11 +35,8 @@ const UploadComponent: FC<UploadComponentProps> = ({
       const d = Math.floor(Math.log(a) / Math.log(1024));
 
       if (d === 0) {
-        console.log('C', c);
-
         setSizeCodeName('B');
       } else if (d === 1) {
-        console.log('C', c);
         setSizeCodeName('Bytes');
       } else if (d === -1) {
         setSizeCodeName('MB');
@@ -70,10 +67,11 @@ const UploadComponent: FC<UploadComponentProps> = ({
 
         <View style={styles.inputBox}>
           <TextInputDefault
-            style={styles.input}
+            style={[styles.input, {opacity: hasDocumentPicked ? 1 : 0.5}]}
             placeholder={t('COMPONENTS.UPLOAD.PLACEHOLDER_INPUT')}
             value={title}
             onChange={e => setTitle(e.nativeEvent.text)}
+            editable={hasDocumentPicked}
           />
         </View>
 

@@ -1,5 +1,33 @@
 import {StyleSheet} from 'react-native';
+import {colors} from '~/shared/themes/colors';
 
-const style = StyleSheet.create({
-  container: {},
-});
+export const styles = (selectedFolderID?: string, elementID?: string) =>
+  StyleSheet.create({
+    content: {
+      marginHorizontal: 4,
+      width: 110,
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+      height: 90,
+      marginVertical: 10,
+      backgroundColor:
+        selectedFolderID === elementID
+          ? colors.primaryCharcoalOpaque
+          : colors.secondaryCharcoal,
+      borderRadius: 6,
+      opacity: selectedFolderID === elementID ? 1 : 0.5,
+    },
+
+    textContent: {
+      fontSize: 12,
+      paddingHorizontal: 4,
+      color: colors.primaryWhite,
+    },
+
+    flatList: {
+      backgroundColor: colors.secondaryText + '50',
+      marginHorizontal: 10,
+      borderRadius: 6,
+      height: 100,
+    },
+  });

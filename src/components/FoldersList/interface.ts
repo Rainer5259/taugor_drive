@@ -3,6 +3,6 @@ import {Dispatch, SetStateAction} from 'react';
 
 export interface FoldersListProps {
   data: FirebaseFirestoreTypes.DocumentSnapshot[];
-  selectedFolderID: string;
-  setSelectedFolderID: Dispatch<SetStateAction<string>>;
+  selectedFolderID: string | null;
+  setSelectedFolderID: Dispatch<SetStateAction<string | null>>;
 }

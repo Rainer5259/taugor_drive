@@ -22,9 +22,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 import toastSuccess from '~/components/ToastNotification/Success';
 import {t} from 'i18next';
-import {readFile} from 'react-native-fs';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
-import ButtonDefault from '~/components/ButtonDefault';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
 import PlusIcon from '~/assets/svgs/plus-icon.svg';
@@ -35,16 +33,11 @@ const UploadScreen: React.FC = () => {
   const [title, setTitle] = useState<string | null>(null);
   const [uri, setURI] = useState<string | null>(null);
   const [size, setSize] = useState<number | null>(0);
-  const [originalNameFile, setOriginalNameFile] = useState<string | null>(null);
-  const [documentURI, setDocumentURI] = useState<string | null>();
   const [userDocuments, setUserDocuments] = useState<
     FirebaseFirestoreTypes.DocumentSnapshot[]
   >([]);
-  const [documentDirectory, setDocumentDirectory] =
-    useState<FirebaseStorageTypes.TaskResult>();
-  const [documentData, setDocumentData] =
-    useState<DocumentPickerResponse | null>();
-  const [selectedFolderID, setSelectedFolderID] = useState<string>('');
+
+  const [selectedFolderID, setSelectedFolderID] = useState<string | null>('');
 
   const {user} = useSelector((state: RootState) => state.user);
 
@@ -58,21 +51,14 @@ const UploadScreen: React.FC = () => {
         type: DocumentPicker.types.allFiles,
       });
 
-      if (document[0].size === 0) {
-        return 0;
-      }
-
       const bytesConvertedToGB = document[0].size! / Math.pow(1024, 3);
       const sizeConverted = parseFloat(bytesConvertedToGB.toString());
 
-      setOriginalNameFile(document[0].name);
-      setDocumentURI(document[0].fileCopyUri);
       setExtension(document[0].type);
       setTitle(document[0].name);
       setSize(sizeConverted);
       setURI(document[0].uri);
     } catch (err) {
-      console.log('err', err);
       if (DocumentPicker.isCancel(err)) {
       } else {
         throw err;
@@ -81,9 +67,6 @@ const UploadScreen: React.FC = () => {
   };
 
   const clearDocumentStates = () => {
-    setOriginalNameFile(null);
-    setDocumentData(null);
-    setDocumentURI(null);
     setExtension(null);
     setTitle(null);
     setSize(null);
@@ -101,12 +84,10 @@ const UploadScreen: React.FC = () => {
         },
         {
           onPress: (value?: string) => {
-            console.log('dasdsada', value);
             if (value && value.length > 40) {
               return Alert.alert('Máximo 40 caracters');
             }
             if (value) {
-              console.log('tem value');
               handleCreateFolder(value);
               return;
             } else {
@@ -125,10 +106,7 @@ const UploadScreen: React.FC = () => {
     try {
       await FirebaseServices.firestore.post.createFolder(user!.id, folderTitle);
       await handleFetchUserDocuments();
-      // set fields null
-    } catch (e) {
-      // console.log('user documents error', e);
-    }
+    } catch (e) {}
   };
 
   const handleUploadDataToFirestore = async (
@@ -142,19 +120,15 @@ const UploadScreen: React.FC = () => {
       };
       await FirebaseServices.firestore.post
         .sendDocument(user!.id, appDocument, selectedFolderID)
-        .then(() => {
-          console.log('enviando');
-        })
-        .catch(e => {
-          console.log('error', e);
-        });
+        .then(() => {})
+        .catch(e => {});
 
       if (!documentSnapshot) {
         return;
       }
     } catch (e) {}
   };
-
+  console.log(selectedFolderID);
   const handleUploadFile = async () => {
     setUploading(true);
 
@@ -175,8 +149,6 @@ const UploadScreen: React.FC = () => {
               text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
             });
             await handleUploadDataToFirestore(res);
-
-            setDocumentDirectory(res);
           })
           .catch(e => {
             const error = e as FirebaseStorageTypes.Reference;
@@ -184,14 +156,11 @@ const UploadScreen: React.FC = () => {
               case e:
                 break;
             }
-            console.log('catchhhhh');
           });
         clearDocumentStates();
       }
     } catch (e) {
       setUploading(false);
-      console.log('catcho');
-      console.log(e);
     }
   };
 
@@ -204,10 +173,7 @@ const UploadScreen: React.FC = () => {
       const userDocumentsRes =
         await FirebaseServices.firestore.get.userDocuments(user!.id);
       setUserDocuments(userDocumentsRes);
-      console.log('user documents sucess', userDocuments);
-    } catch (e) {
-      console.log('user documents error', e);
-    }
+    } catch (e) {}
   };
 
   useEffect(() => {

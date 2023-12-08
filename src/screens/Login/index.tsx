@@ -57,13 +57,11 @@ const Login: React.FC = () => {
         );
 
       if (userInfo) {
-        console.log('userInfo', userInfo);
         dispatch(setToken(userInfo.token));
         return;
       }
     } catch (e) {
       const error = e as FirebaseAuthTypes.NativeFirebaseAuthError;
-      console.log('erro userInfo', e);
 
       switch (error.code) {
         case '':

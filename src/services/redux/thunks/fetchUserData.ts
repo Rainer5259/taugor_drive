@@ -6,7 +6,6 @@ export const userGoogleData = createAsyncThunk(
   'user/userGoogleData',
   async data => {
     return async (dispatch: AppDispatch) => {
-      console.log('tunk', data, dispatch);
       dispatch({type: 'USER_DATA', payload: data});
     };
   },

@@ -5,41 +5,29 @@ import {FirebaseStorageTypes} from '@react-native-firebase/storage';
 export abstract class FirestorePost {
   private rootPath: string;
   private usersPath: string;
-
+  private usersEndpoint: string;
   constructor(rootPath: string, usersPath: string) {
     this.rootPath = rootPath;
     this.usersPath = usersPath;
-
-    //  await SInfo.getItem(LOCAL_STORAGE_SECRET_KEY, {}).then(
-    //       (storagedUser: string) => {
-    //         const userParsed: AppUserCredentialInterface =
-    //           JSON.parse(storagedUser);
-    //         this.userID = userParsed.id;
-    //       },
-    //     );
-    //   }
+    this.usersEndpoint = `${this.rootPath}/${this.usersPath}`;
   }
 
   protected addDocument = async (
     userID: string,
     data: AppDocumentInterface,
-    folderID?: string,
+    folderID: string | null,
   ): Promise<FirebaseFirestoreTypes.DocumentData | void> => {
-    const endpoint = `${this.rootPath}/${this.usersPath}/${userID}`;
-    const endpointFolder = `${endpoint}/${folderID}`;
+    const userIDEndpoint = `${this.usersEndpoint}/${userID}`;
+    const endpointFolder = `${userIDEndpoint}/${folderID}`;
 
-    if (folderID === '' || folderID === undefined) {
+    if (folderID === '' || folderID === undefined || folderID === null) {
       return new Promise<FirebaseFirestoreTypes.DocumentData>(
         async (resolve, reject) => {
-          console.log('enviou');
           await firestore()
-            .collection(endpoint)
+            .collection(userIDEndpoint)
             .add(data)
             .then(response => resolve(response))
-            .catch(error => {
-              console.log('reject');
-              reject(error as FirebaseStorageTypes.Module);
-            });
+            .catch(error => reject(error as FirebaseStorageTypes.Module));
         },
       );
     } else if (folderID) {
@@ -47,15 +35,8 @@ export abstract class FirestorePost {
         await firestore()
           .doc(endpointFolder)
           .update({folder: firestore.FieldValue.arrayUnion(data)})
-          .then(response => {
-            resolve(response);
-          })
-          .catch(error => {
-            console.log('reject');
-            reject(error as FirebaseStorageTypes.Module);
-          });
-
-        console.log('postou');
+          .then(response => resolve(response))
+          .catch(error => reject(error as FirebaseStorageTypes.Module));
       });
     }
   };
@@ -67,14 +48,10 @@ export abstract class FirestorePost {
     return new Promise<FirebaseFirestoreTypes.DocumentData>(
       (resolve, reject) => {
         firestore()
-          .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
-          .add({folder: [{title}]})
-          .then(response => {
-            resolve(response);
-          })
-          .catch(error => {
-            reject(error as typeof FirebaseStorageTypes);
-          });
+          .collection(`${this.usersEndpoint}/${userID}`)
+          .add({folder: [], title})
+          .then(response => resolve(response))
+          .catch(error => reject(error as typeof FirebaseStorageTypes));
       },
     );
   };
@@ -85,7 +62,7 @@ export abstract class FirestorePost {
     return new Promise<FirebaseFirestoreTypes.DocumentData>(
       (resolve, reject) => {
         firestore()
-          .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
+          .collection(`${this.usersEndpoint}/${userID}`)
           .get()
           .then(response => {
             resolve(response);
@@ -126,18 +103,23 @@ export class FirestorePostServices extends FirestorePost {
   async sendDocument(
     userID: string,
     data: AppDocumentInterface,
-    folderID?: string,
-  ) {
+    folderID: string | null,
+  ): Promise<FirebaseFirestoreTypes.DocumentData | void> {
     const response = await this.addDocument(userID, data, folderID);
     return response;
   }
 
-  async createFolder(userID: string, folderName: string) {
+  async createFolder(
+    userID: string,
+    folderName: string,
+  ): Promise<FirebaseFirestoreTypes.DocumentData> {
     const response = await this.createEmptyDocument(userID, folderName);
     return response;
   }
 
-  async userDocuments(userID: string) {
+  async userDocuments(
+    userID: string,
+  ): Promise<FirebaseFirestoreTypes.DocumentData> {
     const response = await this.fetchAllDocumentsByUserID(userID);
     return response;
   }

@@ -2,7 +2,7 @@ import firebaseAuth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
-import firebase from '../..';
+import {FirebaseError} from 'firebase/app';
 export abstract class AuthGet {
   protected signInWithEmailAndPassword = async (
     email: string,
@@ -23,11 +23,9 @@ export abstract class AuthGet {
             SInfo.setItem(LOCAL_STORAGE_SECRET_KEY, JSON.stringify(user), {});
             resolve(user);
           });
-          console.log('result token', token);
         })
         .catch(error => {
           const e = error as FirebaseAuthTypes.NativeFirebaseAuthError;
-          console.log('result error', e.stack);
           reject(error as FirebaseAuthTypes.NativeFirebaseAuthError);
         });
     });

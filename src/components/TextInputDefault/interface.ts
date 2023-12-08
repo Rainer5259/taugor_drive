@@ -1,5 +1,5 @@
-import {TextInputProps, ViewStyle} from 'react-native';
+import {TextInputProps, TextStyle, ViewStyle} from 'react-native';
 
 export interface TextInputDefaultProps extends TextInputProps {
-  style?: ViewStyle;
+  style?: TextStyle & object;
 }
