@@ -25,8 +25,7 @@ export abstract class AuthGet {
           });
         })
         .catch(error => {
-          const e = error as FirebaseAuthTypes.NativeFirebaseAuthError;
-          reject(error as FirebaseAuthTypes.NativeFirebaseAuthError);
+          reject(error);
         });
     });
   };
@@ -49,6 +48,7 @@ export class AuthenticationGetServices extends AuthGet {
   constructor() {
     super();
   }
+
   async signInWithEmail(
     email: string,
     password: string,

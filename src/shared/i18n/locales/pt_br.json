@@ -68,7 +68,9 @@
           "TRY_AGAIN_LATER": "Tente novamente mais tarde",
           "INVALID_EMAIL": "Email inválido",
           "SET_TOKEN": "Ocorreu um erro ao salvar token",
-          "SEND_LINK": "Erro ao enviar link"
+          "SEND_LINK": "Erro ao enviar link",
+          "USER_NOT_FOUND": "Usuário não encontrado",
+          "INVALID_PASSWORD": "Senha inválida"
         },
         "SUCCESS": {
           "USER_REGISTERED": "Usuário cadastrado com sucesso",

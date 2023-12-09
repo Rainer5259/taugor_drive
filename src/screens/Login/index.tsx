@@ -22,8 +22,7 @@ import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {regexEmail} from '~/shared/utils/regex/email';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-const authModuleTypes: FirebaseAuthTypes.NativeFirebaseAuthError =
-  {} as FirebaseAuthTypes.NativeFirebaseAuthError;
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('oo@email.com');
   const [password, setPassword] = useState<string>('123123');
@@ -64,11 +63,18 @@ const Login: React.FC = () => {
       const error = e as FirebaseAuthTypes.NativeFirebaseAuthError;
 
       switch (error.code) {
-        case '':
+        case AuthErrorCodesCustom.USER_NOT_FOUND:
           toastError({
-            text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_CREDENTIALS'),
+            text1: t('SCREENS.AUTHENTICATION.ERRORS.USER_NOT_FOUND'),
           });
           break;
+
+        case AuthErrorCodesCustom.INVALID_PASSWORD:
+          toastError({
+            text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_PASSWORD'),
+          });
+          break;
+
         case AuthErrorCodesCustom.TOO_MANY_ATTEMPTS_TRY_LATER:
           toastError({
             text1: t(
@@ -118,8 +124,8 @@ const Login: React.FC = () => {
         );
 
       if (userInfo) {
-        dispatch(setToken(userInfo.refreshToken));
-        dispatch(setUser({id: userInfo.uid}));
+        dispatch(setToken(userInfo.token));
+        dispatch(setUser({id: userInfo.id}));
         toastSuccess({
           text1: t('SCREENS.AUTHENTICATION.SUCCESS.USER_REGISTERED'),
         });
@@ -127,7 +133,7 @@ const Login: React.FC = () => {
         return;
       }
     } catch (e) {
-      const error = e as FirebaseError;
+      const error = e as FirebaseAuthTypes.NativeFirebaseAuthError;
 
       switch (error.code) {
         case AuthErrorCodesCustom.EMAIL_EXISTS:
