@@ -17,9 +17,13 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
     await FirebaseServices.storage.get
       .getMetadataByUserID(user!.id)
       .then(bytes => {
-        const gigabytes = bytes / (1024 * 1024 * 1024);
+        if (bytes !== 0) {
+          const gigabytes = bytes / (1024 * 1024 * 1024);
+          return dispatch(setTotalBytesUsed(parseFloat(gigabytes.toFixed(2))));
+        }
 
-        dispatch(setTotalBytesUsed(parseFloat(gigabytes.toFixed(2))));
+        dispatch(setTotalBytesUsed(0));
+        return;
       });
   };
 
@@ -40,7 +44,7 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
         {t('COMPONENTS.UPLOAD.USED_SPACE.TITLE')}
       </Text>
       <Text style={styles.usedText}>
-        {totalBytesUsed ? (
+        {totalBytesUsed !== null ? (
           t('COMPONENTS.UPLOAD.USED_SPACE.CURRENT', {gb: totalBytesUsed})
         ) : (
           <ActivityIndicator />

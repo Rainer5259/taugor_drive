@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './styles';
 import ChevronLeft from '~/assets/svgs/chevron-left-icon.svg';
+import Folder from '~/assets/svgs/folder-icon.svg';
 import Logout from '~/assets/svgs/logout-icon.svg';
 import {t} from 'i18next';
 import {AppScreens} from '~/routes/AppScreens';
@@ -13,7 +14,7 @@ import {setToken} from '~/services/redux/slices/authenticateUser';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
+const Header: FC<HeaderProps> = ({left, right, title}) => {
   const navigation = useTypedNavigation();
   const dispatch = useDispatch();
 
@@ -21,6 +22,9 @@ const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
     switch (left) {
       case 'chevron-left':
         return <ChevronLeft />;
+
+      case 'files':
+        return <Folder width={21} height={21} />;
 
       default:
         break;
@@ -31,14 +35,15 @@ const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
     switch (right) {
       case 'logout':
         return <Logout />;
-
-      default:
-        break;
     }
   };
 
   const navigationGoBack = () => {
     navigation.goBack();
+  };
+
+  const navigateToFolders = () => {
+    navigation.navigate('Files');
   };
 
   const handleLogout = async () => {
@@ -56,6 +61,10 @@ const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
       case 'chevron-left':
         navigationGoBack();
         break;
+
+      case 'files':
+        navigateToFolders();
+        break;
     }
   };
 
@@ -63,6 +72,7 @@ const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
     switch (right) {
       case 'logout':
         handleLogout();
+        break;
     }
   };
 
@@ -71,14 +81,18 @@ const Header: FC<HeaderProps> = ({left, right, onPressLeft, onPressRight}) => {
       <TouchableOpacity
         style={styles.chevronLeft}
         disabled={!left}
-        onPress={handlePressLeft}>
+        onPress={handlePressLeft}
+        activeOpacity={0.6}>
         {renderLeftContent()}
       </TouchableOpacity>
-      <Text style={styles.title}>{AppScreens.Upload}</Text>
+
+      <Text style={styles.title}>{title}</Text>
+
       <TouchableOpacity
         style={styles.logout}
         disabled={!right}
-        onPress={handlePressRight}>
+        onPress={handlePressRight}
+        activeOpacity={0.6}>
         {renderRightContent()}
       </TouchableOpacity>
     </View>

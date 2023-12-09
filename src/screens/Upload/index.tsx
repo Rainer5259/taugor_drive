@@ -176,7 +176,11 @@ const UploadScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <Header right="logout" />
+      <Header
+        left="files"
+        title={t('COMPONENTS.HEADER.SCREENS_NAME.UPLOAD')}
+        right="logout"
+      />
       <View style={styles.container}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
@@ -202,6 +206,7 @@ const UploadScreen: React.FC = () => {
             data={userDocuments}
             setSelectedFolderID={setSelectedFolderID}
             selectedFolderID={selectedFolderID}
+            style={styles.flatList}
           />
         </View>
       </View>

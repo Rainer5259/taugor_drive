@@ -21,8 +21,7 @@
         }
       },
       "HEADER": {
-        "STEP": "Passo {{step1}} de {{step2}}",
-        "TITLE": "Informações docontato"
+        "SCREENS_NAME": {"UPLOAD": "Upload", "FILES": "Files"}
       },
       "WELCOME": {
         "TITLE_ONE": "Bem-Vindo",
@@ -55,7 +54,13 @@
             "BUTTON": {"CONFIRM": "Confirmar", "CANCEL": "Cancelar"}
           }
         }
-      }
+      },
+      "FOLDERS_LIST": {
+        "TITLE": "Pastas",
+        "NO_FOLDER": "Nenhuma pasta",
+        "MAIN_DIRECTORY": "Diretório Principal"
+      },
+      "SEARCH_INPUT": {"PLACEHOLDER": "Pesquisar arquivos"}
     },
     "SCREENS": {
       "AUTHENTICATION": {

@@ -1,7 +1,8 @@
 import React, {FC, useEffect, useState} from 'react';
-import {FoldersListProps} from './interface';
+import {FilesListProps} from './interface';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import FolderIcon from '~/assets/svgs/folder-icon.svg';
+import ChevronDownIcon from '~/assets/svgs/chevron-down.svg';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {styles} from './styles';
 import {t} from 'i18next';
@@ -9,9 +10,9 @@ import FirebaseServices from '~/services/firebase';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 
-const FoldersList: FC<FoldersListProps> = ({
-  selectedFolderID,
-  setSelectedFolderID,
+const FilesList: FC<FilesListProps> = ({
+  // selectedFolderID,
+  // setSelectedFolderID,
   style,
 }) => {
   const [folders, setFolders] = useState<
@@ -48,22 +49,27 @@ const FoldersList: FC<FoldersListProps> = ({
             document !== undefined && (
               <TouchableOpacity
                 key={e.id}
-                style={styles(selectedFolderID!, e.id).content}
-                onPress={() =>
-                  setSelectedFolderID(state => (state === e.id ? null : e.id))
+                style={styles('', e.id).content}
+                activeOpacity={0.8}
+                onPress={
+                  () => {}
+                  // setSelectedFolderID(state => (state === e.id ? null : e.id))
                 }>
                 <FolderIcon
-                  width={36}
-                  height={36}
+                  width={24}
+                  height={24}
                   opacity={
-                    selectedFolderID === null
-                      ? 1
-                      : selectedFolderID === e.id
-                      ? 1
-                      : 0.6
+                    // selectedFolderID === null
+                    //   ? 1
+                    //   : selectedFolderID === e.id
+                    //   ? 1
+                    //   : 0.6
+                    1
                   }
                 />
                 <Text style={styles().textContent}>{document.title}</Text>
+
+                <ChevronDownIcon style={styles().chevronDownIcon} />
               </TouchableOpacity>
             )
           );
@@ -75,13 +81,12 @@ const FoldersList: FC<FoldersListProps> = ({
   return sortedData[0] ? (
     <View>
       <Text style={styles().titleText}>
-        {t('COMPONENTS.FOLDERS_LIST.TITLE')}
+        {t('COMPONENTS.FOLDERS_LIST.MAIN_DIRECTORY')}
       </Text>
       <FlatList
         data={[sortedData]}
         keyExtractor={(id, i) => id.toString()}
         renderItem={({item}) => renderFolders(item)}
-        horizontal
         style={[styles().flatList, style]}
         contentContainerStyle={styles().contentContainerFlatList}
       />
@@ -95,4 +100,4 @@ const FoldersList: FC<FoldersListProps> = ({
   );
 };
 
-export {FoldersList};
+export {FilesList};

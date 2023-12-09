@@ -13,13 +13,19 @@ export const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
   },
+
   listBox: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   createFolderButton: {
     marginHorizontal: 10,
     alignItems: 'center',
     width: 30,
+  },
+
+  flatList: {
+    borderRadius: 6,
   },
 });

@@ -5,26 +5,29 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
   StyleSheet.create({
     content: {
       marginHorizontal: 4,
-      width: 110,
-      justifyContent: 'space-evenly',
+      width: 280,
+      justifyContent: 'flex-start',
       alignItems: 'center',
-      height: 90,
+      paddingHorizontal: 12,
+      minHeight: 38,
+      maxHeight: 82,
       marginVertical: 10,
       backgroundColor:
         selectedFolderID === elementID
           ? colors.primaryCharcoalOpaque
-          : colors.secondaryCharcoal,
-      borderRadius: 6,
+          : colors.primaryCharcoalOpaque,
+      borderRadius: 16,
+      flexDirection: 'row',
     },
 
     textContent: {
+      paddingLeft: 10,
       fontSize: 12,
       paddingHorizontal: 4,
       color: colors.primaryWhite,
     },
 
     titleText: {
-      paddingLeft: 10,
       color: colors.primaryGreen,
       fontWeight: 'bold',
       fontSize: 18,
@@ -32,8 +35,8 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
 
     flatList: {
       backgroundColor: colors.secondaryText + '50',
-      height: 100,
       width: 300,
+      borderRadius: 6,
     },
 
     contentContainerFlatList: {alignItems: 'center'},
@@ -46,4 +49,6 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
       backgroundColor: colors.secondaryCharcoal,
       borderRadius: 6,
     },
+
+    chevronDownIcon: {position: 'absolute', right: 20},
   });

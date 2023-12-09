@@ -1,6 +1,5 @@
 export interface HeaderProps {
-  left?: 'chevron-left' | undefined;
+  left?: 'chevron-left' | 'files' | 'folder' | undefined;
   right?: 'logout' | undefined;
-  onPressRight?: () => void;
-  onPressLeft?: () => void;
+  title: string;
 }

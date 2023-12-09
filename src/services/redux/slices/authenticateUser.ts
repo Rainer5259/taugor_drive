@@ -6,7 +6,7 @@ import {AppUserInterface} from '~/shared/utils/types/user';
 export interface AuthenticateUserProps {
   token: string | null;
   user: AppUserInterface | null;
-  totalBytesUsed: number;
+  totalBytesUsed: number | null;
   roundedAvatar: boolean;
   error: boolean;
   loading: boolean;
@@ -16,7 +16,7 @@ export interface AuthenticateUserProps {
 const initialState: AuthenticateUserProps = {
   token: null,
   user: null,
-  totalBytesUsed: 0,
+  totalBytesUsed: null,
   roundedAvatar: false,
   error: false,
   loading: false,
