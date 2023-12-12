@@ -45,7 +45,9 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
       </Text>
       <Text style={styles.usedText}>
         {totalBytesUsed !== null ? (
-          t('COMPONENTS.UPLOAD.USED_SPACE.CURRENT', {gb: totalBytesUsed})
+          t('COMPONENTS.UPLOAD.USED_SPACE.CURRENT', {
+            gb: totalBytesUsed.toFixed(2),
+          })
         ) : (
           <ActivityIndicator />
         )}

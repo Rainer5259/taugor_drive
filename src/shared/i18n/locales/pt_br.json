@@ -60,6 +60,9 @@
         "NO_FOLDER": "Nenhuma pasta",
         "MAIN_DIRECTORY": "Diretório Principal"
       },
+      "FILES_LIST": {
+        "SIZE": "{{size}}GB"
+      },
       "SEARCH_INPUT": {"PLACEHOLDER": "Pesquisar arquivos"}
     },
     "SCREENS": {

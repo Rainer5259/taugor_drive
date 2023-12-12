@@ -18,6 +18,10 @@ export const styles = StyleSheet.create({
 
   FilesListBox: {
     height: 450,
+    marginTop: 10,
+    shadowColor: '#333333',
+    shadowOpacity: 0.2,
+    shadowOffset: {height: 0, width: 0},
   },
 
   FoldersListBox: {position: 'absolute', bottom: 40, width: '100%'},

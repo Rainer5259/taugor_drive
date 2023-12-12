@@ -1,30 +1,57 @@
 import {StyleSheet} from 'react-native';
 import {colors} from '~/shared/themes/colors';
 
-export const styles = (selectedFolderID?: string, elementID?: string) =>
+export const styles = (selectedFile?: string, elementID?: string) =>
   StyleSheet.create({
     content: {
       marginHorizontal: 4,
       width: 280,
       justifyContent: 'flex-start',
-      alignItems: 'center',
-      paddingHorizontal: 12,
-      minHeight: 38,
-      maxHeight: 82,
+      alignItems: selectedFile === elementID ? 'flex-start' : 'center',
+      paddingVertical: selectedFile === elementID ? 8 : 0,
+      paddingLeft: 8,
+      height: selectedFile === elementID ? 82 : 38,
       marginVertical: 10,
-      backgroundColor:
-        selectedFolderID === elementID
-          ? colors.primaryCharcoalOpaque
-          : colors.primaryCharcoalOpaque,
+      borderWidth: 0.6,
+      borderColor: colors.primaryGreen,
       borderRadius: 16,
       flexDirection: 'row',
     },
 
-    textContent: {
-      paddingLeft: 10,
+    childrenContentAlignment: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+
+    contentTextsBox: {
+      paddingLeft: 8,
+      height: selectedFile === elementID ? '100%' : 38,
+      justifyContent: selectedFile === elementID ? 'space-between' : 'center',
+    },
+
+    contentTitleText: {
+      fontWeight: '500',
+      fontSize: 14,
+      color: colors.primaryText,
+    },
+
+    contentExtensionText: {
       fontSize: 12,
-      paddingHorizontal: 4,
-      color: colors.primaryWhite,
+      color: colors.primaryCharcoal,
+    },
+
+    contentSizeText: {
+      fontSize: 14,
+      color: colors.primaryCharcoal,
+      fontWeight: '600',
+    },
+
+    dateText: {
+      position: 'absolute',
+      right: 12,
+      bottom: 6,
+      fontSize: 12,
+      color: colors.primaryCharcoal,
     },
 
     titleText: {
@@ -34,8 +61,9 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
     },
 
     flatList: {
-      backgroundColor: colors.secondaryText + '50',
+      backgroundColor: colors.secondaryBackgroundOpaque,
       width: 300,
+      height: 500,
       borderRadius: 6,
     },
 
@@ -50,5 +78,9 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
       borderRadius: 6,
     },
 
-    chevronDownIcon: {position: 'absolute', right: 20},
+    chevronDownIcon: {
+      position: 'absolute',
+      right: 14,
+      top: 14,
+    },
   });

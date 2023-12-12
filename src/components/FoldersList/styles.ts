@@ -10,17 +10,13 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
       alignItems: 'center',
       height: 90,
       marginVertical: 10,
-      backgroundColor:
-        selectedFolderID === elementID
-          ? colors.primaryCharcoalOpaque
-          : colors.secondaryCharcoal,
       borderRadius: 6,
     },
 
     textContent: {
       fontSize: 12,
       paddingHorizontal: 4,
-      color: colors.primaryWhite,
+      color: colors.secondaryTextOpaque,
     },
 
     titleText: {
@@ -31,7 +27,7 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
     },
 
     flatList: {
-      backgroundColor: colors.secondaryText + '50',
+      backgroundColor: colors.secondaryBackgroundOpaque,
       height: 100,
       width: 300,
     },

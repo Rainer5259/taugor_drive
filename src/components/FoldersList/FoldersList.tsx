@@ -45,7 +45,7 @@ const FoldersList: FC<FoldersListProps> = ({
           const document = e.data();
 
           return (
-            document !== undefined && (
+            document?.folder !== undefined && (
               <TouchableOpacity
                 key={e.id}
                 style={styles(selectedFolderID!, e.id).content}
@@ -84,6 +84,7 @@ const FoldersList: FC<FoldersListProps> = ({
         horizontal
         style={[styles().flatList, style]}
         contentContainerStyle={styles().contentContainerFlatList}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   ) : (

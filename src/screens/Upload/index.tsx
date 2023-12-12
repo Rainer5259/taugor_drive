@@ -129,7 +129,7 @@ const UploadScreen: React.FC = () => {
     toastSuccess({
       text1: t('COMPONENTS.UPLOAD.STATUS.LOADING'),
       text2: t('COMPONENTS.UPLOAD.STATUS.WAIT'),
-      autoHide: !uploading,
+      autoHide: false,
     });
 
     try {
@@ -203,7 +203,6 @@ const UploadScreen: React.FC = () => {
             <PlusIcon width={32} height={32} />
           </TouchableOpacity>
           <FoldersList
-            data={userDocuments}
             setSelectedFolderID={setSelectedFolderID}
             selectedFolderID={selectedFolderID}
             style={styles.flatList}

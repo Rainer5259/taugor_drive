@@ -5,11 +5,10 @@ import Header from '~/components/Header';
 import {t} from 'i18next';
 import SearchInput from '~/components/SearchInput';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
-import FirebaseServices from '~/services/firebase';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {FilesList} from '~/components/FilesList';
+
 const FilesScreen: React.FC = () => {
   const {user} = useSelector((state: RootState) => state.user);
   const [selectedFolderID, setSelectedFolderID] = useState<string | null>(null);

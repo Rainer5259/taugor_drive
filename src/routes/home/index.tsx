@@ -12,7 +12,9 @@ const Stack = createNativeStackNavigator<HomeRootParamsList>();
 function HomeStack() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName={AppScreens.Upload}>
         <Stack.Screen name={AppScreens.Home} component={HomeScreen} />
         <Stack.Screen name={AppScreens.Upload} component={UploadScreen} />
         <Stack.Screen name={AppScreens.Files} component={FilesScreen} />
