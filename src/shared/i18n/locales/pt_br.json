@@ -8,7 +8,8 @@
       "PASSWORD": "Digite sua senha",
       "NEXT": "Próximo",
       "WELCOME": "Bem-Vindo!",
-      "SUCCESS": "Sucesso"
+      "SUCCESS": "Sucesso",
+      "UNKNOWN_ERROR": "Ocorreu um erro desconhecido"
     },
     "COMPONENTS": {
       "AUTH_CARD": {
@@ -58,7 +59,9 @@
       "FOLDERS_LIST": {
         "TITLE": "Pastas",
         "NO_FOLDER": "Nenhuma pasta",
-        "MAIN_DIRECTORY": "Diretório Principal"
+        "NO_FILES": "Nenhum arquivo",
+        "MAIN_DIRECTORY": "Diretório Principal",
+        "SEARCH_RESULT": "Resultado da pesquisa"
       },
       "FILES_LIST": {
         "SIZE": "{{size}}GB"

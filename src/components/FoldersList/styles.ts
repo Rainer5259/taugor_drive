@@ -20,16 +20,15 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
     },
 
     titleText: {
-      paddingLeft: 10,
       color: colors.primaryGreen,
       fontWeight: 'bold',
       fontSize: 18,
+      paddingLeft: 10,
     },
 
     flatList: {
-      backgroundColor: colors.secondaryBackgroundOpaque,
       height: 100,
-      width: 300,
+      width: '100%',
     },
 
     contentContainerFlatList: {alignItems: 'center'},
@@ -37,9 +36,18 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
     emptyListView: {
       justifyContent: 'center',
       alignItems: 'center',
-      width: 300,
+      width: '100%',
       height: 100,
-      backgroundColor: colors.secondaryCharcoal,
+      backgroundColor: colors.secondaryBackgroundOpaque,
       borderRadius: 6,
+      shadowColor: colors.primaryShadow,
+      shadowOpacity: 0.2,
+      shadowOffset: {height: 0, width: 0},
+    },
+
+    createFolderButton: {
+      marginHorizontal: 10,
+      alignItems: 'center',
+      width: 30,
     },
   });

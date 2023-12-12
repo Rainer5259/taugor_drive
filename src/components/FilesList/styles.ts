@@ -63,17 +63,19 @@ export const styles = (selectedFile?: string, elementID?: string) =>
     flatList: {
       backgroundColor: colors.secondaryBackgroundOpaque,
       width: 300,
-      height: 500,
       borderRadius: 6,
     },
 
     contentContainerFlatList: {alignItems: 'center'},
 
     emptyListView: {
+      shadowColor: colors.primaryShadow,
+      shadowOpacity: 0.2,
+      shadowOffset: {height: 0, width: 0},
       justifyContent: 'center',
       alignItems: 'center',
       width: 300,
-      height: 100,
+      height: 450,
       backgroundColor: colors.secondaryCharcoal,
       borderRadius: 6,
     },

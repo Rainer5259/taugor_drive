@@ -1,9 +1,11 @@
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {Dispatch, SetStateAction} from 'react';
 import {ViewStyle} from 'react-native';
+import {AppDocumentInterface} from '~/shared/utils/types/document';
 
 export interface FilesListProps {
-  // selectedFile: string | null;
-  // setSelectedFile: Dispatch<SetStateAction<string | null>>;
+  searchName: string;
+  documentsData: AppDocumentInterface[];
+  searchData?: AppDocumentInterface[];
+  setSelectedFileID?: Dispatch<SetStateAction<string | null>>;
   style?: ViewStyle;
 }

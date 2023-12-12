@@ -1,13 +1,8 @@
-import {AppDocumentInterface} from '~/shared/utils/types/document';
-import {
-  AppUserCredentialInterface,
-  AppUserInterface,
-} from '~/shared/utils/types/user';
 import firestore from '@react-native-firebase/firestore';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore/lib/index';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
-import SInfo from 'react-native-sensitive-info';
-import {LOCAL_STORAGE_SECRET_KEY} from '@env';
+import {AppDocumentInterface} from '~/shared/utils/types/document';
+
 export abstract class FirestoreGet {
   private rootPath: string;
   private usersPath: string;
@@ -19,41 +14,66 @@ export abstract class FirestoreGet {
 
   protected fetchAllDocumentsByUserID = (
     userID: string,
-  ): Promise<FirebaseFirestoreTypes.DocumentSnapshot[]> => {
-    return new Promise<FirebaseFirestoreTypes.DocumentSnapshot[]>(
-      (resolve, reject) => {
-        firestore()
-          .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
-          .get()
-          .then(response => {
-            resolve(response.docs);
-          })
-          .catch(error => {
-            reject(error as FirebaseStorageTypes.Reference);
-          });
-      },
-    );
+  ): Promise<AppDocumentInterface[]> => {
+    return new Promise<AppDocumentInterface[]>((resolve, reject) => {
+      firestore()
+        .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
+        .get()
+        .then(response => {
+          const documents = response.docs.map(doc =>
+            doc.data(),
+          ) as AppDocumentInterface[];
+          resolve(documents);
+        })
+        .catch(error => {
+          reject(error as FirebaseStorageTypes.Reference);
+        });
+    });
   };
 
-  /**Fetch document by title */
-  // protected fetchDocByDocTitle = (
-  //   userID: string,
-  //   docID: string,
-  // ): Promise<AppDocumentInterface> => {
-  //   return new Promise<AppDocumentInterface>((resolve, reject) => {
-  //     firestore()
-  //       .doc(`${this.rootPath}/${userID}`)
-  //       .get()
-  //       .then(response => {
-  //         const doc = response.data as AppDocumentInterface;
+  protected fetchDocumentsByFolderID = (
+    userID: string,
+    folderID: string,
+  ): Promise<AppDocumentInterface[]> => {
+    return new Promise<AppDocumentInterface[]>((resolve, reject) => {
+      firestore()
+        .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
+        .doc(`${folderID}`)
+        .get()
+        .then(response => {
+          const documents = response.data()?.folder as AppDocumentInterface[];
+          resolve(documents);
+        })
+        .catch(error => {
+          reject(error as FirebaseStorageTypes.Reference);
+        });
+    });
+  };
 
-  //         resolve(doc);
-  //       })
-  //       .catch(error => {
-  //         reject(error as FirebaseStorageTypes.Reference);
-  //       });
-  //   });
-  // };
+  protected searchDocumentWithQuery = (
+    userID: string,
+    q: string,
+  ): Promise<AppDocumentInterface[]> => {
+    return new Promise<AppDocumentInterface[]>(async (resolve, reject) => {
+      firestore()
+        .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
+        .where('searchName', '>=', q)
+        .where('searchName', '<=', q + '\uf8ff')
+        .get()
+        .then(response => {
+          const rootFilesData = response.docs.filter(
+            doc => doc !== doc.data()?.folder && doc.data(),
+          );
+          const subfolderFilesData = response.docs.map(
+            doc => doc.data()?.folder,
+          );
+          const allFiles = [...rootFilesData, ...subfolderFilesData];
+
+          resolve(allFiles);
+        })
+        .catch(error => reject(error));
+    });
+  };
 }
 
 export class FirestoreGetServices extends FirestoreGet {
@@ -61,10 +81,24 @@ export class FirestoreGetServices extends FirestoreGet {
     super('drive', 'users');
   }
 
-  async userDocuments(
-    userID: string,
-  ): Promise<FirebaseFirestoreTypes.DocumentSnapshot[]> {
+  async userDocuments(userID: string): Promise<AppDocumentInterface[]> {
     const response = await this.fetchAllDocumentsByUserID(userID);
+    return response;
+  }
+
+  async documentByFolderID(
+    userID: string,
+    folderID: string,
+  ): Promise<AppDocumentInterface[]> {
+    const response = await this.fetchDocumentsByFolderID(userID, folderID);
+    return response;
+  }
+
+  async searchDocument(
+    userID: string,
+    q: string,
+  ): Promise<AppDocumentInterface[]> {
+    const response = await this.searchDocumentWithQuery(userID, q);
     return response;
   }
 }

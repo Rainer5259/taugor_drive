@@ -6,6 +6,7 @@ export const colors = {
   primaryLightGrayOpaque: '#D9D9D960',
   primaryCharcoalOpaque: '#42424260',
   primaryBackground: '#E8E8E8',
+  primaryShadow: '#333333',
   secondaryBackground: '#666666',
   secondaryBackgroundOpaque: '#D9D9D999',
   secondaryCharcoal: '#C4C4C4',

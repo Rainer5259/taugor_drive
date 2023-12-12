@@ -8,12 +8,17 @@ import {FoldersList} from '~/components/FoldersList/FoldersList';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 import {FilesList} from '~/components/FilesList';
-import {useTypedNavigation} from '~/routes/useTypedNavigation';
+import {AppScreens, RootStackParamList} from '~/routes/AppScreens';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import FirebaseServices from '~/services/firebase';
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
 
-const FilesScreen: React.FC = () => {
-  const [selectedFolderID, setSelectedFolderID] = useState<string>('');
+const FilesFolderScreen = ({
+  route,
+}: NativeStackScreenProps<RootStackParamList, 'FilesFolder'>) => {
+  const {user} = useSelector((state: RootState) => state.user);
+
   const [searchName, setSearchName] = useState<string>('');
   const [documentsData, setDocumentsData] = useState<AppDocumentInterface[]>(
     [],
@@ -22,15 +27,18 @@ const FilesScreen: React.FC = () => {
     AppDocumentInterface[]
   >([]);
 
-  const {user} = useSelector((state: RootState) => state.user);
-  const navigation = useTypedNavigation();
-
   const handleFetchUserDocuments = async () => {
     try {
       const userDocumentsRes =
-        await FirebaseServices.firestore.get.userDocuments(user!.id);
+        await FirebaseServices.firestore.get.documentByFolderID(
+          user!.id,
+          route.params.folderID,
+        );
+      console.log(userDocumentsRes);
       setDocumentsData(userDocumentsRes);
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleSearchFiles = async () => {
@@ -53,10 +61,6 @@ const FilesScreen: React.FC = () => {
     handleSearchFiles();
   }, [searchName]);
 
-  const handleNavigateToFolderFiles = useCallback(() => {
-    navigation.navigate('FilesFolder', {folderID: selectedFolderID ?? ''});
-  }, [selectedFolderID]);
-
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header
@@ -73,17 +77,9 @@ const FilesScreen: React.FC = () => {
             searchData={searchResultsData}
           />
         </View>
-        <View style={styles.FoldersListBox}>
-          <FoldersList
-            selectedFolderID={selectedFolderID ?? ''}
-            setSelectedFolderID={setSelectedFolderID}
-            style={styles.flatListContainer}
-            onPressFolder={handleNavigateToFolderFiles}
-          />
-        </View>
       </View>
     </SafeAreaView>
   );
 };
 
-export default FilesScreen;
+export default FilesFolderScreen;

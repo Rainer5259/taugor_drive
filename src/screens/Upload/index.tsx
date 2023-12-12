@@ -1,21 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {styles} from './styles';
-
 import UploadComponent from '~/components/UploadComponent';
 import Header from '~/components/Header';
-import DocumentPicker, {
-  DocumentPickerResponse,
-} from 'react-native-document-picker';
+import DocumentPicker from 'react-native-document-picker';
 import FirebaseServices from '~/services/firebase';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
 import {useSelector} from 'react-redux';
@@ -25,7 +20,8 @@ import {t} from 'i18next';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
-import PlusIcon from '~/assets/svgs/plus-icon.svg';
+import firebaseDatabase from '@react-native-firebase/database';
+import toastError from '~/components/ToastNotification/Error';
 
 const UploadScreen: React.FC = () => {
   const [uploading, setUploading] = useState<boolean>(false);
@@ -33,11 +29,11 @@ const UploadScreen: React.FC = () => {
   const [title, setTitle] = useState<string | null>(null);
   const [uri, setURI] = useState<string | null>(null);
   const [size, setSize] = useState<number | null>(0);
-  const [userDocuments, setUserDocuments] = useState<
-    FirebaseFirestoreTypes.DocumentSnapshot[]
-  >([]);
+  const [userDocuments, setUserDocuments] = useState<AppDocumentInterface[]>(
+    [],
+  );
 
-  const [selectedFolderID, setSelectedFolderID] = useState<string | null>('');
+  const [selectedFolderID, setSelectedFolderID] = useState<string>('');
 
   const {user} = useSelector((state: RootState) => state.user);
 
@@ -73,44 +69,22 @@ const UploadScreen: React.FC = () => {
     setURI(null);
   };
 
-  const handleShowPromptCreateFolder = () => {
-    Alert.prompt(t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.TITLE'), '', [
-      {
-        onPress: () => {},
-        text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CANCEL'),
-      },
-      {
-        onPress: (value?: string) => {
-          if (value && value.length > 40) {
-            return Alert.alert('Máximo 40 caracters');
-          }
-          if (value) {
-            handleCreateFolder(value);
-            return;
-          } else {
-            handleShowPromptCreateFolder();
-          }
-        },
-        text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CONFIRM'),
-      },
-    ]);
-  };
-
-  const handleCreateFolder = async (folderTitle: string) => {
-    try {
-      await FirebaseServices.firestore.post.createFolder(user!.id, folderTitle);
-      await handleFetchUserDocuments();
-    } catch (e) {}
-  };
-
   const handleUploadDataToFirestore = async (
     documentSnapshot: FirebaseStorageTypes.TaskSnapshot,
   ) => {
+    const documentRefID = firebaseDatabase().ref().key;
+
+    if (documentRefID === null) {
+      return toastError({text1: t('GENERICS.UNKNOWN_ERROR')});
+    }
+
     try {
       const appDocument: AppDocumentInterface = {
         ...documentSnapshot,
         id: user!.id,
         title: title!,
+        docID: documentRefID,
+        searchName: title!.toLowerCase(),
       };
       await FirebaseServices.firestore.post
         .sendDocument(user!.id, appDocument, selectedFolderID)
@@ -196,18 +170,13 @@ const UploadScreen: React.FC = () => {
             />
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
-        <View style={styles.listBox}>
-          <TouchableOpacity
-            style={styles.createFolderButton}
-            onPress={handleShowPromptCreateFolder}>
-            <PlusIcon width={32} height={32} />
-          </TouchableOpacity>
-          <FoldersList
-            setSelectedFolderID={setSelectedFolderID}
-            selectedFolderID={selectedFolderID}
-            style={styles.flatList}
-          />
-        </View>
+
+        <FoldersList
+          setSelectedFolderID={setSelectedFolderID}
+          selectedFolderID={selectedFolderID}
+          style={styles.flatList}
+          addNewFolderButton
+        />
       </View>
     </SafeAreaView>
   );

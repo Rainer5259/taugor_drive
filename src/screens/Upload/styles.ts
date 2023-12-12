@@ -14,18 +14,8 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
 
-  listBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  createFolderButton: {
-    marginHorizontal: 10,
-    alignItems: 'center',
-    width: 30,
-  },
-
   flatList: {
-    borderRadius: 6,
+    borderLeftWidth: 0.6,
+    borderColor: colors.secondaryCharcoal,
   },
 });

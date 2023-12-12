@@ -5,4 +5,10 @@ export interface AppDocumentInterface
   extends FirebaseStorageTypes.TaskSnapshot,
     AppUserInterface {
   title: string;
+  searchName: string;
+  docID: string;
+}
+
+export interface AppDocumentFolderInterface {
+  folder: AppDocumentInterface;
 }
