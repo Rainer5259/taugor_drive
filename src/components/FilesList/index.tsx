@@ -3,13 +3,15 @@ import {FilesListProps} from './interface';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import FolderIcon from '~/assets/svgs/folder-icon.svg';
 import ChevronDownIcon from '~/assets/svgs/chevron-down.svg';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {styles} from './styles';
 import {t} from 'i18next';
 import FirebaseServices from '~/services/firebase';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
-import {AppDocumentInterface} from '~/shared/utils/types/document';
+import {
+  AppDocumentInterface,
+  AppFolderDocumentInterface,
+} from '~/shared/utils/types/document';
 import {formatInputValue} from '~/shared/utils/functions/formatters.ts';
 
 const FilesList: FC<FilesListProps> = ({
@@ -18,8 +20,16 @@ const FilesList: FC<FilesListProps> = ({
   setSelectedFileID,
   documentsData,
   searchData,
+  isFolder,
 }) => {
   const [selectedFile, setSelectedFile] = useState<string>('');
+  useEffect(() => {
+    // if (folder) {
+    //   documentsData.map(e =>
+    //     e
+    //   );
+    // }
+  }, []);
 
   const documentsSortedData = documentsData?.sort((a, b) => {
     const titleA = a?.title || '';
@@ -36,44 +46,51 @@ const FilesList: FC<FilesListProps> = ({
   const newDocumentsSortedData = documentsSortedData?.map(e => e);
   const newSearchSortedData = searchSortedData?.map(e => e);
 
-  const renderFiles = (item: AppDocumentInterface) => {
+  const renderFiles = (item: AppFolderDocumentInterface) => {
     const BytesToGB = formatInputValue(item?.metadata?.size, 'size');
-    return (
+
+    // console.log(Boolean(file?.folder));
+    const fileID = !isFolder ? item.fileID : item.fileID;
+
+    return !item.folder ? (
       <TouchableOpacity
-        key={item.id}
-        style={[styles(selectedFile, item.id).content]}
+        key={fileID}
+        style={[styles(selectedFile, fileID).content]}
         activeOpacity={0.8}
         onPress={() => {
-          setSelectedFile(state => (state === item.id ? '' : item.id));
+          setSelectedFile(state => (state === fileID ? '' : fileID));
         }}>
         <View style={styles().childrenContentAlignment}>
           <FolderIcon
             width={24}
             height={24}
             opacity={
-              selectedFile === '' ? 1 : selectedFile === item.id ? 1 : 0.3
+              selectedFile === '' ? 1 : selectedFile === fileID ? 1 : 0.3
             }
           />
         </View>
-        <View style={styles(selectedFile, item.id).contentTextsBox}>
-          <Text style={styles().contentTitleText}>{item?.title}</Text>
-          {selectedFile === item.id && BytesToGB.size !== undefined ? (
+        <View style={styles(selectedFile, fileID).contentTextsBox}>
+          <Text style={styles().contentTitleText}>{item.title}</Text>
+          {selectedFile === fileID && BytesToGB.size !== undefined ? (
             <Text style={styles().contentSizeText}>
               {`${BytesToGB?.size.toFixed(1)}${BytesToGB.reference}`}
             </Text>
           ) : null}
         </View>
 
-        {selectedFile === item.id && (
+        {selectedFile === fileID && (
           <Text style={styles().dateText}>
-            {item.metadata?.timeCreated.substring(0, 10)}
+            {item?.metadata?.timeCreated.substring(0, 10)}
           </Text>
         )}
         <ChevronDownIcon style={styles().chevronDownIcon} />
       </TouchableOpacity>
-    );
+    ) : null;
   };
 
+  useEffect(() => {
+    return;
+  }, []);
   return newDocumentsSortedData ? (
     <View>
       <Text style={styles().titleText}>
@@ -83,7 +100,7 @@ const FilesList: FC<FilesListProps> = ({
       </Text>
       <FlatList
         data={searchName ? newSearchSortedData! : newDocumentsSortedData}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.fileID}
         renderItem={({item}) => renderFiles(item)}
         style={[styles().flatList, style]}
         contentContainerStyle={styles().contentContainerFlatList}

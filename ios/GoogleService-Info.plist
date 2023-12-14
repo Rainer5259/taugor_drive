@@ -3,36 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>757586612421-8mr345f10gjckmjod8jl4bqckgivp66v.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.757586612421-8mr345f10gjckmjod8jl4bqckgivp66v</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>757586612421-6icclbhgvd9e2i43qsrv71k3pfrg4vid.apps.googleusercontent.com</string>
+	<string>530187568591-5u6hq1rspo5lrk0itk2t3hdm5mhfhit3.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBYcXE0VLQ6M9aEtZM4x3kbTbK1ft0wggs</string>
+	<string>AIzaSyDuVI3hqeYdpTvotHLa2vuBh6mty2BB-nI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>757586612421</string>
+	<string>530187568591</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>org.reactjs.native.example.taugor-drive</string>
 	<key>PROJECT_ID</key>
-	<string>db-erd</string>
+	<string>taugor-drive-3e46a</string>
 	<key>STORAGE_BUCKET</key>
-	<string>db-erd.appspot.com</string>
+	<string>taugor-drive-3e46a.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:757586612421:ios:b7e5754be4af48c40260ac</string>
-	<key>DATABASE_URL</key>
-	<string>https://db-erd-default-rtdb.firebaseio.com</string>
+	<string>1:530187568591:ios:7dd84722bbd7293164beba</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.530187568591-5u6hq1rspo5lrk0itk2t3hdm5mhfhit3</string>
 </dict>
 </plist>

@@ -44,13 +44,13 @@ export abstract class FirestorePost {
 
   protected createEmptyDocument = (
     userID: string,
-    title: string,
+    folderTitle: string,
   ): Promise<FirebaseFirestoreTypes.DocumentData> => {
     return new Promise<FirebaseFirestoreTypes.DocumentData>(
       (resolve, reject) => {
         firestore()
           .collection(`${this.usersEndpoint}/${userID}`)
-          .add({folder: [], title})
+          .add({folder: [], folderTitle, isFolder: true})
           .then(response => resolve(response))
           .catch(error => reject(error as typeof FirebaseStorageTypes));
       },

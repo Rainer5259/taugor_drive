@@ -4,7 +4,7 @@ export interface UploadComponentProps {
   onPressChooseFile: () => void;
   size: number;
   title: string;
-  setTitle: Dispatch<SetStateAction<string | null>>;
+  setTitle: Dispatch<SetStateAction<string>>;
   hasDocumentPicked: boolean;
   onPressRemoveDocumentPicked: () => void;
 }

@@ -11,6 +11,7 @@ import {FilesList} from '~/components/FilesList';
 import {useTypedNavigation} from '~/routes/useTypedNavigation';
 import FirebaseServices from '~/services/firebase';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 
 const FilesScreen: React.FC = () => {
   const [selectedFolderID, setSelectedFolderID] = useState<string>('');
@@ -29,6 +30,7 @@ const FilesScreen: React.FC = () => {
     try {
       const userDocumentsRes =
         await FirebaseServices.firestore.get.userDocuments(user!.id);
+
       setDocumentsData(userDocumentsRes);
     } catch (e) {}
   };
@@ -40,9 +42,7 @@ const FilesScreen: React.FC = () => {
         searchName.toLowerCase(),
       );
       setSearchResultsData(response);
-    } catch (error) {
-      console.log('catch', error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -54,7 +54,10 @@ const FilesScreen: React.FC = () => {
   }, [searchName]);
 
   const handleNavigateToFolderFiles = useCallback(() => {
-    navigation.navigate('FilesFolder', {folderID: selectedFolderID ?? ''});
+    if (selectedFolderID) {
+      navigation.navigate('FilesFolder', {folderID: selectedFolderID});
+      return;
+    }
   }, [selectedFolderID]);
 
   return (
@@ -75,7 +78,7 @@ const FilesScreen: React.FC = () => {
         </View>
         <View style={styles.FoldersListBox}>
           <FoldersList
-            selectedFolderID={selectedFolderID ?? ''}
+            selectedFolderID={selectedFolderID}
             setSelectedFolderID={setSelectedFolderID}
             style={styles.flatListContainer}
             onPressFolder={handleNavigateToFolderFiles}

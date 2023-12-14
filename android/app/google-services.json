@@ -1,60 +1,26 @@
 {
   "project_info": {
-    "project_number": "757586612421",
-    "firebase_url": "https://db-erd-default-rtdb.firebaseio.com",
-    "project_id": "db-erd",
-    "storage_bucket": "db-erd.appspot.com"
+    "project_number": "530187568591",
+    "project_id": "taugor-drive-3e46a",
+    "storage_bucket": "taugor-drive-3e46a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:757586612421:android:16db5e6b42e98e4b0260ac",
+        "mobilesdk_app_id": "1:530187568591:android:fffe641bd84b783b64beba",
         "android_client_info": {
           "package_name": "com.taugor_drive"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "757586612421-6icclbhgvd9e2i43qsrv71k3pfrg4vid.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.taugor_drive",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "757586612421-e8fsvdc8bf4rvqar7q27snk6h5eojd8e.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.taugor_drive",
-            "certificate_hash": "5d505dfe5c497f0fd9cde33f802c226d1b72bb5a"
-          }
-        },
-        {
-          "client_id": "757586612421-1kir30s8ped564q49ieif35aq7rc1teb.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDORc6yp7Hk2R2cI2yBDNEBWqnsJA_xNU0"
+          "current_key": "AIzaSyBJo2saLoqZ-vlIcbkizjhWFIuInvEUECI"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "757586612421-1kir30s8ped564q49ieif35aq7rc1teb.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "757586612421-8mr345f10gjckmjod8jl4bqckgivp66v.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "org.reactjs.native.example.taugor-drive"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

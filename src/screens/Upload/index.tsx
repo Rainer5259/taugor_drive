@@ -4,6 +4,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -22,11 +24,13 @@ import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
 import firebaseDatabase from '@react-native-firebase/database';
 import toastError from '~/components/ToastNotification/Error';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 const UploadScreen: React.FC = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const [extension, setExtension] = useState<string | null>();
-  const [title, setTitle] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>('');
   const [uri, setURI] = useState<string | null>(null);
   const [size, setSize] = useState<number | null>(0);
   const [userDocuments, setUserDocuments] = useState<AppDocumentInterface[]>(
@@ -51,7 +55,7 @@ const UploadScreen: React.FC = () => {
       const sizeConverted = parseFloat(bytesConvertedToGB.toString());
 
       setExtension(document[0].type);
-      setTitle(document[0].name);
+      setTitle(document[0].name ?? '');
       setSize(sizeConverted);
       setURI(document[0].uri);
     } catch (err) {
@@ -64,7 +68,7 @@ const UploadScreen: React.FC = () => {
 
   const clearDocumentStates = () => {
     setExtension(null);
-    setTitle(null);
+    setTitle('');
     setSize(null);
     setURI(null);
   };
@@ -72,18 +76,14 @@ const UploadScreen: React.FC = () => {
   const handleUploadDataToFirestore = async (
     documentSnapshot: FirebaseStorageTypes.TaskSnapshot,
   ) => {
-    const documentRefID = firebaseDatabase().ref().key;
-
-    if (documentRefID === null) {
-      return toastError({text1: t('GENERICS.UNKNOWN_ERROR')});
-    }
-
+    const fileID = uuidv4();
     try {
       const appDocument: AppDocumentInterface = {
         ...documentSnapshot,
         id: user!.id,
-        title: title!,
-        docID: documentRefID,
+        title,
+        fileID,
+        folderID: selectedFolderID,
         searchName: title!.toLowerCase(),
       };
       await FirebaseServices.firestore.post
@@ -116,7 +116,10 @@ const UploadScreen: React.FC = () => {
             toastSuccess({
               text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
             });
-            await handleUploadDataToFirestore(res);
+
+            await handleUploadDataToFirestore(res)
+              .then(async firestoreRes => {})
+              .catch(error => {});
           })
           .catch(e => {
             const error = e as FirebaseStorageTypes.Reference;
@@ -156,6 +159,14 @@ const UploadScreen: React.FC = () => {
         right="logout"
       />
       <View style={styles.container}>
+        <TouchableOpacity
+          style={{width: 80, height: 40, backgroundColor: 'green'}}
+          onPress={() => {
+            async () =>
+              await FirebaseServices.storage.post.deleteAllFiles(user!.id);
+          }}>
+          <Text>Apagar todos os meus dados</Text>
+        </TouchableOpacity>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'height'}

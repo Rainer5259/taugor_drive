@@ -11,8 +11,9 @@ import {RootState} from '~/services/redux/store';
 import PlusIcon from '~/assets/svgs/plus-icon.svg';
 import {colors} from '~/shared/themes/colors';
 import {
-  AppDocumentFolderInterface,
   AppDocumentInterface,
+  AppFolderDocumentInterface,
+  IFirebaseDocChangeData,
 } from '~/shared/utils/types/document';
 
 const FoldersList: FC<FoldersListProps> = ({
@@ -22,13 +23,13 @@ const FoldersList: FC<FoldersListProps> = ({
   onPressFolder,
   style,
 }) => {
-  const [folders, setFolders] = useState<AppDocumentInterface[]>([]);
+  const [folders, setFolders] = useState<IFirebaseDocChangeData[]>([]);
 
   const {user} = useSelector((state: RootState) => state.user);
 
   const sortedData = folders.sort((a, b) => {
-    const titleA = a?.title || '';
-    const titleB = b?.title || '';
+    const titleA = a?.data().title || '';
+    const titleB = b?.data().title || '';
     return titleA.localeCompare(titleB);
   });
 
@@ -64,41 +65,51 @@ const FoldersList: FC<FoldersListProps> = ({
 
   const handleFetchUserDocuments = async () => {
     try {
-      const userDocumentsRes =
-        await FirebaseServices.firestore.get.userDocuments(user!.id);
-      setFolders(userDocumentsRes);
+      const userDocumentsRes = await FirebaseServices.firestore.get.userFolders(
+        user!.id,
+      );
+      const results = userDocumentsRes.map(e => e);
+      setFolders(results);
     } catch (e) {}
+  };
+
+  const handleOnPressFolder = () => {
+    if (onPressFolder) {
+      onPressFolder();
+    }
   };
 
   useEffect(() => {
     handleFetchUserDocuments();
   }, [user?.id]);
 
-  const handleOnPressFolder = (folderID: string) => {
-    if (onPressFolder) {
-      onPressFolder();
-    }
-  };
+  console.log(selectedFolderID);
 
-  const renderFolders = (item: AppDocumentInterface) => {
-    return (
+  const renderFolders = (item: IFirebaseDocChangeData) => {
+    const docFiles = item?.data();
+
+    return docFiles?.folder ? (
       <TouchableOpacity
-        key={item.id}
-        style={styles(selectedFolderID!, item.id).content}
+        key={item?.id}
+        style={styles(selectedFolderID!, item?.id).content}
         onPress={() => {
-          setSelectedFolderID(state => (state === item.id ? '' : item.id));
-          handleOnPressFolder(item.id);
+          setSelectedFolderID(state => (state === item?.id ? '' : item?.id));
+          handleOnPressFolder();
         }}>
         <FolderIcon
           width={36}
           height={36}
           opacity={
-            selectedFolderID === '' ? 1 : selectedFolderID === item.id ? 1 : 0.6
+            selectedFolderID === ''
+              ? 1
+              : selectedFolderID === item?.id
+              ? 1
+              : 0.6
           }
         />
-        <Text style={styles().textContent}>{item.title}</Text>
+        <Text style={styles().textContent}>{item?.data()?.title}</Text>
       </TouchableOpacity>
-    );
+    ) : null;
   };
 
   const renderAddFolderButton = () => {

@@ -34,11 +34,9 @@ const FilesFolderScreen = ({
           user!.id,
           route.params.folderID,
         );
-      console.log(userDocumentsRes);
+
       setDocumentsData(userDocumentsRes);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   const handleSearchFiles = async () => {
@@ -48,9 +46,7 @@ const FilesFolderScreen = ({
         searchName.toLowerCase(),
       );
       setSearchResultsData(response);
-    } catch (error) {
-      console.log('catch', error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -75,6 +71,7 @@ const FilesFolderScreen = ({
             searchName={searchName}
             documentsData={documentsData}
             searchData={searchResultsData}
+            isFolder={true}
           />
         </View>
       </View>

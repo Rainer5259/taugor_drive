@@ -24,8 +24,19 @@ abstract class StoragePost {
           resolve(res);
         })
         .catch(error => {
-          console.log('error no api', error);
           reject(error as FirebaseStorageTypes.Module);
+        });
+    });
+  };
+
+  protected deleteUserFiles = (userID: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      storage()
+        .ref(`${this.rootPath}/${userID}`)
+        .delete()
+        .then(() => {})
+        .catch(error => {
+          reject(error);
         });
     });
   };
@@ -41,6 +52,11 @@ export class StoragePostServices extends StoragePost {
     data: string,
   ): Promise<FirebaseStorageTypes.TaskSnapshot> {
     const response = await this.uploadFileToStorage(userID, data);
+    return response;
+  }
+
+  async deleteAllFiles(userID: string): Promise<void> {
+    const response = await this.deleteUserFiles(userID);
     return response;
   }
 }

@@ -1,7 +1,11 @@
 import firestore from '@react-native-firebase/firestore';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore/lib/index';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
-import {AppDocumentInterface} from '~/shared/utils/types/document';
+import {resumeDownload} from 'react-native-fs';
+import {
+  AppDocumentInterface,
+  IFirebaseDocChangeData,
+} from '~/shared/utils/types/document';
 
 export abstract class FirestoreGet {
   private rootPath: string;
@@ -20,10 +24,27 @@ export abstract class FirestoreGet {
         .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
         .get()
         .then(response => {
-          const documents = response.docs.map(doc =>
-            doc.data(),
-          ) as AppDocumentInterface[];
+          const documents = response
+            .docChanges()
+            .map(doc => doc.doc.data()) as AppDocumentInterface[];
           resolve(documents);
+        })
+        .catch(error => {
+          reject(error as FirebaseStorageTypes.Reference);
+        });
+    });
+  };
+
+  protected fetchAllFoldersByUserID = (
+    userID: string,
+  ): Promise<IFirebaseDocChangeData[]> => {
+    return new Promise<IFirebaseDocChangeData[]>((resolve, reject) => {
+      firestore()
+        .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
+        .get()
+        .then(response => {
+          const folders = response.docChanges().map(doc => doc.doc);
+          resolve(folders);
         })
         .catch(error => {
           reject(error as FirebaseStorageTypes.Reference);
@@ -42,6 +63,7 @@ export abstract class FirestoreGet {
         .get()
         .then(response => {
           const documents = response.data()?.folder as AppDocumentInterface[];
+
           resolve(documents);
         })
         .catch(error => {
@@ -53,8 +75,8 @@ export abstract class FirestoreGet {
   protected searchDocumentWithQuery = (
     userID: string,
     q: string,
-  ): Promise<AppDocumentInterface[]> => {
-    return new Promise<AppDocumentInterface[]>(async (resolve, reject) => {
+  ): Promise<IFirebaseDocChangeData[]> => {
+    return new Promise<IFirebaseDocChangeData[]>(async (resolve, reject) => {
       firestore()
         .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
         .where('searchName', '>=', q)
@@ -86,6 +108,11 @@ export class FirestoreGetServices extends FirestoreGet {
     return response;
   }
 
+  async userFolders(userID: string): Promise<IFirebaseDocChangeData[]> {
+    const response = await this.fetchAllFoldersByUserID(userID);
+    return response;
+  }
+
   async documentByFolderID(
     userID: string,
     folderID: string,
@@ -97,7 +124,7 @@ export class FirestoreGetServices extends FirestoreGet {
   async searchDocument(
     userID: string,
     q: string,
-  ): Promise<AppDocumentInterface[]> {
+  ): Promise<IFirebaseDocChangeData[]> {
     const response = await this.searchDocumentWithQuery(userID, q);
     return response;
   }
