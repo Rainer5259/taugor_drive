@@ -11,6 +11,10 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
       height: 90,
       marginVertical: 10,
       borderRadius: 6,
+      backgroundColor:
+        selectedFolderID === elementID
+          ? colors.secondaryCharcoalOpaque
+          : undefined,
     },
 
     textContent: {

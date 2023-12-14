@@ -8,5 +8,6 @@ export interface FilesListProps {
   searchData?: AppDocumentInterface[];
   setSelectedFileID?: Dispatch<SetStateAction<string | null>>;
   style?: ViewStyle;
+  folderTitle?: string;
   isFolder?: boolean;
 }

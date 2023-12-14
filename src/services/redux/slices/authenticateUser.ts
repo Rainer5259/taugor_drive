@@ -8,6 +8,7 @@ export interface AuthenticateUserProps {
   user: AppUserInterface | null;
   totalBytesUsed: number | null;
   roundedAvatar: boolean;
+  uploading: boolean;
   error: boolean;
   loading: boolean;
   errorMessage: string;
@@ -16,6 +17,7 @@ export interface AuthenticateUserProps {
 const initialState: AuthenticateUserProps = {
   token: null,
   user: null,
+  uploading: false,
   totalBytesUsed: null,
   roundedAvatar: false,
   error: false,
@@ -36,10 +38,13 @@ export const authenticateUserSlice = createSlice({
     setTotalBytesUsed: (state, action: PayloadAction<number>) => {
       state.totalBytesUsed = action.payload;
     },
+    setUploading: (state, action: PayloadAction<boolean>) => {
+      state.uploading = action.payload;
+    },
   },
 });
 
-export const {setToken, setUser, setTotalBytesUsed} =
+export const {setToken, setUser, setTotalBytesUsed, setUploading} =
   authenticateUserSlice.actions;
 
 export default authenticateUserSlice.reducer;

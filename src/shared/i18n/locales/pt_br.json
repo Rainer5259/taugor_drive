@@ -37,6 +37,7 @@
         },
         "SIZE_OF_FILE": "Tamanho: {{size}}{{sizeReference}}",
         "LIMIT_PER_FILE": "Limite 1GB/arquivo",
+        "MAX_LIMIT_PER_FILE": "Limite Máximo: 1GB/arquivo",
         "PLACEHOLDER_INPUT": "Título",
         "BUTTON": {
           "REMOVE_FILE_PICKED": "Remover item selecionado",
@@ -59,7 +60,8 @@
       "FOLDERS_LIST": {
         "TITLE": "Pastas",
         "NO_FOLDER": "Nenhuma pasta",
-        "NO_FILES": "Nenhum arquivo",
+        "NO_FILES": "Nenhum arquivo ",
+        "EXTENSION": "Extensão: {{type}}",
         "MAIN_DIRECTORY": "Diretório Principal",
         "SEARCH_RESULT": "Resultado da pesquisa"
       },

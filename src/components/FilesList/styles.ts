@@ -10,10 +10,16 @@ export const styles = (selectedFile?: string, elementID?: string) =>
       alignItems: selectedFile === elementID ? 'flex-start' : 'center',
       paddingVertical: selectedFile === elementID ? 8 : 0,
       paddingLeft: 8,
-      height: selectedFile === elementID ? 82 : 38,
+      height: selectedFile === elementID ? 100 : 40,
       marginVertical: 10,
       borderWidth: 0.6,
-      borderColor: colors.primaryGreen,
+      borderColor: !selectedFile
+        ? colors.primaryGreen
+        : selectedFile === elementID
+        ? colors.primaryGreen
+        : colors.primaryCharcoalOpaque,
+      opacity: !selectedFile ? 1 : selectedFile === elementID ? 1 : 0.8,
+
       borderRadius: 16,
       flexDirection: 'row',
     },
@@ -27,6 +33,8 @@ export const styles = (selectedFile?: string, elementID?: string) =>
       paddingLeft: 8,
       height: selectedFile === elementID ? '100%' : 38,
       justifyContent: selectedFile === elementID ? 'space-between' : 'center',
+
+      width: '80%',
     },
 
     contentTitleText: {

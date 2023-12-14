@@ -50,7 +50,7 @@ export abstract class FirestorePost {
       (resolve, reject) => {
         firestore()
           .collection(`${this.usersEndpoint}/${userID}`)
-          .add({folder: [], folderTitle, isFolder: true})
+          .add({folder: [], folderTitle})
           .then(response => resolve(response))
           .catch(error => reject(error as typeof FirebaseStorageTypes));
       },

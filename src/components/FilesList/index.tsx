@@ -13,6 +13,7 @@ import {
   AppFolderDocumentInterface,
 } from '~/shared/utils/types/document';
 import {formatInputValue} from '~/shared/utils/functions/formatters.ts';
+import IconPerFileType from '../IconPerFileType';
 
 const FilesList: FC<FilesListProps> = ({
   searchName,
@@ -20,16 +21,10 @@ const FilesList: FC<FilesListProps> = ({
   setSelectedFileID,
   documentsData,
   searchData,
+  folderTitle,
   isFolder,
 }) => {
   const [selectedFile, setSelectedFile] = useState<string>('');
-  useEffect(() => {
-    // if (folder) {
-    //   documentsData.map(e =>
-    //     e
-    //   );
-    // }
-  }, []);
 
   const documentsSortedData = documentsData?.sort((a, b) => {
     const titleA = a?.title || '';
@@ -49,10 +44,11 @@ const FilesList: FC<FilesListProps> = ({
   const renderFiles = (item: AppFolderDocumentInterface) => {
     const BytesToGB = formatInputValue(item?.metadata?.size, 'size');
 
-    // console.log(Boolean(file?.folder));
-    const fileID = !isFolder ? item.fileID : item.fileID;
+    const fileID = !isFolder ? item?.fileID : item?.fileID;
+    const focusedFile = selectedFile === fileID;
+    const extension = item?.metadata?.contentType?.split('/');
 
-    return !item.folder ? (
+    return !item?.folder ? (
       <TouchableOpacity
         key={fileID}
         style={[styles(selectedFile, fileID).content]}
@@ -61,19 +57,27 @@ const FilesList: FC<FilesListProps> = ({
           setSelectedFile(state => (state === fileID ? '' : fileID));
         }}>
         <View style={styles().childrenContentAlignment}>
-          <FolderIcon
-            width={24}
-            height={24}
+          <IconPerFileType
+            fileType={extension?.[1]}
             opacity={
-              selectedFile === '' ? 1 : selectedFile === fileID ? 1 : 0.3
+              selectedFile === '' ? 1 : selectedFile === fileID ? 1 : 0.6
             }
           />
         </View>
         <View style={styles(selectedFile, fileID).contentTextsBox}>
-          <Text style={styles().contentTitleText}>{item.title}</Text>
+          <Text style={styles().contentTitleText}>
+            {focusedFile ? item?.title : item?.title?.substring(0, 25)}
+          </Text>
+          {focusedFile && (
+            <Text style={styles().contentTitleText}>
+              {t('COMPONENTS.FOLDERS_LIST.EXTENSION', {
+                type: extension?.[1],
+              })}
+            </Text>
+          )}
           {selectedFile === fileID && BytesToGB.size !== undefined ? (
             <Text style={styles().contentSizeText}>
-              {`${BytesToGB?.size.toFixed(1)}${BytesToGB.reference}`}
+              {`${BytesToGB?.size.toFixed(1)}${BytesToGB?.reference}`}
             </Text>
           ) : null}
         </View>
@@ -96,11 +100,13 @@ const FilesList: FC<FilesListProps> = ({
       <Text style={styles().titleText}>
         {searchName
           ? t('COMPONENTS.FOLDERS_LIST.SEARCH_RESULT')
-          : t('COMPONENTS.FOLDERS_LIST.MAIN_DIRECTORY')}
+          : !isFolder
+          ? t('COMPONENTS.FOLDERS_LIST.MAIN_DIRECTORY')
+          : folderTitle}
       </Text>
       <FlatList
-        data={searchName ? newSearchSortedData! : newDocumentsSortedData}
-        keyExtractor={item => item.fileID}
+        data={searchName ? searchData : newDocumentsSortedData}
+        keyExtractor={(item, i) => item?.fileID ?? `key:${i}`}
         renderItem={({item}) => renderFiles(item)}
         style={[styles().flatList, style]}
         contentContainerStyle={styles().contentContainerFlatList}

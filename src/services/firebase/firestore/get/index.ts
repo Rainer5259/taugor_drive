@@ -4,6 +4,7 @@ import {FirebaseStorageTypes} from '@react-native-firebase/storage';
 import {resumeDownload} from 'react-native-fs';
 import {
   AppDocumentInterface,
+  AppFolderDocumentInterface,
   IFirebaseDocChangeData,
 } from '~/shared/utils/types/document';
 
@@ -72,24 +73,44 @@ export abstract class FirestoreGet {
     });
   };
 
+  protected fetchFolderByID = (
+    userID: string,
+    folderID: string,
+  ): Promise<AppFolderDocumentInterface> => {
+    return new Promise<AppFolderDocumentInterface>((resolve, reject) => {
+      firestore()
+        .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
+        .doc(`${folderID}`)
+        .get()
+        .then(response => {
+          const document = response.data() as AppFolderDocumentInterface;
+          resolve(document);
+        })
+        .catch(error => {
+          reject(error as FirebaseStorageTypes.Reference);
+        });
+    });
+  };
+
   protected searchDocumentWithQuery = (
     userID: string,
     q: string,
-  ): Promise<IFirebaseDocChangeData[]> => {
-    return new Promise<IFirebaseDocChangeData[]>(async (resolve, reject) => {
+  ): Promise<AppDocumentInterface[]> => {
+    return new Promise<AppDocumentInterface[]>(async (resolve, reject) => {
       firestore()
         .collection(`${this.rootPath}/${this.usersPath}/${userID}`)
         .where('searchName', '>=', q)
         .where('searchName', '<=', q + '\uf8ff')
         .get()
         .then(response => {
-          const rootFilesData = response.docs.filter(
-            doc => doc !== doc.data()?.folder && doc.data(),
+          const copyResponse = response;
+          const rootFilesData = copyResponse.docs.map(
+            doc => doc.data() !== doc.data()?.folder && doc.data(),
           );
-          const subfolderFilesData = response.docs.map(
-            doc => doc.data()?.folder,
-          );
-          const allFiles = [...rootFilesData, ...subfolderFilesData];
+          const subfolderFilesData = response.docs.filter(doc => doc?.data());
+
+          const allFiles = [...rootFilesData];
+          // console.log('allFiles', allFiles);
 
           resolve(allFiles);
         })
@@ -121,10 +142,18 @@ export class FirestoreGetServices extends FirestoreGet {
     return response;
   }
 
+  async folderByID(
+    userID: string,
+    folderID: string,
+  ): Promise<AppFolderDocumentInterface> {
+    const response = await this.fetchFolderByID(userID, folderID);
+    return response;
+  }
+
   async searchDocument(
     userID: string,
     q: string,
-  ): Promise<IFirebaseDocChangeData[]> {
+  ): Promise<AppDocumentInterface[]> {
     const response = await this.searchDocumentWithQuery(userID, q);
     return response;
   }

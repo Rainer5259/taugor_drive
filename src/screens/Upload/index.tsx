@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -15,20 +16,19 @@ import Header from '~/components/Header';
 import DocumentPicker from 'react-native-document-picker';
 import FirebaseServices from '~/services/firebase';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 import toastSuccess from '~/components/ToastNotification/Success';
 import {t} from 'i18next';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
-import firebaseDatabase from '@react-native-firebase/database';
-import toastError from '~/components/ToastNotification/Error';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
+import {setUploading} from '~/services/redux/slices/authenticateUser';
+import toastError from '~/components/ToastNotification/Error';
 
 const UploadScreen: React.FC = () => {
-  const [uploading, setUploading] = useState<boolean>(false);
+  // const [uploading, dispatch(setUploading] = useState<boolean>(false));
   const [extension, setExtension] = useState<string | null>();
   const [title, setTitle] = useState<string>('');
   const [uri, setURI] = useState<string | null>(null);
@@ -41,15 +41,23 @@ const UploadScreen: React.FC = () => {
 
   const {user} = useSelector((state: RootState) => state.user);
 
+  const dispatch = useDispatch();
+
   const handlePickerDocument = async () => {
     if (uri) {
       return handleUploadFile();
     }
 
     try {
+      const limitGB = Math.pow(1024, 3);
       const document = await DocumentPicker.pick({
         type: DocumentPicker.types.allFiles,
       });
+
+      if (document[0].size && document[0].size > limitGB) {
+        toastError({text1: t('COMPONENTS.UPLOAD.MAX_LIMIT_PER_FILE')});
+        return;
+      }
 
       const bytesConvertedToGB = document[0].size! / Math.pow(1024, 3);
       const sizeConverted = parseFloat(bytesConvertedToGB.toString());
@@ -98,7 +106,7 @@ const UploadScreen: React.FC = () => {
   };
 
   const handleUploadFile = async () => {
-    setUploading(true);
+    dispatch(setUploading(true));
 
     toastSuccess({
       text1: t('COMPONENTS.UPLOAD.STATUS.LOADING'),
@@ -111,14 +119,17 @@ const UploadScreen: React.FC = () => {
         await FirebaseServices.storage.post
           .uploadFile(user!.id, uri)
           .then(async res => {
-            setUploading(false);
-            clearDocumentStates();
-            toastSuccess({
-              text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
-            });
+            dispatch(setUploading(true));
 
             await handleUploadDataToFirestore(res)
-              .then(async firestoreRes => {})
+              .then(() => {
+                clearDocumentStates();
+                dispatch(setUploading(false));
+
+                toastSuccess({
+                  text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
+                });
+              })
               .catch(error => {});
           })
           .catch(e => {
@@ -131,7 +142,7 @@ const UploadScreen: React.FC = () => {
         clearDocumentStates();
       }
     } catch (e) {
-      setUploading(false);
+      dispatch(setUploading(false));
     }
   };
 
@@ -159,14 +170,6 @@ const UploadScreen: React.FC = () => {
         right="logout"
       />
       <View style={styles.container}>
-        <TouchableOpacity
-          style={{width: 80, height: 40, backgroundColor: 'green'}}
-          onPress={() => {
-            async () =>
-              await FirebaseServices.storage.post.deleteAllFiles(user!.id);
-          }}>
-          <Text>Apagar todos os meus dados</Text>
-        </TouchableOpacity>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'height'}

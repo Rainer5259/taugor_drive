@@ -10,6 +10,7 @@ export const colors = {
   secondaryBackground: '#666666',
   secondaryBackgroundOpaque: '#D9D9D999',
   secondaryCharcoal: '#C4C4C4',
+  secondaryCharcoalOpaque: '#C4C4C480',
   primarySlateBlue: '#0F4060',
   primarySlateBlueOpaque: '#0F406040',
   primaryText: '#333333',

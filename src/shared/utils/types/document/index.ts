@@ -9,11 +9,11 @@ export interface AppDocumentInterface
   searchName: string;
   fileID: string;
   folderID: string;
+  folder?: AppDocumentInterface[];
 }
 
 export interface AppFolderDocumentInterface extends AppDocumentInterface {
-  folder?: AppDocumentInterface;
-  folderTitle?: string[];
+  folderTitle?: string;
   isFolder?: boolean;
 }
 export interface IFirebaseDocChangeData

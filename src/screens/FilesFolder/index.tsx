@@ -20,12 +20,16 @@ const FilesFolderScreen = ({
   const {user} = useSelector((state: RootState) => state.user);
 
   const [searchName, setSearchName] = useState<string>('');
+  const [currentFolderTitle, setCurrentFolderTitle] = useState<string>('');
   const [documentsData, setDocumentsData] = useState<AppDocumentInterface[]>(
     [],
   );
   const [searchResultsData, setSearchResultsData] = useState<
-    AppDocumentInterface[]
+    AppDocumentInterface[] | undefined
   >([]);
+  const [searchData, setSearchData] = useState<AppDocumentInterface[] | null>(
+    null,
+  );
 
   const handleFetchUserDocuments = async () => {
     try {
@@ -35,27 +39,37 @@ const FilesFolderScreen = ({
           route.params.folderID,
         );
 
+      const {folderTitle} = await FirebaseServices.firestore.get.folderByID(
+        user!.id,
+        route.params.folderID,
+      );
+
+      setCurrentFolderTitle(folderTitle ?? '');
+
+      const newCollectionSubFolders = userDocumentsRes.filter(e => e.folder);
+      const folder = newCollectionSubFolders.map(e =>
+        e?.folder ? e?.folder : null,
+      );
+      const root = userDocumentsRes.filter(e => e);
+      console.log(root);
+
+      setSearchData(root);
+      console.log();
+
       setDocumentsData(userDocumentsRes);
     } catch (e) {}
   };
 
-  const handleSearchFiles = async () => {
-    try {
-      const response = await FirebaseServices.firestore.get.searchDocument(
-        user!.id,
-        searchName.toLowerCase(),
-      );
-      setSearchResultsData(response);
-    } catch (error) {}
-  };
+  useEffect(() => {
+    const newDocumentsData = searchData?.filter((d, index) =>
+      d.searchName?.includes(searchName.toLowerCase()),
+    );
+    setSearchResultsData(newDocumentsData);
+  }, [searchName]);
 
   useEffect(() => {
     handleFetchUserDocuments();
   }, []);
-
-  useEffect(() => {
-    handleSearchFiles();
-  }, [searchName]);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -72,6 +86,7 @@ const FilesFolderScreen = ({
             documentsData={documentsData}
             searchData={searchResultsData}
             isFolder={true}
+            folderTitle={currentFolderTitle}
           />
         </View>
       </View>

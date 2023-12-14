@@ -83,10 +83,9 @@ const FoldersList: FC<FoldersListProps> = ({
     handleFetchUserDocuments();
   }, [user?.id]);
 
-  console.log(selectedFolderID);
-
   const renderFolders = (item: IFirebaseDocChangeData) => {
     const docFiles = item?.data();
+    // console.log(docFiles);
 
     return docFiles?.folder ? (
       <TouchableOpacity
@@ -107,7 +106,7 @@ const FoldersList: FC<FoldersListProps> = ({
               : 0.6
           }
         />
-        <Text style={styles().textContent}>{item?.data()?.title}</Text>
+        <Text style={styles().textContent}>{docFiles?.folderTitle}</Text>
       </TouchableOpacity>
     ) : null;
   };

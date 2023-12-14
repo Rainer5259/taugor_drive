@@ -19,9 +19,12 @@ const FilesScreen: React.FC = () => {
   const [documentsData, setDocumentsData] = useState<AppDocumentInterface[]>(
     [],
   );
+  const [searchData, setSearchData] = useState<
+    AppDocumentInterface[] | undefined
+  >();
   const [searchResultsData, setSearchResultsData] = useState<
-    AppDocumentInterface[]
-  >([]);
+    AppDocumentInterface[] | undefined
+  >();
 
   const {user} = useSelector((state: RootState) => state.user);
   const navigation = useTypedNavigation();
@@ -32,17 +35,13 @@ const FilesScreen: React.FC = () => {
         await FirebaseServices.firestore.get.userDocuments(user!.id);
 
       setDocumentsData(userDocumentsRes);
-    } catch (e) {}
-  };
-
-  const handleSearchFiles = async () => {
-    try {
-      const response = await FirebaseServices.firestore.get.searchDocument(
-        user!.id,
-        searchName.toLowerCase(),
+      const newCollectionSubFolders = userDocumentsRes.filter(e => e.folder);
+      const folder = newCollectionSubFolders.map(e =>
+        e?.folder ? e?.folder : null,
       );
-      setSearchResultsData(response);
-    } catch (error) {}
+      const root = userDocumentsRes.filter(e => e);
+      setSearchData([...root, ...(folder[0] ?? [])]);
+    } catch (e) {}
   };
 
   useEffect(() => {
@@ -50,7 +49,10 @@ const FilesScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    handleSearchFiles();
+    const newDocumentsData = searchData?.filter((d, index) =>
+      d.searchName?.includes(searchName.toLowerCase()),
+    );
+    setSearchResultsData(newDocumentsData);
   }, [searchName]);
 
   const handleNavigateToFolderFiles = useCallback(() => {

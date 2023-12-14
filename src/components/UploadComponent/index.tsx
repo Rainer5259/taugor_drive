@@ -9,6 +9,8 @@ import {SizeReferenceType, UploadComponentProps} from './interface';
 import ButtonDefault from '../ButtonDefault';
 import UsedSpace from '~/components/UsedSpace';
 import {colors} from '~/shared/themes/colors';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/services/redux/store';
 
 const UploadComponent: FC<UploadComponentProps> = ({
   onPressChooseFile,
@@ -20,6 +22,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
 }) => {
   const [sizeCodeName, setSizeCodeName] = useState<SizeReferenceType>('B');
   const [convertedSize, setConvertedSize] = useState<number>(0);
+  const {uploading} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     function formatBits(a: number, b = 2) {
@@ -85,6 +88,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
             hasDocumentPicked && {
               backgroundColor: colors.primaryGreen,
             },
+            uploading && {opacity: 0.6},
           ]}
           textStyle={[
             styles.buttonText,
@@ -97,15 +101,17 @@ const UploadComponent: FC<UploadComponentProps> = ({
               : t('COMPONENTS.UPLOAD.BUTTON.CHOOSE_FILE')
           }
           disabledAnimation
+          disabled={uploading}
         />
 
         {hasDocumentPicked && (
           <ButtonDefault
             onPress={onPressRemoveDocumentPicked}
-            style={styles.chooseFileButton}
+            style={[styles.chooseFileButton, uploading && {opacity: 0.6}]}
             textStyle={[styles.buttonText, styles.secondaryText]}
             title={t('COMPONENTS.UPLOAD.BUTTON.REMOVE_FILE_PICKED')}
             disabledAnimation
+            disabled={uploading}
           />
         )}
       </View>
