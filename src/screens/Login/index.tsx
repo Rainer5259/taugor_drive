@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,12 +17,9 @@ import {t} from 'i18next';
 import toastSuccess from '~/components/ToastNotification/Success';
 import {useDispatch, useSelector} from 'react-redux';
 import {setToken, setUser} from '~/services/redux/slices/authenticateUser';
-import SInfo from 'react-native-sensitive-info';
-import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {regexEmail} from '~/shared/utils/regex/email';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import SplashScreen from 'react-native-splash-screen';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('oo@email.com');

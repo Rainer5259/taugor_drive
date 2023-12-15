@@ -1,8 +1,5 @@
 import storage, {FirebaseStorageTypes} from '@react-native-firebase/storage';
 import database from '@react-native-firebase/database';
-import {FirebaseError} from 'firebase/app';
-import {push, set, ref as databaseRef, Database} from 'firebase/database';
-import {uploadBytes} from 'firebase/storage';
 abstract class StoragePost {
   // private database: Database = databaseFirebaseService;
   private rootPath: string;

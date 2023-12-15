@@ -74,26 +74,6 @@ export abstract class FirestorePost {
       },
     );
   };
-
-  /**Fetch document by title */
-  // protected fetchDocByDocTitle = (
-  //   userID: string,
-  //   docID: string,
-  // ): Promise<AppDocumentInterface> => {
-  //   return new Promise<AppDocumentInterface>((resolve, reject) => {
-  //     firestore()
-  //       .doc(`${this.rootPath}/${userID}`)
-  //       .get()
-  //       .then(response => {
-  //         const doc = response.data as AppDocumentInterface;
-
-  //         resolve(doc);
-  //       })
-  //       .catch(error => {
-  //         reject(error as FirebaseStorageTypes.Reference);
-  //       });
-  //   });
-  // };
 }
 
 export class FirestorePostServices extends FirestorePost {

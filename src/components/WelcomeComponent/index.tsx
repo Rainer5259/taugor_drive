@@ -1,19 +1,7 @@
-import React, {FC, useEffect, useMemo, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import {Text, View, Animated} from 'react-native';
-// import Animated, {
-//   Easing,
-//   SharedValue,
-//   useSharedValue,
-//   withTiming,
-// } from 'react-native-reanimated';
-
 import TaugorDriveLogo from '~/assets/svgs/taugor-drive-with-name-logo.svg';
-import {colors} from '~/shared/themes/colors';
 import ButtonDefault from '../ButtonDefault';
-import {AppScreens} from '~/routes/AppScreens';
-import {LOCAL_STORAGE_SECRET_KEY} from '@env';
-import SInfo from 'react-native-sensitive-info';
-import {setToken} from '~/services/redux/slices/authenticateUser';
 import {useDispatch} from 'react-redux';
 import {useTypedNavigation} from '~/routes/useTypedNavigation';
 import {styles} from './styles';

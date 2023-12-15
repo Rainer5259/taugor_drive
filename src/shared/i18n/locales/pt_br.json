@@ -91,66 +91,6 @@
           "USER_REGISTERED": "Usuário cadastrado com sucesso",
           "CHECK_EMAIL_BOX": "Verifique sua caixa de entrada ou spam"
         }
-      },
-      "HOME": {
-        "TITLE": "Lista de funcionários",
-        "BUTTONS": {
-          "PROMOTE": "Promover",
-          "PROMOTED": "Promovido",
-          "EDIT": "Editar",
-          "END_CONTRACT": "Eliminar",
-          "ADD_NEW": "Adicionar novo"
-        }
-      },
-      "DASHBOARD": {
-        "TITLE": {
-          "TELL_US_ABOUT_YOURSELF": "Fale-nos um pouco sobre você",
-          "CONTACT_INFO": "Informações de contato"
-        },
-        "SUBTITLE": {
-          "HOW_CONTACT_YOU": "Diga quem você é, como os empregados podem entrar em contato com você e qual a sua profissão."
-        },
-        "AVATAR": {
-          "TEXT_ONE": "Foto do perfil",
-          "TEXT_TWO": "Adicionar Foto",
-          "TEXT_THREE": "Foto redonda"
-        },
-        "EMPLOYEE": {
-          "ADD": "Adicionar novo funcionário",
-          "EDIT": "Editar funcionário"
-        },
-        "BUTTON": {
-          "CANCEL": "Cancel",
-          "CONFIRM": "Confirm",
-          "ADD": "Add",
-          "SAVE": "Salvar",
-          "SEND": "Enviar"
-        },
-        "EXTERNAL_PLACEHOLDER": {
-          "NAME": "ex: Tiago ",
-          "LAST_NAME": "ex: Souza ",
-          "JOB": "ex: Emprego ",
-          "OFFICE": "ex: Cargo ",
-          "GENDER": "ex: Feminino / Masculino",
-          "SECTOR": "ex: Setor",
-          "SALARY": "ex: Salário",
-          "ISSUE_DATE": "ex: 22-06-1999",
-          "ADDRESS": "ex: Avenida Paulista, 1.234 - São Paulo - SP - 07010 001",
-          "PHONE_NUMBER": "ex: (11) 9 9123-7676",
-          "EMAIL": "ex: tiago.souza@email.com",
-          "NATIONALITY": "ex: Brasileiro",
-          "BIRTH_DATE": "ex: 23-05-1985",
-          "BIOGRAPHY": "Biografia"
-        },
-        "PLACEHOLDER": {
-          "ISSUE_DATE": "Data de admissão"
-        },
-        "PDF_VIEWER": {
-          "TITLE": {
-            "EXPERIENCE": "Experience",
-            "CONTACT_DETAILS": "Contato"
-          }
-        }
       }
     },
     "ERRORS": {

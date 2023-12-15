@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -28,8 +25,6 @@ import {v4 as uuidv4} from 'uuid';
 import {setUploading} from '~/services/redux/slices/authenticateUser';
 import toastError from '~/components/ToastNotification/Error';
 import {StorageErrorCodesCustom} from '~/shared/utils/types/StorageError';
-import RNFS from 'react-native-fs';
-import RNFetchBlob from 'rn-fetch-blob';
 
 const UploadScreen: React.FC = () => {
   const [title, setTitle] = useState<string>('');

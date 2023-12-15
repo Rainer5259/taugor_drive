@@ -1,7 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
 import {styles} from './styles';
-
 import WelcomeComponent from '~/components/WelcomeComponent';
 import {AppScreens} from '~/routes/AppScreens';
 import {useTypedNavigation} from '~/routes/useTypedNavigation';

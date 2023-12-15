@@ -1,7 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore/lib/index';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
-import {resumeDownload} from 'react-native-fs';
 import {
   AppDocumentInterface,
   AppFolderDocumentInterface,
@@ -104,13 +102,11 @@ export abstract class FirestoreGet {
         .get()
         .then(response => {
           const copyResponse = response;
-          const rootFilesData = copyResponse.docs.map(
-            doc => doc.data() !== doc.data()?.folder && doc.data(),
+          const rootFilesData = copyResponse.docs.map(doc =>
+            doc.data() !== doc.data()?.folder ? doc.data() : [],
           );
-          const subfolderFilesData = response.docs.filter(doc => doc?.data());
 
-          const allFiles = [...rootFilesData];
-          // console.log('allFiles', allFiles);
+          const allFiles = [...rootFilesData] as AppDocumentInterface[];
 
           resolve(allFiles);
         })

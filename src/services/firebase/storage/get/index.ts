@@ -1,27 +1,10 @@
 import storage, {FirebaseStorageTypes} from '@react-native-firebase/storage';
-
-import {FirebaseError} from 'firebase/app';
-import firebase from '../..';
-import {ListResult} from 'firebase/storage';
-
 abstract class StorageGet {
   private rootPath: string;
 
   constructor(rootPath: string) {
     this.rootPath = rootPath;
   }
-
-  // protected getURLFileFromStorage = (docID: string): Promise<string> => {
-  //   return new Promise<string>((resolve, reject) => {
-  //     getDownloadURL(ref(getStorage(), docID))
-  //       .then(response => {
-  //         resolve(response);
-  //       })
-  //       .catch(error => {
-  //         reject(error as FirebaseError);
-  //       });
-  //   });
-  // };
 
   protected getAllFilesByUserID = (
     userID: string,

@@ -7,7 +7,6 @@ import FirebaseServices from '~/services/firebase';
 import {RootState} from '~/services/redux/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTotalBytesUsed} from '~/services/redux/slices/authenticateUser';
-import {useUsedSpace} from '~/shared/hooks/useUsedSpace';
 
 const UsedSpace: FC<UsedSpaceProps> = () => {
   const {user, uploading, totalBytesUsed} = useSelector(
@@ -40,11 +39,6 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
     }
     console.log(user?.id);
   }, [uploading === false, user?.id]);
-  // const usedSpace = useUsedSpace();
-
-  // useEffect(() => {
-  //   dispatch(setTotalBytesUsed(usedSpace));
-  // }, []);
 
   return (
     <View style={styles.container}>

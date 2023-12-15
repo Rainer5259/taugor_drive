@@ -70,7 +70,7 @@ const FilesScreen: React.FC = () => {
 
   const handleNavigateToFolder = (folderID: string) => {
     if (selectedFolderID) {
-      navigation.navigate('FilesFolder', {folderID: selectedFolderID});
+      navigation.navigate('FilesFolder', {folderID: folderID});
       return;
     }
   };
