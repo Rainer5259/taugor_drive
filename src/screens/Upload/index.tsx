@@ -59,15 +59,13 @@ const UploadScreen: React.FC = () => {
         return;
       }
 
-      if (document[0].size && totalBytesUsed !== null) {
+      if (document[0].size && totalBytesUsed) {
         const fileSize = document[0].size / Math.pow(1024, 3);
         const totalSize = fileSize + totalBytesUsed;
         if (totalSize > limitUpload) {
           toastError({text1: t('COMPONENTS.UPLOAD.EXCEEDED_STORAGE_LIMIT')});
           return;
         }
-
-        return;
       }
 
       const bytesConvertedToGB = document[0].size! / Math.pow(1024, 3);

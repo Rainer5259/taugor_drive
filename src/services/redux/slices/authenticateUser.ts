@@ -10,7 +10,7 @@ const initialState: AuthenticateUserProps = {
   user: null,
   limitUpload,
   uploading: false,
-  totalBytesUsed: null,
+  totalBytesUsed: 0,
   roundedAvatar: false,
   error: false,
   loading: false,
