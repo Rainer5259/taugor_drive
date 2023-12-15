@@ -22,8 +22,8 @@ import {AppUserCredentialInterface} from '~/shared/utils/types/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>('oo@email.com');
-  const [password, setPassword] = useState<string>('123123');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [loadingSignIn, setLoadingSignIn] = useState<boolean>(false);
   const [loadingSignUp, setLoadingSignUp] = useState<boolean>(false);
   const [loadingSocialMedia, setLoadingSocialMedia] = useState<boolean>(false);
