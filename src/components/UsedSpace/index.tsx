@@ -37,7 +37,6 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
         handleGetTotalBytesUsed();
       }
     }
-    console.log(user?.id);
   }, [uploading === false, user?.id]);
 
   return (

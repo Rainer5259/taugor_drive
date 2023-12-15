@@ -42,12 +42,7 @@ const FilesFolderScreen = ({
 
       setCurrentFolderTitle(folderTitle ?? '');
 
-      const newCollectionSubFolders = userDocumentsRes.filter(e => e.folder);
-      const folder = newCollectionSubFolders.map(e =>
-        e?.folder ? e?.folder : null,
-      );
       const root = userDocumentsRes.filter(e => e);
-      console.log(root);
 
       setSearchData(root);
 
