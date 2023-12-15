@@ -21,37 +21,42 @@ import {RootState} from '~/services/redux/store';
 import toastSuccess from '~/components/ToastNotification/Success';
 import {t} from 'i18next';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
+import firebase, {ReactNativeFirebase} from '@react-native-firebase/app';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {setUploading} from '~/services/redux/slices/authenticateUser';
 import toastError from '~/components/ToastNotification/Error';
+import {StorageErrorCodesCustom} from '~/shared/utils/types/StorageError';
+import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const UploadScreen: React.FC = () => {
-  // const [uploading, dispatch(setUploading] = useState<boolean>(false));
-  const [extension, setExtension] = useState<string | null>();
   const [title, setTitle] = useState<string>('');
   const [uri, setURI] = useState<string | null>(null);
   const [size, setSize] = useState<number | null>(0);
-  const [userDocuments, setUserDocuments] = useState<AppDocumentInterface[]>(
-    [],
-  );
-
+  const [pickingFile, setPickingFile] = useState<boolean>(false);
   const [selectedFolderID, setSelectedFolderID] = useState<string>('');
 
-  const {user} = useSelector((state: RootState) => state.user);
+  const {user, totalBytesUsed, limitUpload} = useSelector(
+    (state: RootState) => state.user,
+  );
 
   const dispatch = useDispatch();
 
   const handlePickerDocument = async () => {
+    clearDocumentStates();
+
     if (uri) {
       return handleUploadFile();
     }
 
     try {
+      setPickingFile(true);
       const limitGB = Math.pow(1024, 3);
       const document = await DocumentPicker.pick({
         type: DocumentPicker.types.allFiles,
+        copyTo: 'cachesDirectory',
       });
 
       if (document[0].size && document[0].size > limitGB) {
@@ -59,23 +64,33 @@ const UploadScreen: React.FC = () => {
         return;
       }
 
+      if (document[0].size && totalBytesUsed !== null) {
+        const fileSize = document[0].size / Math.pow(1024, 3);
+        const totalSize = fileSize + totalBytesUsed;
+        if (totalSize > limitUpload) {
+          toastError({text1: t('COMPONENTS.UPLOAD.EXCEEDED_STORAGE_LIMIT')});
+          return;
+        }
+
+        return;
+      }
+
       const bytesConvertedToGB = document[0].size! / Math.pow(1024, 3);
       const sizeConverted = parseFloat(bytesConvertedToGB.toString());
-
-      setExtension(document[0].type);
       setTitle(document[0].name ?? '');
       setSize(sizeConverted);
-      setURI(document[0].uri);
+      setURI(document[0].fileCopyUri ?? document[0].uri);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
       } else {
         throw err;
       }
+    } finally {
+      setPickingFile(false);
     }
   };
 
   const clearDocumentStates = () => {
-    setExtension(null);
     setTitle('');
     setSize(null);
     setURI(null);
@@ -94,10 +109,11 @@ const UploadScreen: React.FC = () => {
         folderID: selectedFolderID,
         searchName: title!.toLowerCase(),
       };
-      await FirebaseServices.firestore.post
-        .sendDocument(user!.id, appDocument, selectedFolderID)
-        .then(() => {})
-        .catch(e => {});
+      await FirebaseServices.firestore.post.sendDocument(
+        user!.id,
+        appDocument,
+        selectedFolderID,
+      );
 
       if (!documentSnapshot) {
         return;
@@ -108,41 +124,39 @@ const UploadScreen: React.FC = () => {
   const handleUploadFile = async () => {
     dispatch(setUploading(true));
 
-    toastSuccess({
-      text1: t('COMPONENTS.UPLOAD.STATUS.LOADING'),
-      text2: t('COMPONENTS.UPLOAD.STATUS.WAIT'),
-      autoHide: false,
-    });
-
-    try {
-      if (uri) {
+    if (uri) {
+      toastSuccess({
+        text1: t('COMPONENTS.UPLOAD.STATUS.LOADING'),
+        text2: t('COMPONENTS.UPLOAD.STATUS.WAIT'),
+        autoHide: false,
+      });
+      try {
         await FirebaseServices.storage.post
           .uploadFile(user!.id, uri)
           .then(async res => {
-            dispatch(setUploading(true));
+            await handleUploadDataToFirestore(res).then(() => {
+              clearDocumentStates();
+              dispatch(setUploading(false));
 
-            await handleUploadDataToFirestore(res)
-              .then(() => {
-                clearDocumentStates();
-                dispatch(setUploading(false));
-
-                toastSuccess({
-                  text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
-                });
-              })
-              .catch(error => {});
-          })
-          .catch(e => {
-            const error = e as FirebaseStorageTypes.Reference;
-            switch (error) {
-              case e:
-                break;
-            }
+              toastSuccess({
+                text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
+              });
+            });
           });
+      } catch (e) {
+        const error = e as ReactNativeFirebase.NativeFirebaseError;
+
+        switch (error.code) {
+          case `storage/${StorageErrorCodesCustom.UNKNOWN}`:
+            toastError({
+              text1: t('GENERICS.UNKNOWN_ERROR'),
+            });
+            break;
+        }
+      } finally {
         clearDocumentStates();
+        dispatch(setUploading(false));
       }
-    } catch (e) {
-      dispatch(setUploading(false));
     }
   };
 
@@ -150,24 +164,12 @@ const UploadScreen: React.FC = () => {
     clearDocumentStates();
   };
 
-  const handleFetchUserDocuments = async () => {
-    try {
-      const userDocumentsRes =
-        await FirebaseServices.firestore.get.userDocuments(user!.id);
-      setUserDocuments(userDocumentsRes);
-    } catch (e) {}
-  };
-
-  useEffect(() => {
-    handleFetchUserDocuments();
-  }, [user?.id]);
-
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header
         left="files"
         title={t('COMPONENTS.HEADER.SCREENS_NAME.UPLOAD')}
-        right="logout"
+        right={'logout'}
       />
       <View style={styles.container}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -181,6 +183,7 @@ const UploadScreen: React.FC = () => {
               hasDocumentPicked={uri ? true : false}
               onPressRemoveDocumentPicked={handleOnPressRemoveDocumentPicked}
               setTitle={setTitle}
+              pickingFile={pickingFile}
             />
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>

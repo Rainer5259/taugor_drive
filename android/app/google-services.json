@@ -12,7 +12,20 @@
           "package_name": "com.taugor_drive"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "530187568591-r43tb6k5jiqgh09gga4g5dmc0ljiek9o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taugor_drive",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "530187568591-5dt4p9ndm8d3kohl5h2c8t5ohuglsh87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBJo2saLoqZ-vlIcbkizjhWFIuInvEUECI"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "530187568591-5dt4p9ndm8d3kohl5h2c8t5ohuglsh87.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "530187568591-5u6hq1rspo5lrk0itk2t3hdm5mhfhit3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.taugor-drive"
+              }
+            }
+          ]
         }
       }
     }

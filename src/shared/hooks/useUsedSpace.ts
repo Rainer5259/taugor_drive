@@ -28,7 +28,7 @@ export const useUsedSpace = () => {
     if (user) {
       fetchUsedSpace();
     }
-  }, [uploading === false]);
+  }, []);
 
   return totalBytesUsed;
 };

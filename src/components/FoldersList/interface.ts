@@ -5,7 +5,7 @@ import {ViewStyle} from 'react-native';
 export interface FoldersListProps {
   selectedFolderID: string;
   setSelectedFolderID: Dispatch<SetStateAction<string>>;
-  onPressFolder?: () => void;
+  onPressFolder?: (folderID: string) => void;
   addNewFolderButton?: boolean;
   style?: ViewStyle;
 }

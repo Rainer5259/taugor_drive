@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import {styles} from './styles';
 import Header from '~/components/Header';
@@ -11,7 +11,6 @@ import {FilesList} from '~/components/FilesList';
 import {useTypedNavigation} from '~/routes/useTypedNavigation';
 import FirebaseServices from '~/services/firebase';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 
 const FilesScreen: React.FC = () => {
   const [selectedFolderID, setSelectedFolderID] = useState<string>('');
@@ -19,12 +18,10 @@ const FilesScreen: React.FC = () => {
   const [documentsData, setDocumentsData] = useState<AppDocumentInterface[]>(
     [],
   );
-  const [searchData, setSearchData] = useState<
-    AppDocumentInterface[] | undefined
-  >();
+  const [searchData, setSearchData] = useState<AppDocumentInterface[]>();
   const [searchResultsData, setSearchResultsData] = useState<
-    AppDocumentInterface[] | undefined
-  >();
+    AppDocumentInterface[]
+  >([]);
 
   const {user} = useSelector((state: RootState) => state.user);
   const navigation = useTypedNavigation();
@@ -44,23 +41,39 @@ const FilesScreen: React.FC = () => {
     } catch (e) {}
   };
 
+  const handleFilterSearch = () => {
+    const removeSpecialCharacters = (str: string) => {
+      return str?.replace(/[^a-zA-Z0-9]/g, '');
+    };
+
+    const sanitizedSearchName = removeSpecialCharacters(
+      searchName?.toLowerCase(),
+    );
+
+    const newDocumentsData = searchData?.filter((d, index) => {
+      const sanitizedDocumentName = removeSpecialCharacters(
+        d?.searchName?.toLowerCase(),
+      );
+
+      return sanitizedDocumentName?.includes(sanitizedSearchName);
+    });
+    setSearchResultsData(newDocumentsData ?? []);
+  };
+
   useEffect(() => {
     handleFetchUserDocuments();
   }, []);
 
   useEffect(() => {
-    const newDocumentsData = searchData?.filter((d, index) =>
-      d.searchName?.includes(searchName.toLowerCase()),
-    );
-    setSearchResultsData(newDocumentsData);
+    handleFilterSearch();
   }, [searchName]);
 
-  const handleNavigateToFolderFiles = useCallback(() => {
+  const handleNavigateToFolder = (folderID: string) => {
     if (selectedFolderID) {
       navigation.navigate('FilesFolder', {folderID: selectedFolderID});
       return;
     }
-  }, [selectedFolderID]);
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -83,7 +96,7 @@ const FilesScreen: React.FC = () => {
             selectedFolderID={selectedFolderID}
             setSelectedFolderID={setSelectedFolderID}
             style={styles.flatListContainer}
-            onPressFolder={handleNavigateToFolderFiles}
+            onPressFolder={handleNavigateToFolder}
           />
         </View>
       </View>

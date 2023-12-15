@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
 import {styles} from './styles';
 import Logo from '~/assets/svgs/taugor-drive-with-name-logo.svg';
@@ -34,9 +34,7 @@ const AuthCard: FC<AuthCardProps> = ({
 
   useEffect(() => {
     if (loadingForgotPassword) {
-      setTimer(60);
-    } else {
-      setTimer(0);
+      setTimer(25);
     }
   }, [loadingForgotPassword]);
 
@@ -68,6 +66,7 @@ const AuthCard: FC<AuthCardProps> = ({
           onChangeText={e => setEmail(e)}
           autoCapitalize="none"
           autoCorrect={false}
+          editable={!disabled}
         />
         <TextInputDefault
           placeholder={t('GENERICS.PASSWORD')}
@@ -77,6 +76,7 @@ const AuthCard: FC<AuthCardProps> = ({
           onChangeText={e => setPassword(e)}
           autoCapitalize="none"
           autoCorrect={false}
+          editable={!disabled}
         />
 
         <View style={styles.forgottenPasswordContainer}>
@@ -89,7 +89,7 @@ const AuthCard: FC<AuthCardProps> = ({
           {loadingForgotPassword && <ActivityIndicator />}
           <ButtonDefault
             onPress={handleOnPressForgotPassword}
-            disabled={!timerIsZero}
+            disabled={disabled || !timerIsZero}
             style={[
               styles.forgottenPasswordButton,
               {opacity: !timerIsZero ? 0.5 : 1},

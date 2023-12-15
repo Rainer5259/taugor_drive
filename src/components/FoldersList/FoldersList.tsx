@@ -2,7 +2,6 @@ import React, {FC, useEffect, useState} from 'react';
 import {FoldersListProps} from './interface';
 import {Alert, FlatList, Text, TouchableOpacity, View} from 'react-native';
 import FolderIcon from '~/assets/svgs/folder-icon.svg';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {styles} from './styles';
 import {t} from 'i18next';
 import FirebaseServices from '~/services/firebase';
@@ -10,11 +9,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 import PlusIcon from '~/assets/svgs/plus-icon.svg';
 import {colors} from '~/shared/themes/colors';
-import {
-  AppDocumentInterface,
-  AppFolderDocumentInterface,
-  IFirebaseDocChangeData,
-} from '~/shared/utils/types/document';
+import {IFirebaseDocChangeData} from '~/shared/utils/types/document';
 
 const FoldersList: FC<FoldersListProps> = ({
   selectedFolderID,
@@ -41,8 +36,8 @@ const FoldersList: FC<FoldersListProps> = ({
       },
       {
         onPress: (value?: string) => {
-          if (value && value.length > 40) {
-            return Alert.alert('Máximo 40 caracters');
+          if (value && value.length > 30) {
+            return Alert.alert('Máximo 30 caracters');
           }
           if (value) {
             handleCreateFolder(value);
@@ -75,7 +70,7 @@ const FoldersList: FC<FoldersListProps> = ({
 
   const handleOnPressFolder = () => {
     if (onPressFolder) {
-      onPressFolder();
+      onPressFolder(selectedFolderID);
     }
   };
 
@@ -85,7 +80,6 @@ const FoldersList: FC<FoldersListProps> = ({
 
   const renderFolders = (item: IFirebaseDocChangeData) => {
     const docFiles = item?.data();
-    // console.log(docFiles);
 
     return docFiles?.folder ? (
       <TouchableOpacity

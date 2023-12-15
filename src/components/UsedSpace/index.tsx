@@ -32,16 +32,14 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
 
   useEffect(() => {
     if (user?.id) {
-      console.log('disparou 123');
-
       try {
         handleGetTotalBytesUsed();
       } catch (e) {
-        // try fetch again
         handleGetTotalBytesUsed();
       }
     }
-  }, [uploading === false]);
+    console.log(user?.id);
+  }, [uploading === false, user?.id]);
   // const usedSpace = useUsedSpace();
 
   // useEffect(() => {
@@ -64,7 +62,7 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
       </Text>
       <Text style={styles.totalAvailableText}>
         {t('COMPONENTS.UPLOAD.USED_SPACE.FROM_TOTAL_AVAILABLE', {
-          totalAvailableGB: 15,
+          totalAvailableGB: 2,
         })}
       </Text>
     </View>

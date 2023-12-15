@@ -35,6 +35,8 @@
           "CURRENT": "{{gb}} GB",
           "FROM_TOTAL_AVAILABLE": "de {{totalAvailableGB}}GB Livres"
         },
+        "EXCEEDED_STORAGE_LIMIT": "Limite máximo de armazenamento atigindo",
+        "FILE_EXISTS": "Verifique se arquivo existe no dispositivo",
         "SIZE_OF_FILE": "Tamanho: {{size}}{{sizeReference}}",
         "LIMIT_PER_FILE": "Limite 1GB/arquivo",
         "MAX_LIMIT_PER_FILE": "Limite Máximo: 1GB/arquivo",

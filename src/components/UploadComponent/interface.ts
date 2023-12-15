@@ -7,6 +7,7 @@ export interface UploadComponentProps {
   setTitle: Dispatch<SetStateAction<string>>;
   hasDocumentPicked: boolean;
   onPressRemoveDocumentPicked: () => void;
+  pickingFile: boolean;
 }
 
 export type SizeReferenceType = 'B' | 'Bytes' | 'KB' | 'MB' | 'GB';

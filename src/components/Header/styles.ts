@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     borderColor: colors.primaryCharcoal,
     flexDirection: 'row',
   },
-  chevronLeft: {
+  left: {
     position: 'absolute',
     left: 20,
   },

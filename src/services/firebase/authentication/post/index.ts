@@ -78,5 +78,3 @@ export class AuthenticationPostServices extends AuthPost {
     return response;
   }
 }
-
-export const authenticationPostService = {};

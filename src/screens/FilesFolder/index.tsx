@@ -1,17 +1,15 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import {styles} from './styles';
 import Header from '~/components/Header';
 import {t} from 'i18next';
 import SearchInput from '~/components/SearchInput';
-import {FoldersList} from '~/components/FoldersList/FoldersList';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 import {FilesList} from '~/components/FilesList';
-import {AppScreens, RootStackParamList} from '~/routes/AppScreens';
+import {RootStackParamList} from '~/routes/AppScreens';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import FirebaseServices from '~/services/firebase';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
 
 const FilesFolderScreen = ({
@@ -25,11 +23,9 @@ const FilesFolderScreen = ({
     [],
   );
   const [searchResultsData, setSearchResultsData] = useState<
-    AppDocumentInterface[] | undefined
+    AppDocumentInterface[]
   >([]);
-  const [searchData, setSearchData] = useState<AppDocumentInterface[] | null>(
-    null,
-  );
+  const [searchData, setSearchData] = useState<AppDocumentInterface[]>([]);
 
   const handleFetchUserDocuments = async () => {
     try {
@@ -54,17 +50,31 @@ const FilesFolderScreen = ({
       console.log(root);
 
       setSearchData(root);
-      console.log();
 
       setDocumentsData(userDocumentsRes);
     } catch (e) {}
   };
 
-  useEffect(() => {
-    const newDocumentsData = searchData?.filter((d, index) =>
-      d.searchName?.includes(searchName.toLowerCase()),
+  const handleFilterSearch = () => {
+    const removeSpecialCharacters = (str: string) => {
+      return str?.replace(/[^a-zA-Z0-9]/g, '');
+    };
+    const sanitizedSearchName = removeSpecialCharacters(
+      searchName?.toLowerCase(),
     );
-    setSearchResultsData(newDocumentsData);
+
+    const newDocumentsData = searchData?.filter((d, index) => {
+      const sanitizedDocumentName = removeSpecialCharacters(
+        d?.searchName?.toLowerCase(),
+      );
+
+      return sanitizedDocumentName?.includes(sanitizedSearchName);
+    });
+    setSearchResultsData(newDocumentsData ?? []);
+  };
+
+  useEffect(() => {
+    handleFilterSearch();
   }, [searchName]);
 
   useEffect(() => {

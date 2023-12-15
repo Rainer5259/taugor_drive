@@ -1,22 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
-
 import {AppUserInterface} from '~/shared/utils/types/user';
+import {AuthenticateUserProps} from './interface';
 
-export interface AuthenticateUserProps {
-  token: string | null;
-  user: AppUserInterface | null;
-  totalBytesUsed: number | null;
-  roundedAvatar: boolean;
-  uploading: boolean;
-  error: boolean;
-  loading: boolean;
-  errorMessage: string;
-}
+const limitUpload = 2 * Math.pow(1024, 3);
 
 const initialState: AuthenticateUserProps = {
   token: null,
   user: null,
+  limitUpload,
   uploading: false,
   totalBytesUsed: null,
   roundedAvatar: false,

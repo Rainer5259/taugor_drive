@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
 
   signUpButton: {
     backgroundColor: 'transparent',
-    width: 80,
+    maxWidth: 80,
   },
 
   secondaryText: {
@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
 
   forgottenPasswordButton: {
     backgroundColor: 'transparent',
-    width: 146,
+    maxWidth: 138,
     alignSelf: 'flex-end',
   },
 

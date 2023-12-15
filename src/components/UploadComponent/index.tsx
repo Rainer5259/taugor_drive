@@ -19,6 +19,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
   setTitle,
   hasDocumentPicked,
   onPressRemoveDocumentPicked,
+  pickingFile,
 }) => {
   const [sizeCodeName, setSizeCodeName] = useState<SizeReferenceType>('B');
   const [convertedSize, setConvertedSize] = useState<number>(0);
@@ -72,6 +73,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
             value={title}
             onChange={e => setTitle(e.nativeEvent.text)}
             editable={hasDocumentPicked}
+            maxLength={40}
           />
         </View>
 
@@ -100,8 +102,9 @@ const UploadComponent: FC<UploadComponentProps> = ({
               ? t('COMPONENTS.UPLOAD.BUTTON.UPLOAD')
               : t('COMPONENTS.UPLOAD.BUTTON.CHOOSE_FILE')
           }
-          disabledAnimation
-          disabled={uploading}
+          loading={pickingFile}
+          disabledAnimation={pickingFile}
+          disabled={uploading || pickingFile}
         />
 
         {hasDocumentPicked && (

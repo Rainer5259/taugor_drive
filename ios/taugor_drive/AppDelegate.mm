@@ -6,6 +6,7 @@
 
 #import <React/RCTAppSetupUtils.h>
 #import <Firebase.h>
+#import "RNSplashScreen.h"
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -13,9 +14,10 @@
 #import <React/RCTFabricSurfaceHostingProxyRootView.h>
 #import <React/RCTSurfacePresenter.h>
 #import <React/RCTSurfacePresenterBridgeAdapter.h>
-#import <ReactCommon/RCTTurboModuleManager.h>
+#import <ReactCommon/RCTTurboModuleManager.h>Ï
 
 #import <react/config/ReactNativeConfig.h>
+
 
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
@@ -29,11 +31,33 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 @end
 #endif
 
+static void ClearKeychainIfNecessary() {
+    // Checks wether or not this is the first time the app is run
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HAS_RUN_BEFORE"] == NO) {
+        // Set the appropriate value so we don't clear next time the app is launched
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HAS_RUN_BEFORE"];
+        NSArray *secItemClasses = @[
+            (__bridge id)kSecClassGenericPassword,
+            (__bridge id)kSecClassInternetPassword,
+            (__bridge id)kSecClassCertificate,
+            (__bridge id)kSecClassKey,
+            (__bridge id)kSecClassIdentity
+        ];
+        // Maps through all Keychain classes and deletes all items that match
+        for (id secItemClass in secItemClasses) {
+            NSDictionary *spec = @{(__bridge id)kSecClass: secItemClass};
+            SecItemDelete((__bridge CFDictionaryRef)spec);
+        }
+    }
+}
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  ClearKeychainIfNecessary();
   [FIRApp configure];
+  [RNSplashScreen show];
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];

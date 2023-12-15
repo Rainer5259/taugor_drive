@@ -9,15 +9,16 @@ import {AppScreens} from '~/routes/AppScreens';
 import {HeaderProps} from './interface';
 import SInfo from 'react-native-sensitive-info';
 import {useTypedNavigation} from '~/routes/useTypedNavigation';
-import {useDispatch} from 'react-redux';
-import {setToken} from '~/services/redux/slices/authenticateUser';
+import {useDispatch, useSelector} from 'react-redux';
+import {setToken, setUser} from '~/services/redux/slices/authenticateUser';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {RootState} from '~/services/redux/store';
 
 const Header: FC<HeaderProps> = ({left, right, title}) => {
   const navigation = useTypedNavigation();
   const dispatch = useDispatch();
-
+  const {uploading} = useSelector((state: RootState) => state.user);
   const renderLeftContent = () => {
     switch (left) {
       case 'chevron-left':
@@ -49,6 +50,7 @@ const Header: FC<HeaderProps> = ({left, right, title}) => {
   const handleLogout = async () => {
     SInfo.deleteItem(LOCAL_STORAGE_SECRET_KEY, {});
     dispatch(setToken(null));
+    dispatch(setUser(null));
     const isSignedIn = await GoogleSignin.isSignedIn();
 
     if (isSignedIn) {
@@ -65,6 +67,9 @@ const Header: FC<HeaderProps> = ({left, right, title}) => {
       case 'files':
         navigateToFolders();
         break;
+
+      default:
+        null;
     }
   };
 
@@ -73,13 +78,15 @@ const Header: FC<HeaderProps> = ({left, right, title}) => {
       case 'logout':
         handleLogout();
         break;
+      default:
+        null;
     }
   };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.chevronLeft}
+        style={styles.left}
         disabled={!left}
         onPress={handlePressLeft}
         activeOpacity={0.6}>
@@ -89,10 +96,10 @@ const Header: FC<HeaderProps> = ({left, right, title}) => {
       <Text style={styles.title}>{title}</Text>
 
       <TouchableOpacity
-        style={styles.logout}
-        disabled={!right}
+        style={[styles.logout, uploading && {opacity: 0.6}]}
+        disabled={!right || uploading}
         onPress={handlePressRight}
-        activeOpacity={0.6}>
+        activeOpacity={0.3}>
         {renderRightContent()}
       </TouchableOpacity>
     </View>

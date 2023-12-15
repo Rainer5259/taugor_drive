@@ -22,6 +22,7 @@ import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {regexEmail} from '~/shared/utils/regex/email';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import SplashScreen from 'react-native-splash-screen';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('oo@email.com');
@@ -48,6 +49,7 @@ const Login: React.FC = () => {
     }
 
     setLoadingSignIn(true);
+
     try {
       const userInfo =
         await FirebaseServices.authentication.get.signInWithEmail(
@@ -180,18 +182,6 @@ const Login: React.FC = () => {
     }
   };
 
-  const fetchUserInfoStoraged = async () => {
-    try {
-      const storagedUser = await SInfo.getItem(LOCAL_STORAGE_SECRET_KEY, {});
-
-      if (storagedUser) {
-        const userParsed: AppUserCredentialInterface = JSON.parse(storagedUser);
-        dispatch(setToken(userParsed.token));
-        dispatch(setUser({id: userParsed.id}));
-      }
-    } catch (e) {}
-  };
-
   const handleResetPassword = async () => {
     if (!email) {
       return fillAllFieldsToast();
@@ -224,14 +214,8 @@ const Login: React.FC = () => {
           toastError({text1: t('SCREENS.AUTHENTICATION.ERRORS.SEND_LINK')});
           break;
       }
-    } finally {
-      setLoadingForgotPassword(false);
     }
   };
-
-  useEffect(() => {
-    fetchUserInfoStoraged();
-  }, []);
 
   return (
     <View style={styles.container}>

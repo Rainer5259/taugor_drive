@@ -1,30 +1,55 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {FilesListProps} from './interface';
-import {FlatList, Text, TouchableOpacity, View} from 'react-native';
-import FolderIcon from '~/assets/svgs/folder-icon.svg';
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ChevronDownIcon from '~/assets/svgs/chevron-down.svg';
 import {styles} from './styles';
 import {t} from 'i18next';
-import FirebaseServices from '~/services/firebase';
-import {useSelector} from 'react-redux';
-import {RootState} from '~/services/redux/store';
-import {
-  AppDocumentInterface,
-  AppFolderDocumentInterface,
-} from '~/shared/utils/types/document';
+import {AppFolderDocumentInterface} from '~/shared/utils/types/document';
 import {formatInputValue} from '~/shared/utils/functions/formatters.ts';
 import IconPerFileType from '../IconPerFileType';
 
 const FilesList: FC<FilesListProps> = ({
   searchName,
   style,
-  setSelectedFileID,
   documentsData,
   searchData,
   folderTitle,
   isFolder,
 }) => {
   const [selectedFile, setSelectedFile] = useState<string>('');
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(10);
+
+  const handleLoadMoreItems = () => {
+    if (isLoadingMore) {
+      return;
+    }
+
+    setIsLoadingMore(true);
+    const totalItems = searchName
+      ? searchData.length
+      : newDocumentsSortedData.length;
+
+    if (endIndex < totalItems) {
+      setTimeout(() => {
+        setStartIndex(prevStartIndex => prevStartIndex + 3);
+        setIsLoadingMore(false);
+      }, 3000);
+      setTimeout(() => {
+        setEndIndex(prevEndIndex => Math.min(prevEndIndex + 3, totalItems));
+        setIsLoadingMore(false);
+      }, 3000);
+    } else {
+      setIsLoadingMore(false);
+    }
+  };
 
   const documentsSortedData = documentsData?.sort((a, b) => {
     const titleA = a?.title || '';
@@ -32,7 +57,7 @@ const FilesList: FC<FilesListProps> = ({
     return titleA.localeCompare(titleB);
   });
 
-  const searchSortedData = documentsData?.sort((a, b) => {
+  const searchSortedData = searchData?.sort((a, b) => {
     const titleA = a?.title || '';
     const titleB = b?.title || '';
     return titleA.localeCompare(titleB);
@@ -58,7 +83,7 @@ const FilesList: FC<FilesListProps> = ({
         }}>
         <View style={styles().childrenContentAlignment}>
           <IconPerFileType
-            fileType={extension?.[1]}
+            fileType={extension?.[1] || ''}
             opacity={
               selectedFile === '' ? 1 : selectedFile === fileID ? 1 : 0.6
             }
@@ -92,24 +117,37 @@ const FilesList: FC<FilesListProps> = ({
     ) : null;
   };
 
-  useEffect(() => {
-    return;
-  }, []);
   return newDocumentsSortedData ? (
     <View>
       <Text style={styles().titleText}>
-        {searchName
-          ? t('COMPONENTS.FOLDERS_LIST.SEARCH_RESULT')
-          : !isFolder
-          ? t('COMPONENTS.FOLDERS_LIST.MAIN_DIRECTORY')
-          : folderTitle}
+        {searchName ? (
+          t('COMPONENTS.FOLDERS_LIST.SEARCH_RESULT')
+        ) : !isFolder ? (
+          t('COMPONENTS.FOLDERS_LIST.MAIN_DIRECTORY')
+        ) : folderTitle ? (
+          folderTitle
+        ) : (
+          <ActivityIndicator />
+        )}
       </Text>
       <FlatList
-        data={searchName ? searchData : newDocumentsSortedData}
-        keyExtractor={(item, i) => item?.fileID ?? `key:${i}`}
+        data={
+          searchName
+            ? newSearchSortedData.slice(startIndex, endIndex)
+            : newDocumentsSortedData.slice(startIndex, endIndex)
+        }
+        keyExtractor={(item, index) => item.fileID ?? `key:${index}`}
         renderItem={({item}) => renderFiles(item)}
         style={[styles().flatList, style]}
         contentContainerStyle={styles().contentContainerFlatList}
+        onEndReached={handleLoadMoreItems}
+        onEndReachedThreshold={0.1}
+        initialNumToRender={3}
+        ListFooterComponent={() =>
+          isLoadingMore ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : null
+        }
       />
     </View>
   ) : (
