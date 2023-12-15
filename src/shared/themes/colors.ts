@@ -2,6 +2,7 @@ export const colors = {
   primaryWhite: '#FFFFFF',
   primaryGreen: '#5FC300',
   primaryCharcoal: '#424242',
+  primaryLight: '#ECECEC',
   primaryLightGray: '#D9D9D9',
   primaryLightGrayOpaque: '#D9D9D960',
   primaryCharcoalOpaque: '#42424260',

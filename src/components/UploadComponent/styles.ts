@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     height: 240,
     borderRadius: 6,
     alignItems: 'center',
-    backgroundColor: colors.secondaryCharcoal,
+    backgroundColor: colors.primaryLightGrayOpaque,
     justifyContent: 'space-evenly',
     borderColor: colors.primaryGreen,
     borderWidth: 0.3,
@@ -24,7 +24,6 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 12,
     color: colors.secondaryText,
-    // fontFamily: 'Roboto-Bold',
   },
 
   limitPerFileText: {
@@ -40,13 +39,13 @@ export const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: colors.primaryBackground,
+    backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingVertical: 6,
     alignItems: 'flex-start',
     color: colors.primarySlateBlue,
     borderWidth: 0.6,
-    borderColor: colors.primaryGreen,
+    borderColor: 'transparent',
   },
 
   buttonBox: {

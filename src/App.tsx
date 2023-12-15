@@ -4,7 +4,7 @@ import Toast from 'react-native-toast-message';
 import '~/shared/i18n';
 import {Provider} from 'react-redux';
 import {store} from './services/redux/store';
-import '~/services/firebase/app/GoogleSignin';
+import '~/services/firebase/googleSignIn';
 import {setToken, setUser} from '~/services/redux/slices/authenticateUser';
 import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';

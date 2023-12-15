@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {Text, View, Animated} from 'react-native';
 import TaugorDriveLogo from '~/assets/svgs/taugor-drive-with-name-logo.svg';
 import ButtonDefault from '../ButtonDefault';
@@ -9,8 +9,7 @@ import {t} from 'i18next';
 import {WelcomeComponentProps} from './interface';
 
 const WelcomeComponent: FC<WelcomeComponentProps> = ({onPress}) => {
-  const dispatch = useDispatch();
-  const navigation = useTypedNavigation();
+  const [isShowing, setIsShowing] = useState<boolean>(true);
 
   const textOne = useRef(new Animated.Value(-300)).current;
   const textTwo = useRef(new Animated.Value(-200)).current;
@@ -44,6 +43,7 @@ const WelcomeComponent: FC<WelcomeComponentProps> = ({onPress}) => {
     animateWithTimingStart(200, textTwo, 1300);
     animateWithTimingStart(1, opacity, 2000, () => {
       animateWithTimingStart(1, opacityButton, 200);
+      setIsShowing(false);
     });
 
     return () => {
@@ -79,6 +79,7 @@ const WelcomeComponent: FC<WelcomeComponentProps> = ({onPress}) => {
           onPress={onPress}
           title={t('COMPONENTS.WELCOME.BUTTON')}
           textStyle={styles.goToUploadTextButton}
+          disabled={isShowing}
         />
       </ViewAnimated>
     </View>
