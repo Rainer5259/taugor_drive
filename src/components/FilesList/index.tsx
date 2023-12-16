@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {FilesListProps} from './interface';
 import {
   ActivityIndicator,
@@ -10,12 +10,16 @@ import {
 import ChevronDownIcon from '~/assets/svgs/chevron-down.svg';
 import {styles} from './styles';
 import {t} from 'i18next';
-import {AppFolderDocumentInterface} from '~/shared/utils/types/document';
+import {
+  AppDocumentInterface,
+  AppFolderDocumentInterface,
+} from '~/shared/utils/types/document';
 import {formatInputValue} from '~/shared/utils/functions/formatters.ts';
 import IconPerFileType from '../IconPerFileType';
+import useCheckLargeScreen from '~/shared/hooks/useLargeScreen';
+import SearchInput from '../SearchInput';
 
 const FilesList: FC<FilesListProps> = ({
-  searchName,
   style,
   documentsData,
   searchData,
@@ -26,8 +30,20 @@ const FilesList: FC<FilesListProps> = ({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(10);
+  const [searchResultsData, setSearchResultsData] = useState<
+    AppDocumentInterface[]
+  >([]);
+
+  const [searchName, setSearchName] = useState<string>('');
+
+  const widthContainer = useCheckLargeScreen() ? 600 : 300;
 
   const handleLoadMoreItems = () => {
+    /**That is only illustration of
+     * pagination to preserve call
+     * services on API and reduce
+     * custs. --Rainer Cordeiro*/
+
     if (isLoadingMore) {
       return;
     }
@@ -39,13 +55,13 @@ const FilesList: FC<FilesListProps> = ({
 
     if (endIndex < totalItems) {
       setTimeout(() => {
-        setStartIndex(prevStartIndex => prevStartIndex + 3);
+        setStartIndex(prevStartIndex => prevStartIndex + 10);
         setIsLoadingMore(false);
-      }, 3000);
+      }, 2000);
       setTimeout(() => {
-        setEndIndex(prevEndIndex => Math.min(prevEndIndex + 3, totalItems));
+        setEndIndex(prevEndIndex => Math.min(prevEndIndex + 10, totalItems));
         setIsLoadingMore(false);
-      }, 3000);
+      }, 2000);
     } else {
       setIsLoadingMore(false);
     }
@@ -63,8 +79,12 @@ const FilesList: FC<FilesListProps> = ({
     return titleA.localeCompare(titleB);
   });
 
-  const newDocumentsSortedData = documentsSortedData?.map(e => e);
-  const newSearchSortedData = searchSortedData?.map(e => e);
+  const newDocumentsSortedData = documentsSortedData?.filter(e => {
+    return !e.folder && e;
+  });
+  const newSearchSortedData = searchSortedData?.map(e => {
+    return e;
+  });
 
   const renderFiles = (item: AppFolderDocumentInterface) => {
     const BytesToGB = formatInputValue(item?.metadata?.size, 'size');
@@ -76,7 +96,7 @@ const FilesList: FC<FilesListProps> = ({
     return !item?.folder ? (
       <TouchableOpacity
         key={fileID}
-        style={[styles(selectedFile, fileID).content]}
+        style={[styles(selectedFile, fileID).content, {width: '100%'}]}
         activeOpacity={0.8}
         onPress={() => {
           setSelectedFile(state => (state === fileID ? '' : fileID));
@@ -117,8 +137,37 @@ const FilesList: FC<FilesListProps> = ({
     ) : null;
   };
 
+  const handleFilterSearch = () => {
+    const removeSpecialCharacters = (str: string) => {
+      return str?.replace(/[^a-zA-Z0-9]/g, '');
+    };
+
+    const sanitizedSearchName = removeSpecialCharacters(
+      searchName?.toLowerCase(),
+    );
+
+    const newDocumentsData = newSearchSortedData?.filter((d, index) => {
+      const sanitizedDocumentName = removeSpecialCharacters(
+        d?.searchName?.toLowerCase(),
+      );
+
+      return sanitizedDocumentName?.includes(sanitizedSearchName);
+    });
+    setSearchResultsData(newDocumentsData);
+  };
+
+  useEffect(() => {
+    handleFilterSearch();
+  }, [searchName]);
+
   return newDocumentsSortedData ? (
     <View>
+      {searchResultsData.length !== 0 || newDocumentsSortedData.length !== 0 ? (
+        <SearchInput
+          onChangeText={e => setSearchName(e)}
+          style={styles().searchInput}
+        />
+      ) : null}
       <Text style={styles().titleText}>
         {searchName ? (
           t('COMPONENTS.FOLDERS_LIST.SEARCH_RESULT')
@@ -132,17 +181,17 @@ const FilesList: FC<FilesListProps> = ({
       </Text>
       <FlatList
         data={
-          searchName
-            ? newSearchSortedData.slice(startIndex, endIndex)
+          searchName.length > 0
+            ? searchResultsData
             : newDocumentsSortedData.slice(startIndex, endIndex)
         }
         keyExtractor={(item, index) => item.fileID ?? `key:${index}`}
         renderItem={({item}) => renderFiles(item)}
-        style={[styles().flatList, style]}
+        style={[styles().flatList, {width: widthContainer}, style]}
         contentContainerStyle={styles().contentContainerFlatList}
         onEndReached={handleLoadMoreItems}
         onEndReachedThreshold={0.1}
-        initialNumToRender={3}
+        initialNumToRender={!searchResultsData ? 50 : 10}
         ListFooterComponent={() =>
           isLoadingMore ? (
             <ActivityIndicator size="large" color="#0000ff" />

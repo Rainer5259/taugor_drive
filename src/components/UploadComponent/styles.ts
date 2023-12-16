@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   uploadContainer: {
     marginTop: 30,
     paddingTop: 30,
-    width: 320,
+    width: '75%',
     height: 240,
     borderRadius: 6,
     alignItems: 'center',
@@ -58,7 +58,9 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 0.8,
     borderColor: colors.primaryGreen,
-    width: 320,
+
+    minWidth: '75%',
+    maxWidth: '75%',
   },
 
   chooseFileTextButton: {

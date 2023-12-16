@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {styles} from './styles';
 import Header from '~/components/Header';
 import {t} from 'i18next';
-import SearchInput from '~/components/SearchInput';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
@@ -11,53 +17,39 @@ import {FilesList} from '~/components/FilesList';
 import {useTypedNavigation} from '~/routes/useTypedNavigation';
 import FirebaseServices from '~/services/firebase';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
+import useCheckLargeScreen from '~/shared/hooks/useLargeScreen';
 
 const FilesScreen: React.FC = () => {
   const [selectedFolderID, setSelectedFolderID] = useState<string>('');
-  const [searchName, setSearchName] = useState<string>('');
   const [documentsData, setDocumentsData] = useState<AppDocumentInterface[]>(
     [],
   );
-  const [searchData, setSearchData] = useState<AppDocumentInterface[]>();
-  const [searchResultsData, setSearchResultsData] = useState<
-    AppDocumentInterface[]
-  >([]);
+  const [searchData, setSearchData] = useState<AppDocumentInterface[]>([]);
+  const [keyboardIsFocused, setKeyboardIsFocused] = useState<boolean>(false);
 
   const {user} = useSelector((state: RootState) => state.user);
   const navigation = useTypedNavigation();
+  const heightContainer = useCheckLargeScreen() ? 900 : 480;
 
   const handleFetchUserDocuments = async () => {
     try {
       const userDocumentsRes =
         await FirebaseServices.firestore.get.userDocuments(user!.id);
 
-      setDocumentsData(userDocumentsRes);
       const newCollectionSubFolders = userDocumentsRes.filter(e => e.folder);
-      const folder = newCollectionSubFolders.map(e =>
-        e?.folder ? e?.folder : null,
-      );
+      const folder = newCollectionSubFolders.map(e => {
+        return e?.folder ? e?.folder : [];
+      });
       const root = userDocumentsRes.filter(e => e);
-      setSearchData([...root, ...(folder[0] ?? [])]);
-    } catch (e) {}
-  };
 
-  const handleFilterSearch = () => {
-    const removeSpecialCharacters = (str: string) => {
-      return str?.replace(/[^a-zA-Z0-9]/g, '');
-    };
-
-    const sanitizedSearchName = removeSpecialCharacters(
-      searchName?.toLowerCase(),
-    );
-
-    const newDocumentsData = searchData?.filter((d, index) => {
-      const sanitizedDocumentName = removeSpecialCharacters(
-        d?.searchName?.toLowerCase(),
+      const filterItemsFolder = folder.find(e =>
+        e?.filter(doc => {
+          return doc;
+        }),
       );
-
-      return sanitizedDocumentName?.includes(sanitizedSearchName);
-    });
-    setSearchResultsData(newDocumentsData ?? []);
+      setDocumentsData(userDocumentsRes);
+      setSearchData([...root, ...(filterItemsFolder ?? [])]);
+    } catch (e) {}
   };
 
   useEffect(() => {
@@ -65,41 +57,68 @@ const FilesScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    handleFilterSearch();
-  }, [searchName]);
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardIsFocused(true);
+      },
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardIsFocused(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const handleNavigateToFolder = (folderID: string) => {
     if (selectedFolderID) {
-      navigation.navigate('FilesFolder', {folderID: folderID});
+      navigation.navigate('FilesFolder', {folderID});
       return;
     }
   };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <Header
-        left="chevron-left"
-        title={t('COMPONENTS.HEADER.SCREENS_NAME.FILES')}
-        right="logout"
-      />
-      <View style={styles.container}>
-        <SearchInput onChangeText={e => setSearchName(e)} />
-        <View style={styles.FilesListBox}>
-          <FilesList
-            searchName={searchName}
-            documentsData={documentsData}
-            searchData={searchResultsData}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 400 : -300}
+          style={{flex: 1}}>
+          <Header
+            left="chevron-left"
+            title={t('COMPONENTS.HEADER.SCREENS_NAME.FILES')}
+            right="logout"
           />
-        </View>
-        <View style={styles.FoldersListBox}>
-          <FoldersList
-            selectedFolderID={selectedFolderID}
-            setSelectedFolderID={setSelectedFolderID}
-            style={styles.flatListContainer}
-            onPressFolder={handleNavigateToFolder}
-          />
-        </View>
-      </View>
+          <View style={styles.container}>
+            <View style={[styles.FilesListBox, {height: heightContainer}]}>
+              <FilesList
+                documentsData={documentsData}
+                searchData={searchData}
+              />
+            </View>
+          </View>
+          <View
+            style={[
+              styles.FoldersListBox,
+              keyboardIsFocused && {bottom: -100},
+            ]}>
+            <FoldersList
+              selectedFolderID={selectedFolderID}
+              setSelectedFolderID={setSelectedFolderID}
+              style={styles.flatListContainer}
+              onPressFolder={handleNavigateToFolder}
+              addNewFolderButton={false}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

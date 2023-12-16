@@ -10,6 +10,8 @@
       "WELCOME": "Bem-Vindo!",
       "SUCCESS": "Sucesso",
       "UNKNOWN_ERROR": "Ocorreu um erro desconhecido",
+      "REQUEST_FAILED": "Requisição falhou!",
+      "TRY_AGAIN": "Tente novamente",
       "CHECK_YOUR_CONNECTION": "Verifique sua internet"
     },
     "COMPONENTS": {
@@ -23,7 +25,11 @@
         }
       },
       "HEADER": {
-        "SCREENS_NAME": {"UPLOAD": "Upload", "FILES": "Files"}
+        "SCREENS_NAME": {
+          "UPLOAD": "Enviar",
+          "FILES": "Meus Arquivos",
+          "FILES_FOLDER": "Pasta"
+        }
       },
       "WELCOME": {
         "TITLE_ONE": "Bem-Vindo",

@@ -19,7 +19,6 @@ export const styles = (selectedFile?: string, elementID?: string) =>
         ? colors.primaryGreen
         : colors.primaryCharcoalOpaque,
       opacity: !selectedFile ? 1 : selectedFile === elementID ? 1 : 0.8,
-
       borderRadius: 16,
       flexDirection: 'row',
     },
@@ -71,7 +70,8 @@ export const styles = (selectedFile?: string, elementID?: string) =>
     flatList: {
       backgroundColor: colors.secondaryBackgroundOpaque,
       width: 300,
-      borderRadius: 6,
+      borderRadius: 12,
+      paddingTop: 10,
     },
 
     contentContainerFlatList: {alignItems: 'center'},
@@ -92,5 +92,15 @@ export const styles = (selectedFile?: string, elementID?: string) =>
       position: 'absolute',
       right: 14,
       top: 14,
+    },
+
+    searchInput: {
+      width: '100%',
+      borderColor: colors.primaryGreen,
+      borderWidth: 1,
+      borderRadius: 24,
+      paddingHorizontal: 20,
+      height: 44,
+      marginBottom: 10,
     },
   });

@@ -2,21 +2,19 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import {Text, View, Animated} from 'react-native';
 import TaugorDriveLogo from '~/assets/svgs/taugor-drive-with-name-logo.svg';
 import ButtonDefault from '../ButtonDefault';
-import {useDispatch} from 'react-redux';
-import {useTypedNavigation} from '~/routes/useTypedNavigation';
 import {styles} from './styles';
 import {t} from 'i18next';
 import {WelcomeComponentProps} from './interface';
+import useCheckLargeScreen from '~/shared/hooks/useLargeScreen';
 
 const WelcomeComponent: FC<WelcomeComponentProps> = ({onPress}) => {
   const [isShowing, setIsShowing] = useState<boolean>(true);
 
   const textOne = useRef(new Animated.Value(-300)).current;
-  const textTwo = useRef(new Animated.Value(-200)).current;
+  const textTwo = useRef(new Animated.Value(-300)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const opacityText = useRef(new Animated.Value(0)).current;
   const opacityButton = useRef(new Animated.Value(0)).current;
-
   const TextAnimated = Animated.createAnimatedComponent(Text);
   const ViewAnimated = Animated.createAnimatedComponent(View);
 
@@ -37,10 +35,14 @@ const WelcomeComponent: FC<WelcomeComponentProps> = ({onPress}) => {
     });
   };
 
+  const isLargeScreen = useCheckLargeScreen();
+  let textOneToValue = isLargeScreen ? 300 : 60;
+  let textTwoToValue = isLargeScreen ? 460 : 200;
+
   useEffect(() => {
     animateWithTimingStart(1, opacityText, 3000);
-    animateWithTimingStart(60, textOne, 800);
-    animateWithTimingStart(200, textTwo, 1300);
+    animateWithTimingStart(textOneToValue, textOne, 800);
+    animateWithTimingStart(textTwoToValue, textTwo, 1300);
     animateWithTimingStart(1, opacity, 2000, () => {
       animateWithTimingStart(1, opacityButton, 200);
       setIsShowing(false);
@@ -50,7 +52,7 @@ const WelcomeComponent: FC<WelcomeComponentProps> = ({onPress}) => {
       animateWithTimingStart(0, textOne);
       animateWithTimingStart(0, textTwo);
     };
-  }, []);
+  }, [textOneToValue, textTwoToValue]);
 
   return (
     <View>

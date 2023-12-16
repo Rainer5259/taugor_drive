@@ -8,7 +8,6 @@ import FirebaseServices from '~/services/firebase';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 import PlusIcon from '~/assets/svgs/plus-icon.svg';
-import {colors} from '~/shared/themes/colors';
 import {IFirebaseDocChangeData} from '~/shared/utils/types/document';
 import Dialog from 'react-native-dialog';
 import toastError from '../ToastNotification/Error';
@@ -66,14 +65,16 @@ const FoldersList: FC<FoldersListProps> = ({
   };
 
   const handleCreateFolder = async () => {
-    if (!folderName) {
+    if (folderName.length === 0) {
       return toastError({text1: t('COMPONENTS.FOLDERS_LIST.TYPE_FOLDER_NAME')});
     }
+
     setDialogVisible(false);
     try {
       await FirebaseServices.firestore.post.createFolder(user!.id, folderName);
-      await handleFetchUserDocuments();
-    } catch (e) {}
+    } catch {}
+    await handleFetchUserDocuments();
+    setFolderName('');
   };
 
   const handleFetchUserDocuments = async () => {
@@ -124,13 +125,13 @@ const FoldersList: FC<FoldersListProps> = ({
   };
 
   const renderAddFolderButton = () => {
-    return (
+    return addNewFolderButton ? (
       <TouchableOpacity
         style={styles().createFolderButton}
         onPress={handleShowPromptCreateFolder}>
         <PlusIcon width={32} height={32} style={{marginBottom: 4}} />
       </TouchableOpacity>
-    );
+    ) : null;
   };
 
   return (
@@ -143,7 +144,7 @@ const FoldersList: FC<FoldersListProps> = ({
           </Text>
 
           <View style={styles().createFolderContainer}>
-            {addNewFolderButton && renderAddFolderButton()}
+            {renderAddFolderButton()}
             <FlatList
               data={sortedData}
               keyExtractor={item => item.id}
@@ -152,6 +153,7 @@ const FoldersList: FC<FoldersListProps> = ({
               style={[styles().flatList, style]}
               contentContainerStyle={styles().contentContainerFlatList}
               showsHorizontalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
             />
           </View>
         </View>

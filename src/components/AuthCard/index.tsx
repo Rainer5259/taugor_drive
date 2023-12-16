@@ -41,18 +41,19 @@ const AuthCard: FC<AuthCardProps> = ({
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
-    if (timer > 0) {
+    if (timer > 0 && loadingForgotPassword) {
       intervalId = setInterval(() => {
         setTimer(prevSeconds => prevSeconds - 1);
       }, 1000);
     } else {
+      setTimer(0);
       setLoadingForgotPassword(false);
     }
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [timer]);
+  }, [timer, loadingForgotPassword]);
 
   return (
     <View style={styles.container}>

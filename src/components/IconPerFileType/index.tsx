@@ -31,6 +31,8 @@ const IconPerFileType: FC<IconPerFileTypeProps> = ({fileType, opacity}) => {
         fileType as (typeof CommonVideoFilesType)[number],
       ):
         return <Video height={size} width={size} opacity={opacity} />;
+      default:
+        return <Document height={size} width={size} opacity={opacity} />;
     }
   };
   return renderIcon();

@@ -11,6 +11,7 @@ import UsedSpace from '~/components/UsedSpace';
 import {colors} from '~/shared/themes/colors';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
+import useCheckLargeScreen from '~/shared/hooks/useLargeScreen';
 
 const UploadComponent: FC<UploadComponentProps> = ({
   onPressChooseFile,
@@ -24,6 +25,8 @@ const UploadComponent: FC<UploadComponentProps> = ({
   const [sizeCodeName, setSizeCodeName] = useState<SizeReferenceType>('B');
   const [convertedSize, setConvertedSize] = useState<number>(0);
   const {uploading} = useSelector((state: RootState) => state.user);
+
+  const isLargeScreen = useCheckLargeScreen();
 
   useEffect(() => {
     function formatBits(a: number, b = 2) {
@@ -56,7 +59,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
     <View style={styles.container}>
       <UsedSpace />
 
-      <View style={styles.uploadContainer}>
+      <View style={[styles.uploadContainer, isLargeScreen && {height: 500}]}>
         <Text style={styles.primaryText}>
           {t('COMPONENTS.UPLOAD.SIZE_OF_FILE', {
             size: convertedSize ? convertedSize : 0,

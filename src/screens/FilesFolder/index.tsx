@@ -11,25 +11,23 @@ import {RootStackParamList} from '~/routes/AppScreens';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import FirebaseServices from '~/services/firebase';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
+import useCheckLargeScreen from '~/shared/hooks/useLargeScreen';
 
 const FilesFolderScreen = ({
   route,
 }: NativeStackScreenProps<RootStackParamList, 'FilesFolder'>) => {
-  const {user} = useSelector((state: RootState) => state.user);
-
-  const [searchName, setSearchName] = useState<string>('');
   const [currentFolderTitle, setCurrentFolderTitle] = useState<string>('');
+  const [searchData, setSearchData] = useState<AppDocumentInterface[]>([]);
   const [documentsData, setDocumentsData] = useState<AppDocumentInterface[]>(
     [],
   );
-  const [searchResultsData, setSearchResultsData] = useState<
-    AppDocumentInterface[]
-  >([]);
-  const [searchData, setSearchData] = useState<AppDocumentInterface[]>([]);
+
+  const {user} = useSelector((state: RootState) => state.user);
+  const heightContainer = useCheckLargeScreen() ? 900 : 600;
 
   const handleFetchUserDocuments = async () => {
     try {
-      const userDocumentsRes =
+      const userDocumentsResponse =
         await FirebaseServices.firestore.get.documentByFolderID(
           user!.id,
           route.params.folderID,
@@ -40,37 +38,15 @@ const FilesFolderScreen = ({
         route.params.folderID,
       );
 
+      const root = userDocumentsResponse.filter(e => {
+        return e;
+      });
+
       setCurrentFolderTitle(folderTitle ?? '');
-
-      const root = userDocumentsRes.filter(e => e);
-
       setSearchData(root);
-
-      setDocumentsData(userDocumentsRes);
+      setDocumentsData(root);
     } catch (e) {}
   };
-
-  const handleFilterSearch = () => {
-    const removeSpecialCharacters = (str: string) => {
-      return str?.replace(/[^a-zA-Z0-9]/g, '');
-    };
-    const sanitizedSearchName = removeSpecialCharacters(
-      searchName?.toLowerCase(),
-    );
-
-    const newDocumentsData = searchData?.filter((d, index) => {
-      const sanitizedDocumentName = removeSpecialCharacters(
-        d?.searchName?.toLowerCase(),
-      );
-
-      return sanitizedDocumentName?.includes(sanitizedSearchName);
-    });
-    setSearchResultsData(newDocumentsData ?? []);
-  };
-
-  useEffect(() => {
-    handleFilterSearch();
-  }, [searchName]);
 
   useEffect(() => {
     handleFetchUserDocuments();
@@ -80,16 +56,14 @@ const FilesFolderScreen = ({
     <SafeAreaView style={styles.safeAreaView}>
       <Header
         left="chevron-left"
-        title={t('COMPONENTS.HEADER.SCREENS_NAME.FILES')}
+        title={t('COMPONENTS.HEADER.SCREENS_NAME.FILES_FOLDER')}
         right="logout"
       />
-      <View style={styles.container}>
-        <SearchInput onChangeText={e => setSearchName(e)} />
-        <View style={styles.FilesListBox}>
+      <View style={[styles.container]}>
+        <View style={[styles.FilesListBox, {height: heightContainer}]}>
           <FilesList
-            searchName={searchName}
             documentsData={documentsData}
-            searchData={searchResultsData}
+            searchData={searchData}
             isFolder={true}
             folderTitle={currentFolderTitle}
           />
