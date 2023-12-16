@@ -9,7 +9,8 @@
       "NEXT": "Próximo",
       "WELCOME": "Bem-Vindo!",
       "SUCCESS": "Sucesso",
-      "UNKNOWN_ERROR": "Ocorreu um erro desconhecido"
+      "UNKNOWN_ERROR": "Ocorreu um erro desconhecido",
+      "CHECK_YOUR_CONNECTION": "Verifique sua internet"
     },
     "COMPONENTS": {
       "AUTH_CARD": {
@@ -60,6 +61,11 @@
         }
       },
       "FOLDERS_LIST": {
+        "FOLDER_NAME": "Nome da pasta",
+        "TYPE_FOLDER_NAME": "Digite o nome da pasta",
+        "CREATE": "Criar",
+        "CANCEL": "Cancelar",
+        "MAX_LIMIT_OF_CHAR": "Limite máximo caracters: 30",
         "TITLE": "Pastas",
         "NO_FOLDER": "Nenhuma pasta",
         "NO_FILES": "Nenhum arquivo ",

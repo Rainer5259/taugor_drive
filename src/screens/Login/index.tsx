@@ -3,6 +3,8 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
+  StatusBar,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -20,6 +22,7 @@ import {setToken, setUser} from '~/services/redux/slices/authenticateUser';
 import {regexEmail} from '~/shared/utils/regex/email';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {colors} from '~/shared/themes/colors';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -90,7 +93,7 @@ const Login: React.FC = () => {
 
         case AuthErrorCodesCustom.NETWORK_REQUEST_FAILED:
           toastError({
-            text1: 'Net caiu',
+            text1: t('GENERICS.CHECK_YOUR_CONNECTION'),
           });
           break;
 
@@ -146,7 +149,7 @@ const Login: React.FC = () => {
 
         case AuthErrorCodesCustom.NETWORK_REQUEST_FAILED:
           toastError({
-            text1: 'Net caiu',
+            text1: t('GENERICS.CHECK_YOUR_CONNECTION'),
           });
           break;
         default:
@@ -215,30 +218,37 @@ const Login: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -300}
-          style={styles.keyboardAvoidingView}>
-          <AuthCard
-            email={email}
-            setEmail={setEmail}
-            onPressForgotPassword={handleResetPassword}
-            onPressSignIn={handleSignIn}
-            onPressSignUp={handleSignUp}
-            setLoadingForgotPassword={setLoadingForgotPassword}
-            password={password}
-            setPassword={setPassword}
-            loadingSignIn={loadingSignIn}
-            loadingSignUp={loadingSignUp}
-            loadingForgotPassword={loadingForgotPassword}
-            loadingSocialMedia={loadingSocialMedia}
-            onPressSocialMedia={handleLoginWithGoogle}
-          />
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-    </View>
+    <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar
+        animated
+        barStyle="dark-content"
+        backgroundColor={colors.primaryBackground}
+      />
+      <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -300}
+            style={styles.keyboardAvoidingView}>
+            <AuthCard
+              email={email}
+              setEmail={setEmail}
+              onPressForgotPassword={handleResetPassword}
+              onPressSignIn={handleSignIn}
+              onPressSignUp={handleSignUp}
+              setLoadingForgotPassword={setLoadingForgotPassword}
+              password={password}
+              setPassword={setPassword}
+              loadingSignIn={loadingSignIn}
+              loadingSignUp={loadingSignUp}
+              loadingForgotPassword={loadingForgotPassword}
+              loadingSocialMedia={loadingSocialMedia}
+              onPressSocialMedia={handleLoginWithGoogle}
+            />
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </View>
+    </SafeAreaView>
   );
 };
 

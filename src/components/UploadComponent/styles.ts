@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: 'white',
+    backgroundColor: colors.primaryLight,
     paddingHorizontal: 10,
     paddingVertical: 6,
     alignItems: 'flex-start',

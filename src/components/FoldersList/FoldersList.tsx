@@ -1,6 +1,6 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useMemo, useState} from 'react';
 import {FoldersListProps} from './interface';
-import {Alert, FlatList, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import FolderIcon from '~/assets/svgs/folder-icon.svg';
 import {styles} from './styles';
 import {t} from 'i18next';
@@ -10,6 +10,8 @@ import {RootState} from '~/services/redux/store';
 import PlusIcon from '~/assets/svgs/plus-icon.svg';
 import {colors} from '~/shared/themes/colors';
 import {IFirebaseDocChangeData} from '~/shared/utils/types/document';
+import Dialog from 'react-native-dialog';
+import toastError from '../ToastNotification/Error';
 
 const FoldersList: FC<FoldersListProps> = ({
   selectedFolderID,
@@ -19,6 +21,8 @@ const FoldersList: FC<FoldersListProps> = ({
   style,
 }) => {
   const [folders, setFolders] = useState<IFirebaseDocChangeData[]>([]);
+  const [folderName, setFolderName] = useState<string>('');
+  const [isDialogVisible, setDialogVisible] = useState(false);
 
   const {user} = useSelector((state: RootState) => state.user);
 
@@ -28,32 +32,46 @@ const FoldersList: FC<FoldersListProps> = ({
     return titleA.localeCompare(titleB);
   });
 
-  const handleShowPromptCreateFolder = () => {
-    Alert.prompt(t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.TITLE'), '', [
-      {
-        onPress: () => {},
-        text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CANCEL'),
-      },
-      {
-        onPress: (value?: string) => {
-          if (value && value.length > 30) {
-            return Alert.alert('Máximo 30 caracters');
+  const dialogPrompt = () => {
+    return (
+      <Dialog.Container
+        visible={isDialogVisible}
+        footerStyle={styles().dialogContainerFooter}
+        headerStyle={styles().dialogContainerHeader}>
+        <Dialog.Title>{t('COMPONENTS.FOLDERS_LIST.FOLDER_NAME')}</Dialog.Title>
+        <Dialog.Input
+          onChangeText={e => setFolderName(e)}
+          maxLength={30}
+          onChange={e =>
+            e.nativeEvent.text.length === 30 &&
+            toastError({text1: t('COMPONENTS.FOLDERS_LIST.MAX_LIMIT_OF_CHAR')})
           }
-          if (value) {
-            handleCreateFolder(value);
-            return;
-          } else {
-            handleShowPromptCreateFolder();
-          }
-        },
-        text: t('COMPONENTS.UPLOAD.ALERT.CREATE_FOLDER.BUTTON.CONFIRM'),
-      },
-    ]);
+        />
+
+        <Dialog.Button
+          onPress={() => setDialogVisible(false)}
+          label={t('COMPONENTS.FOLDERS_LIST.CANCEL')}
+        />
+
+        <Dialog.Button
+          onPress={() => handleCreateFolder()}
+          label={t('COMPONENTS.FOLDERS_LIST.CREATE')}
+        />
+      </Dialog.Container>
+    );
   };
 
-  const handleCreateFolder = async (folderTitle: string) => {
+  const handleShowPromptCreateFolder = () => {
+    setDialogVisible(true);
+  };
+
+  const handleCreateFolder = async () => {
+    if (!folderName) {
+      return toastError({text1: t('COMPONENTS.FOLDERS_LIST.TYPE_FOLDER_NAME')});
+    }
+    setDialogVisible(false);
     try {
-      await FirebaseServices.firestore.post.createFolder(user!.id, folderTitle);
+      await FirebaseServices.firestore.post.createFolder(user!.id, folderName);
       await handleFetchUserDocuments();
     } catch (e) {}
   };
@@ -115,39 +133,37 @@ const FoldersList: FC<FoldersListProps> = ({
     );
   };
 
-  return sortedData[0] ? (
-    <View>
-      <Text style={styles().titleText}>
-        {t('COMPONENTS.FOLDERS_LIST.TITLE')}
-      </Text>
+  return (
+    <>
+      {isDialogVisible && dialogPrompt()}
+      {sortedData[0] ? (
+        <View>
+          <Text style={styles().titleText}>
+            {t('COMPONENTS.FOLDERS_LIST.TITLE')}
+          </Text>
 
-      <View
-        style={{
-          backgroundColor: colors.secondaryBackgroundOpaque,
-          height: 100,
-          width: '100%',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        {addNewFolderButton && renderAddFolderButton()}
-        <FlatList
-          data={sortedData}
-          keyExtractor={item => item.id}
-          renderItem={({item}) => renderFolders(item)}
-          horizontal
-          style={[styles().flatList, style]}
-          contentContainerStyle={styles().contentContainerFlatList}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    </View>
-  ) : (
-    <View style={styles().emptyListView}>
-      <Text style={styles().titleText}>
-        {t('COMPONENTS.FOLDERS_LIST.NO_FOLDER')}
-      </Text>
-      {renderAddFolderButton()}
-    </View>
+          <View style={styles().createFolderContainer}>
+            {addNewFolderButton && renderAddFolderButton()}
+            <FlatList
+              data={sortedData}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => renderFolders(item)}
+              horizontal
+              style={[styles().flatList, style]}
+              contentContainerStyle={styles().contentContainerFlatList}
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+        </View>
+      ) : (
+        <View style={styles().emptyListView}>
+          <Text style={styles().titleText}>
+            {t('COMPONENTS.FOLDERS_LIST.NO_FOLDER')}
+          </Text>
+          {renderAddFolderButton()}
+        </View>
+      )}
+    </>
   );
 };
 

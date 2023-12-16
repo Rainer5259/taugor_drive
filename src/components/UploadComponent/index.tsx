@@ -68,7 +68,13 @@ const UploadComponent: FC<UploadComponentProps> = ({
 
         <View style={styles.inputBox}>
           <TextInputDefault
-            style={[styles.input, {opacity: hasDocumentPicked ? 1 : 0.5}]}
+            style={[
+              styles.input,
+              !hasDocumentPicked && {
+                opacity: 0.5,
+                backgroundColor: colors.secondaryCharcoalOpaque,
+              },
+            ]}
             placeholder={t('COMPONENTS.UPLOAD.PLACEHOLDER_INPUT')}
             value={title}
             onChange={e => setTitle(e.nativeEvent.text)}

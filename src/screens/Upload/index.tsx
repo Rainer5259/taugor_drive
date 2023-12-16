@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  StatusBar,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -25,6 +26,7 @@ import {v4 as uuidv4} from 'uuid';
 import {setUploading} from '~/services/redux/slices/authenticateUser';
 import toastError from '~/components/ToastNotification/Error';
 import {StorageErrorCodesCustom} from '~/shared/utils/types/StorageError';
+import {colors} from '~/shared/themes/colors';
 
 const UploadScreen: React.FC = () => {
   const [title, setTitle] = useState<string>('');
@@ -159,6 +161,11 @@ const UploadScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar
+        animated
+        barStyle="dark-content"
+        backgroundColor={colors.primaryBackground}
+      />
       <Header
         left="files"
         title={t('COMPONENTS.HEADER.SCREENS_NAME.UPLOAD')}

@@ -10,6 +10,8 @@ import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {AppUserCredentialInterface} from './shared/utils/types/user';
 import SplashScreen from 'react-native-splash-screen';
+import {StatusBar} from 'react-native';
+import {colors} from './shared/themes/colors';
 
 const App = () => {
   const fetchUserInfoStoraged = async () => {
@@ -22,9 +24,8 @@ const App = () => {
         store.dispatch(setToken(userParsed.token));
         store.dispatch(setUser({id: userParsed.id}));
       }
-    } finally {
-      SplashScreen.hide();
-    }
+    } catch {}
+    SplashScreen.hide();
   };
 
   useEffect(() => {

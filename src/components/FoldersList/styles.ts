@@ -54,4 +54,16 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
       alignItems: 'center',
       width: 30,
     },
+
+    createFolderContainer: {
+      backgroundColor: colors.secondaryBackgroundOpaque,
+      height: 100,
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+
+    dialogContainerHeader: {alignItems: 'center'},
+
+    dialogContainerFooter: {justifyContent: 'space-between'},
   });
