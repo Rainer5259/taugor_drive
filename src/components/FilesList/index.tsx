@@ -96,7 +96,7 @@ const FilesList: FC<FilesListProps> = ({
     return !item?.folder ? (
       <TouchableOpacity
         key={fileID}
-        style={[styles(selectedFile, fileID).content, {width: '100%'}]}
+        style={[styles(selectedFile, fileID).content]}
         activeOpacity={0.8}
         onPress={() => {
           setSelectedFile(state => (state === fileID ? '' : fileID));

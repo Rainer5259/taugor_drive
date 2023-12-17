@@ -5,7 +5,7 @@ export const styles = (selectedFile?: string, elementID?: string) =>
   StyleSheet.create({
     content: {
       marginHorizontal: 4,
-      width: 280,
+      width: '100%',
       justifyContent: 'flex-start',
       alignItems: selectedFile === elementID ? 'flex-start' : 'center',
       paddingVertical: selectedFile === elementID ? 8 : 0,
@@ -21,6 +21,7 @@ export const styles = (selectedFile?: string, elementID?: string) =>
       opacity: !selectedFile ? 1 : selectedFile === elementID ? 1 : 0.8,
       borderRadius: 16,
       flexDirection: 'row',
+      paddingRight: 30,
     },
 
     childrenContentAlignment: {
