@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
 
   FoldersListBox: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 30,
     width: '100%',
     shadowColor: colors.primaryShadow,
     shadowOpacity: 0.2,

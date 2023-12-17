@@ -1110,8 +1110,6 @@ PODS:
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
   - RecaptchaInterop (100.0.0)
-  - rn-fetch-blob (0.12.0):
-    - React-Core
   - RNCAsyncStorage (1.19.8):
     - React-Core
   - RNFBApp (18.7.1):
@@ -1216,7 +1214,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
@@ -1337,8 +1334,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  rn-fetch-blob:
-    :path: "../node_modules/rn-fetch-blob"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBApp:
@@ -1430,7 +1425,6 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-  rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCAsyncStorage: 687bb9e85dd3d45b966662440dcfc0cd962347e6
   RNFBApp: 3d518e0ea7f945ae546facc0e6034806d9ddfde7
   RNFBAuth: 9cea77b4b216e77e10ed30b433f3778e21c1fd1a
@@ -1444,6 +1438,6 @@ SPEC CHECKSUMS:
   RNSVG: 255767813dac22db1ec2062c8b7e7b856d4e5ae6
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
 
-PODFILE CHECKSUM: 7f0c5bf7f88152ffd31ecd2d0233eb5226860da8
+PODFILE CHECKSUM: f56a5cdff7021da2937bb1d61947a72be405eb0d
 
 COCOAPODS: 1.14.3

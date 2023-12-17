@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
 
   forgottenPasswordButton: {
     backgroundColor: 'transparent',
-    maxWidth: 142,
+    width: 148,
     alignSelf: 'flex-end',
   },
 
