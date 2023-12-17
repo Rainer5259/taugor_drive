@@ -10,6 +10,7 @@ const SearchInput: FC<SearchInputProps> = ({...rest}) => {
       style={styles.container}
       clearButtonMode="always"
       placeholder={t('COMPONENTS.SEARCH_INPUT.PLACEHOLDER')}
+      maxLength={60}
       {...rest}
     />
   );

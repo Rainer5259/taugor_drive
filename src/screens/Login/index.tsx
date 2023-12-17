@@ -12,7 +12,6 @@ import {styles} from './styles';
 import AuthCard from '~/components/AuthCard';
 import {FirebaseError} from 'firebase/app';
 import FirebaseServices from '~/services/firebase';
-import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {AuthErrorCodesCustom} from '~/shared/utils/types/AuthError';
 import toastError from '~/components/ToastNotification/Error';
 import {t} from 'i18next';
@@ -23,6 +22,12 @@ import {regexEmail} from '~/shared/utils/regex/email';
 import {AppUserCredentialInterface} from '~/shared/utils/types/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {colors} from '~/shared/themes/colors';
+import {
+  fillAllFieldsToast,
+  isInvalidEmailToast,
+  isShortPasswordToast,
+} from './fields_middleware';
+import {handleSignInErrors, handleSignUpErrors} from './errors';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -35,23 +40,20 @@ const Login: React.FC = () => {
 
   const dispatch = useDispatch();
   const emptyFields = !email || !password;
-
-  const fillAllFieldsToast = () => {
-    return Toast.show({
-      type: 'error',
-      text1: t('SCREENS.AUTHENTICATION.ERRORS.FILL_FIELDS'),
-    });
-  };
+  const isValidPassword = password.length < 6;
 
   const handleSignIn = async () => {
     if (emptyFields) {
-      return fillAllFieldsToast();
+      fillAllFieldsToast();
+      return;
     }
 
     if (!regexEmail.test(email)) {
-      return toastError({
-        text1: t('COMPONENTS.AUTH_CARD.ERRORS.INVALID_EMAIL'),
-      });
+      return isInvalidEmailToast();
+    }
+
+    if (isValidPassword) {
+      return isShortPasswordToast();
     }
 
     setLoadingSignIn(true);
@@ -68,52 +70,7 @@ const Login: React.FC = () => {
         });
     } catch (e) {
       setLoadingSignIn(false);
-      const error = e as FirebaseAuthTypes.NativeFirebaseAuthError;
-
-      switch (error.code) {
-        case AuthErrorCodesCustom.USER_NOT_FOUND:
-          toastError({
-            text1: t('SCREENS.AUTHENTICATION.ERRORS.USER_NOT_FOUND'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.INVALID_PASSWORD:
-          toastError({
-            text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_PASSWORD'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.TOO_MANY_ATTEMPTS_TRY_LATER:
-          toastError({
-            text1: t(
-              'SCREENS.AUTHENTICATION.ERRORS.TOO_MANY_ATTEMPTS_TRY_LATER',
-            ),
-          });
-          break;
-
-        case AuthErrorCodesCustom.INVALID_EMAIL:
-          toastError({
-            text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_EMAIL'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.NETWORK_REQUEST_FAILED:
-          toastError({
-            text1: t('GENERICS.CHECK_YOUR_CONNECTION'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.TIMEOUT:
-          toastError({
-            text1: t('GENERICS.REQUEST_FAILED'),
-            text2: t('GENERICS.TRY_AGAIN'),
-          });
-          break;
-
-        default:
-          toastError({text1: t('ERRORS.HAS_OCURRED')});
-          break;
-      }
+      handleSignInErrors(e as FirebaseAuthTypes.NativeFirebaseAuthError);
     }
   };
 
@@ -123,12 +80,15 @@ const Login: React.FC = () => {
     }
 
     if (!regexEmail.test(email)) {
-      return toastError({
-        text1: t('COMPONENTS.AUTH_CARD.ERRORS.INVALID_EMAIL'),
-      });
+      return isInvalidEmailToast();
+    }
+
+    if (isValidPassword) {
+      return isShortPasswordToast();
     }
 
     setLoadingSignUp(true);
+
     try {
       await FirebaseServices.authentication.post
         .signUpWithEmail(email, password)
@@ -144,34 +104,7 @@ const Login: React.FC = () => {
         });
     } catch (e) {
       const error = e as FirebaseAuthTypes.NativeFirebaseAuthError;
-
-      switch (error.code) {
-        case AuthErrorCodesCustom.EMAIL_EXISTS:
-          toastError({text1: t('SCREENS.AUTHENTICATION.ERRORS.USER_EXIST')});
-          setEmail('');
-          break;
-
-        case AuthErrorCodesCustom.INVALID_EMAIL:
-          toastError({text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_EMAIL')});
-          break;
-
-        case AuthErrorCodesCustom.NETWORK_REQUEST_FAILED:
-          toastError({
-            text1: t('GENERICS.CHECK_YOUR_CONNECTION'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.TIMEOUT:
-          toastError({
-            text1: t('GENERICS.REQUEST_FAILED'),
-            text2: t('GENERICS.TRY_AGAIN'),
-          });
-          break;
-
-        default:
-          toastError({text1: t('ERRORS.HAS_OCURRED')});
-          break;
-      }
+      handleSignUpErrors(error, setEmail);
     } finally {
       setLoadingSignUp(false);
     }
@@ -200,7 +133,11 @@ const Login: React.FC = () => {
 
   const handleResetPassword = async () => {
     if (!email) {
-      return toastError({text1: t('GENERICS.EMAIL')});
+      return toastError({text1: t('GENERICS.TYPE_YOUR_EMAIL')});
+    }
+
+    if (!regexEmail.test(email)) {
+      return isInvalidEmailToast();
     }
 
     setLoadingForgotPassword(true);

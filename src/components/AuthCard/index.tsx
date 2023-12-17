@@ -61,16 +61,17 @@ const AuthCard: FC<AuthCardProps> = ({
 
       <View style={styles.formBox}>
         <TextInputDefault
-          placeholder={t('GENERICS.EMAIL')}
+          placeholder={t('GENERICS.TYPE_YOUR_EMAIL')}
           keyboardType="email-address"
           value={email}
           onChangeText={e => setEmail(e)}
           autoCapitalize="none"
           autoCorrect={false}
           editable={!disabled}
+          maxLength={50}
         />
         <TextInputDefault
-          placeholder={t('GENERICS.PASSWORD')}
+          placeholder={t('GENERICS.TYPE_YOUR_PASSWORD')}
           keyboardType="default"
           secureTextEntry
           value={password}
@@ -78,6 +79,7 @@ const AuthCard: FC<AuthCardProps> = ({
           autoCapitalize="none"
           autoCorrect={false}
           editable={!disabled}
+          maxLength={16}
         />
 
         <View style={styles.forgottenPasswordContainer}>

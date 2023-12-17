@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import Routes from './routes';
 import Toast from 'react-native-toast-message';
-import '~/shared/i18n';
+import i18n from '~/shared/i18n';
 import {Provider} from 'react-redux';
 import {store} from './services/redux/store';
 import '~/services/firebase/googleSignIn';
@@ -10,8 +10,7 @@ import SInfo from 'react-native-sensitive-info';
 import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {AppUserCredentialInterface} from './shared/utils/types/user';
 import SplashScreen from 'react-native-splash-screen';
-import {StatusBar} from 'react-native';
-import {colors} from './shared/themes/colors';
+import {initReactI18next} from 'react-i18next';
 
 const App = () => {
   const fetchUserInfoStoraged = async () => {
@@ -29,6 +28,7 @@ const App = () => {
   };
 
   useEffect(() => {
+    initReactI18next.init(i18n);
     fetchUserInfoStoraged();
   }, []);
 

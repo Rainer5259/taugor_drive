@@ -4,8 +4,8 @@
       "OK": "Ok",
       "CONFIRM": "Confirmar",
       "CANCEL": "Cancelar",
-      "EMAIL": "Digite seu email",
-      "PASSWORD": "Digite sua senha",
+      "TYPE_YOUR_EMAIL": "Digite seu email",
+      "TYPE_YOUR_PASSWORD": "Digite sua senha",
       "NEXT": "Próximo",
       "WELCOME": "Bem-Vindo!",
       "SUCCESS": "Sucesso",
@@ -22,6 +22,10 @@
         "OR_CONTINUE_WITH": "Ou continue com",
         "ERRORS": {
           "INVALID_EMAIL": "Email inválido"
+        },
+        "SHORT_PASSWORD": {
+          "ONE": "Senha muito curta!",
+          "TWO": "Mínimo: 6 caracters"
         }
       },
       "HEADER": {
@@ -88,6 +92,7 @@
     "SCREENS": {
       "AUTHENTICATION": {
         "ERRORS": {
+          "EMAIL_ALREADY_IN_USE": "Email já cadastrado",
           "USER_EXIST": "Usuário já existe",
           "USER_NOT_EXIST": "User não existe",
           "INVALID_CREDENTIALS": "Email e/ou senha inválido(s)",
