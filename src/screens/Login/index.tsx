@@ -10,9 +10,7 @@ import {
 } from 'react-native';
 import {styles} from './styles';
 import AuthCard from '~/components/AuthCard';
-import {FirebaseError} from 'firebase/app';
 import FirebaseServices from '~/services/firebase';
-import {AuthErrorCodesCustom} from '~/shared/utils/types/AuthError';
 import toastError from '~/components/ToastNotification/Error';
 import {t} from 'i18next';
 import toastSuccess from '~/components/ToastNotification/Success';
@@ -27,7 +25,11 @@ import {
   isInvalidEmailToast,
   isShortPasswordToast,
 } from './fields_middleware';
-import {handleSignInErrors, handleSignUpErrors} from './errors';
+import {
+  handleResetPasswordErrors,
+  handleSignInErrors,
+  handleSignUpErrors,
+} from './errors';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -147,41 +149,8 @@ const Login: React.FC = () => {
         text1: t('SCREENS.AUTHENTICATION.SUCCESS.CHECK_EMAIL_BOX'),
       });
     } catch (e) {
-      const error = e as FirebaseError;
-
-      switch (error.code) {
-        case AuthErrorCodesCustom.TOO_MANY_ATTEMPTS_TRY_LATER:
-          toastSuccess({
-            text1: t(
-              'SCREENS.AUTHENTICATION.ERRORS.TOO_MANY_ATTEMPTS_TRY_LATER',
-            ),
-            text2: t('SCREENS.AUTHENTICATION.ERRORS.TRY_AGAIN_LATER'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.INVALID_EMAIL:
-          toastError({
-            text1: t('SCREENS.AUTHENTICATION.ERRORS.INVALID_EMAIL'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.NETWORK_REQUEST_FAILED:
-          toastError({
-            text1: t('GENERICS.CHECK_YOUR_CONNECTION'),
-          });
-          break;
-
-        case AuthErrorCodesCustom.TIMEOUT:
-          toastError({
-            text1: t('GENERICS.REQUEST_FAILED'),
-            text2: t('GENERICS.TRY_AGAIN'),
-          });
-          break;
-
-        default:
-          toastError({text1: t('SCREENS.AUTHENTICATION.ERRORS.SEND_LINK')});
-          break;
-      }
+      const error = e as FirebaseAuthTypes.NativeFirebaseAuthError;
+      handleResetPasswordErrors(error);
     }
     setLoadingForgotPassword(false);
   };
