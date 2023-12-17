@@ -111,7 +111,7 @@ const UploadComponent: FC<UploadComponentProps> = ({
               ? t('COMPONENTS.UPLOAD.BUTTON.UPLOAD')
               : t('COMPONENTS.UPLOAD.BUTTON.CHOOSE_FILE')
           }
-          loading={pickingFile}
+          loading={pickingFile || uploading}
           disabledAnimation={pickingFile}
           disabled={uploading || pickingFile}
         />

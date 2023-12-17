@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -19,7 +19,7 @@ import {RootState} from '~/services/redux/store';
 import toastSuccess from '~/components/ToastNotification/Success';
 import {t} from 'i18next';
 import {FirebaseStorageTypes} from '@react-native-firebase/storage';
-import firebase, {ReactNativeFirebase} from '@react-native-firebase/app';
+import {ReactNativeFirebase} from '@react-native-firebase/app';
 import {FoldersList} from '~/components/FoldersList/FoldersList';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
@@ -132,15 +132,15 @@ const UploadScreen: React.FC = () => {
             await handleUploadDataToFirestore(res).then(() => {
               clearDocumentStates();
               dispatch(setUploading(false));
-
               toastSuccess({
                 text1: t('COMPONENTS.UPLOAD.STATUS.SENT_SUCCESSFULLY'),
               });
             });
           });
       } catch (e) {
+        dispatch(setUploading(false));
+        clearDocumentStates();
         const error = e as ReactNativeFirebase.NativeFirebaseError;
-
         switch (error.code) {
           case `storage/${StorageErrorCodesCustom.UNKNOWN}`:
             toastError({
@@ -148,9 +148,6 @@ const UploadScreen: React.FC = () => {
             });
             break;
         }
-      } finally {
-        clearDocumentStates();
-        dispatch(setUploading(false));
       }
     }
   };
@@ -166,34 +163,41 @@ const UploadScreen: React.FC = () => {
         barStyle="dark-content"
         backgroundColor={colors.primaryBackground}
       />
-      <Header
-        left="files"
-        title={t('COMPONENTS.HEADER.SCREENS_NAME.UPLOAD')}
-        right={'logout'}
-      />
       <View style={styles.container}>
+        <Header
+          left="files"
+          title={t('COMPONENTS.HEADER.SCREENS_NAME.UPLOAD')}
+          right={'logout'}
+          style={styles.header}
+        />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 150 : -300}>
-            <UploadComponent
-              onPressChooseFile={handlePickerDocument}
-              size={size!}
-              title={title ?? ''}
-              hasDocumentPicked={uri ? true : false}
-              onPressRemoveDocumentPicked={handleOnPressRemoveDocumentPicked}
-              setTitle={setTitle}
-              pickingFile={pickingFile}
-            />
+            behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 150 : 0}
+            contentContainerStyle={styles.keyboardAvoidingViewContainer}
+            style={styles.keyboardAvoidingView}>
+            <View style={styles.keyboardAvoidingViewContent}>
+              <UploadComponent
+                onPressChooseFile={handlePickerDocument}
+                size={size!}
+                title={title ?? ''}
+                hasDocumentPicked={uri ? true : false}
+                onPressRemoveDocumentPicked={handleOnPressRemoveDocumentPicked}
+                setTitle={setTitle}
+                pickingFile={pickingFile}
+              />
+            </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
-
-        <FoldersList
-          setSelectedFolderID={setSelectedFolderID}
-          selectedFolderID={selectedFolderID}
-          style={styles.flatList}
-          addNewFolderButton
-        />
+        <View style={[styles.flatListBox]}>
+          <FoldersList
+            setSelectedFolderID={setSelectedFolderID}
+            selectedFolderID={selectedFolderID}
+            style={styles.flatList}
+            addNewFolderButton
+            title={t('COMPONENTS.FOLDERS_LIST.CHOOSE_FOLDER')}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );

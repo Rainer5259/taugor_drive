@@ -14,6 +14,10 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
 
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+
   FilesListBox: {
     height: 450,
     marginTop: 10,
@@ -24,14 +28,10 @@ export const styles = StyleSheet.create({
 
   FoldersListBox: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 0,
     width: '100%',
     shadowColor: colors.primaryShadow,
     shadowOpacity: 0.2,
     shadowOffset: {height: 1, width: 0},
-  },
-
-  flatListContainer: {
-    width: '100%',
   },
 });

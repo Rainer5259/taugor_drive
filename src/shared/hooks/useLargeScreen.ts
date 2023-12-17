@@ -6,7 +6,7 @@ const useCheckLargeScreen = () => {
   const {width} = useWindowDimensions();
 
   const checkWidthScreen = () => {
-    if (width > 400) {
+    if (width > 480) {
       return setIsLargeScreen(true);
     }
     return setIsLargeScreen(false);

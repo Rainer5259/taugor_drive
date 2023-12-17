@@ -49,6 +49,16 @@ export const styles = (selectedFolderID?: string, elementID?: string) =>
       shadowOffset: {height: 0, width: 0},
     },
 
+    emptyListViewContent: {
+      justifyContent: 'center',
+    },
+
+    addButtonEmptyListView: {
+      position: 'absolute',
+      alignSelf: 'center',
+      left: -50,
+    },
+
     createFolderButton: {
       marginHorizontal: 10,
       alignItems: 'center',

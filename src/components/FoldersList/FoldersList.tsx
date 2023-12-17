@@ -17,6 +17,7 @@ const FoldersList: FC<FoldersListProps> = ({
   setSelectedFolderID,
   addNewFolderButton,
   onPressFolder,
+  title,
   style,
 }) => {
   const [folders, setFolders] = useState<IFirebaseDocChangeData[]>([]);
@@ -140,7 +141,7 @@ const FoldersList: FC<FoldersListProps> = ({
       {sortedData[0] ? (
         <View>
           <Text style={styles().titleText}>
-            {t('COMPONENTS.FOLDERS_LIST.TITLE')}
+            {title ?? t('COMPONENTS.FOLDERS_LIST.TITLE')}
           </Text>
 
           <View style={styles().createFolderContainer}>
@@ -159,10 +160,14 @@ const FoldersList: FC<FoldersListProps> = ({
         </View>
       ) : (
         <View style={styles().emptyListView}>
-          <Text style={styles().titleText}>
-            {t('COMPONENTS.FOLDERS_LIST.NO_FOLDER')}
-          </Text>
-          {renderAddFolderButton()}
+          <View style={styles().emptyListViewContent}>
+            <Text style={styles().titleText}>
+              {t('COMPONENTS.FOLDERS_LIST.NO_FOLDER')}
+            </Text>
+            <View style={styles().addButtonEmptyListView}>
+              {renderAddFolderButton()}
+            </View>
+          </View>
         </View>
       )}
     </>

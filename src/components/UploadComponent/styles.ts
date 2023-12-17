@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.primaryBackground,
     alignItems: 'center',
+    flex: 1,
   },
 
   uploadContainer: {

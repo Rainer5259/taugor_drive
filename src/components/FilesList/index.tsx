@@ -146,7 +146,7 @@ const FilesList: FC<FilesListProps> = ({
       searchName?.toLowerCase(),
     );
 
-    const newDocumentsData = newSearchSortedData?.filter((d, index) => {
+    const newDocumentsData = newSearchSortedData?.filter(d => {
       const sanitizedDocumentName = removeSpecialCharacters(
         d?.searchName?.toLowerCase(),
       );
@@ -157,7 +157,13 @@ const FilesList: FC<FilesListProps> = ({
   };
 
   useEffect(() => {
-    handleFilterSearch();
+    if (searchName.length === 0) {
+      setSearchResultsData([]);
+      setEndIndex(10);
+      setStartIndex(0);
+    } else {
+      handleFilterSearch();
+    }
   }, [searchName]);
 
   return newDocumentsSortedData ? (

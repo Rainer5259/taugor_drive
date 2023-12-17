@@ -3,7 +3,6 @@ import {SafeAreaView, View} from 'react-native';
 import {styles} from './styles';
 import Header from '~/components/Header';
 import {t} from 'i18next';
-import SearchInput from '~/components/SearchInput';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/services/redux/store';
 import {FilesList} from '~/components/FilesList';

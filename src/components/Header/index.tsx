@@ -15,7 +15,7 @@ import {LOCAL_STORAGE_SECRET_KEY} from '@env';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {RootState} from '~/services/redux/store';
 
-const Header: FC<HeaderProps> = ({left, right, title}) => {
+const Header: FC<HeaderProps> = ({left, right, title, style}) => {
   const navigation = useTypedNavigation();
   const dispatch = useDispatch();
   const {uploading} = useSelector((state: RootState) => state.user);
@@ -84,7 +84,7 @@ const Header: FC<HeaderProps> = ({left, right, title}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <TouchableOpacity
         style={styles.left}
         disabled={!left}

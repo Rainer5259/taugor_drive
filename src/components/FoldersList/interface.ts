@@ -8,4 +8,5 @@ export interface FoldersListProps {
   onPressFolder?: (folderID: string) => void;
   addNewFolderButton?: boolean;
   style?: ViewStyle;
+  title?: string;
 }

@@ -18,6 +18,7 @@ import {useTypedNavigation} from '~/routes/useTypedNavigation';
 import FirebaseServices from '~/services/firebase';
 import {AppDocumentInterface} from '~/shared/utils/types/document';
 import useCheckLargeScreen from '~/shared/hooks/useLargeScreen';
+import useKeyboardListener from '~/shared/hooks/useKeyboardListener';
 
 const FilesScreen: React.FC = () => {
   const [selectedFolderID, setSelectedFolderID] = useState<string>('');
@@ -25,11 +26,11 @@ const FilesScreen: React.FC = () => {
     [],
   );
   const [searchData, setSearchData] = useState<AppDocumentInterface[]>([]);
-  const [keyboardIsFocused, setKeyboardIsFocused] = useState<boolean>(false);
 
   const {user} = useSelector((state: RootState) => state.user);
   const navigation = useTypedNavigation();
   const heightContainer = useCheckLargeScreen() ? 900 : 480;
+  const isKeyboardFocused = useKeyboardListener();
 
   const handleFetchUserDocuments = async () => {
     try {
@@ -56,27 +57,6 @@ const FilesScreen: React.FC = () => {
     handleFetchUserDocuments();
   }, []);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardIsFocused(true);
-      },
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardIsFocused(false);
-      },
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
   const handleNavigateToFolder = (folderID: string) => {
     if (selectedFolderID) {
       navigation.navigate('FilesFolder', {folderID});
@@ -90,7 +70,7 @@ const FilesScreen: React.FC = () => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 400 : -300}
-          style={{flex: 1}}>
+          style={styles.keyboardAvoidingView}>
           <Header
             left="chevron-left"
             title={t('COMPONENTS.HEADER.SCREENS_NAME.FILES')}
@@ -104,21 +84,20 @@ const FilesScreen: React.FC = () => {
               />
             </View>
           </View>
-          <View
-            style={[
-              styles.FoldersListBox,
-              keyboardIsFocused && {bottom: -100},
-            ]}>
-            <FoldersList
-              selectedFolderID={selectedFolderID}
-              setSelectedFolderID={setSelectedFolderID}
-              style={styles.flatListContainer}
-              onPressFolder={handleNavigateToFolder}
-              addNewFolderButton={false}
-            />
-          </View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
+      <View
+        style={[
+          styles.FoldersListBox,
+          isKeyboardFocused && {zIndex: -1, opacity: 0.3},
+        ]}>
+        <FoldersList
+          selectedFolderID={selectedFolderID}
+          setSelectedFolderID={setSelectedFolderID}
+          onPressFolder={handleNavigateToFolder}
+          addNewFolderButton={false}
+        />
+      </View>
     </SafeAreaView>
   );
 };
