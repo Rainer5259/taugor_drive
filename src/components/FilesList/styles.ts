@@ -10,7 +10,7 @@ export const styles = (selectedFile?: string, elementID?: string) =>
       alignItems: selectedFile === elementID ? 'flex-start' : 'center',
       paddingVertical: selectedFile === elementID ? 8 : 0,
       paddingLeft: 8,
-      height: selectedFile === elementID ? 100 : 40,
+      height: selectedFile === elementID ? 130 : 40,
       marginVertical: 10,
       borderWidth: 0.6,
       borderColor: !selectedFile
