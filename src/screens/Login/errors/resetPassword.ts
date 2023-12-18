@@ -34,6 +34,12 @@ const handleResetPasswordErrors = (
       });
       break;
 
+    case AuthErrorCodesCustom.USER_NOT_FOUND:
+      toastError({
+        text1: t('SCREENS.AUTHENTICATION.ERRORS.USER_NOT_FOUND'),
+      });
+      break;
+
     default:
       toastError({text1: t('SCREENS.AUTHENTICATION.ERRORS.SEND_LINK')});
       break;
