@@ -44,7 +44,6 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
           }
 
           const convertedBits = formatBits(bytes);
-          console.log('converted', convertedBits, user?.id);
 
           return dispatch(setTotalBytesUsed(convertedBits));
         }
