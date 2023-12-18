@@ -38,14 +38,14 @@ const UploadComponent: FC<UploadComponentProps> = ({
       const c = b < 0 ? 0 : b;
       const d = Math.floor(Math.log(a) / Math.log(1024));
 
-      if (d === 0) {
+      if (a < 1024) {
         setSizeCodeName('B');
-      } else if (d === 1) {
-        setSizeCodeName('Bytes');
-      } else if (d === -1) {
-        setSizeCodeName('MB');
-      } else if (d === -2) {
+      } else if (a >= 1024 && a < Math.pow(1024, 2)) {
         setSizeCodeName('KB');
+      } else if (a >= Math.pow(1024, 2) && a < Math.pow(1024, 3)) {
+        setSizeCodeName('MB');
+      } else {
+        setSizeCodeName('GB');
       }
 
       return parseFloat((a / Math.pow(1024, d)).toFixed(c));

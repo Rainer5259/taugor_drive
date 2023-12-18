@@ -7,12 +7,13 @@ import FirebaseServices from '~/services/firebase';
 import {RootState} from '~/services/redux/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTotalBytesUsed} from '~/services/redux/slices/authenticateUser';
+import {SizeReferenceType} from '~/shared/utils/types/SizeReference';
 
 const UsedSpace: FC<UsedSpaceProps> = () => {
   const {user, uploading, totalBytesUsed} = useSelector(
     (state: RootState) => state.user,
   );
-
+  const [sizeCodeName, setSizeCodeName] = useState<SizeReferenceType>('B');
   const dispatch = useDispatch();
 
   const handleGetTotalBytesUsed = async () => {
@@ -20,8 +21,32 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
       .getMetadataByUserID(user!.id)
       .then(bytes => {
         if (bytes !== 0) {
-          const gigabytes = bytes / (1024 * 1024 * 1024);
-          return dispatch(setTotalBytesUsed(parseFloat(gigabytes.toFixed(2))));
+          function formatBits(a: number, b = 2) {
+            if (!+a) {
+              setSizeCodeName('B');
+              return 0;
+            }
+
+            const c = b < 0 ? 0 : b;
+            const d = Math.floor(Math.log(a) / Math.log(1024));
+
+            if (a < 1024) {
+              setSizeCodeName('B');
+            } else if (a >= 1024 && a < Math.pow(1024, 2)) {
+              setSizeCodeName('KB');
+            } else if (a >= Math.pow(1024, 2) && a < Math.pow(1024, 3)) {
+              setSizeCodeName('MB');
+            } else {
+              setSizeCodeName('GB');
+            }
+
+            return parseFloat((a / Math.pow(1024, d)).toFixed(c));
+          }
+
+          const convertedBits = formatBits(bytes);
+          console.log('converted', convertedBits, user?.id);
+
+          return dispatch(setTotalBytesUsed(convertedBits));
         }
 
         dispatch(setTotalBytesUsed(0));
@@ -44,15 +69,14 @@ const UsedSpace: FC<UsedSpaceProps> = () => {
       <Text style={styles.usedSpaceText}>
         {t('COMPONENTS.UPLOAD.USED_SPACE.TITLE')}
       </Text>
-      <Text style={styles.usedText}>
-        {totalBytesUsed !== null ? (
-          t('COMPONENTS.UPLOAD.USED_SPACE.CURRENT', {
-            gb: totalBytesUsed.toFixed(2),
-          })
-        ) : (
-          <ActivityIndicator />
-        )}
-      </Text>
+      {totalBytesUsed !== null ? (
+        <Text style={styles.usedText}>
+          {totalBytesUsed.toFixed(0)}
+          {sizeCodeName}
+        </Text>
+      ) : (
+        <ActivityIndicator />
+      )}
       <Text style={styles.totalAvailableText}>
         {t('COMPONENTS.UPLOAD.USED_SPACE.FROM_TOTAL_AVAILABLE', {
           totalAvailableGB: 2,

@@ -50,7 +50,7 @@ const UploadScreen: React.FC = () => {
 
     try {
       setPickingFile(true);
-      const limitGB = Math.pow(1024, 3);
+      const limitGB = 1073741824;
       const document = await DocumentPicker.pick({
         type: DocumentPicker.types.allFiles,
         copyTo: 'cachesDirectory',
@@ -70,8 +70,7 @@ const UploadScreen: React.FC = () => {
         }
       }
 
-      const bytesConvertedToGB = document[0].size! / Math.pow(1024, 3);
-      const sizeConverted = parseFloat(bytesConvertedToGB.toString());
+      const sizeConverted = parseFloat(document[0].size!.toString());
       setTitle(document[0].name ?? '');
       setSize(sizeConverted);
       setURI(document[0].fileCopyUri ?? document[0].uri);

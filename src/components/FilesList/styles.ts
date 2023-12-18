@@ -103,5 +103,6 @@ export const styles = (selectedFile?: string, elementID?: string) =>
       paddingHorizontal: 20,
       height: 44,
       marginBottom: 10,
+      backgroundColor: colors.secondaryCharcoalOpaque,
     },
   });

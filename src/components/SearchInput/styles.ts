@@ -13,5 +13,6 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     color: colors.secondaryText,
+    backgroundColor: colors.secondaryBackgroundOpaque,
   },
 });

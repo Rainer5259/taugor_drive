@@ -13,5 +13,6 @@ export const styles = StyleSheet.create({
     height: 40,
     borderRadius: 12,
     color: colors.primarySlateBlue,
+    backgroundColor: colors.secondaryBackgroundOpaque,
   },
 });

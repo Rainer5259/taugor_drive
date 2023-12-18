@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
 
-  keyboardAvoidingViewContent: {flex: 1, paddingTop: 80},
+  keyboardAvoidingViewContent: {flex: 1, paddingTop: 60},
 
   header: {position: 'absolute', zIndex: 1},
 
